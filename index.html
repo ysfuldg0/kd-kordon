@@ -114,7 +114,7 @@
         .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: var(--success); color: white; padding: 12px 24px; border-radius: 30px; font-size: 13px; font-weight: 700; z-index: 9999; transition: all 0.4s ease; opacity: 0; box-shadow: 0 10px 25px rgba(0,0,0,0.2); white-space: nowrap;}
         .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
         
-        #fullScreenSpinner { position: fixed; inset:0; background:var(--kd-dark); z-index:999999; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--kd-gold); font-weight:bold; font-size:14px; }
+        #fullScreenSpinner { position: fixed; inset:0; background:var(--kd-dark); z-index:999999; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--kd-gold); font-weight:bold; font-size:14px; text-align: center; padding: 20px;}
     </style>
 </head>
 <body>
@@ -122,7 +122,7 @@
     <!-- YÜKLENİYOR EKRANI -->
     <div id="fullScreenSpinner">
         <i class="fa-solid fa-spinner fa-spin fa-2x" style="margin-bottom: 15px;"></i>
-        <span>Sistem Başlatılıyor...</span>
+        <span id="spinnerText">Sistem Bulutla Eşleşiyor...</span>
     </div>
 
     <!-- GİRİŞ EKRANI (PIN) -->
@@ -167,12 +167,13 @@
                     <div class="chip active" onclick="loadOrderTemplate('Manav', this)">🥦 Manav</div>
                     <div class="chip" onclick="loadOrderTemplate('Süt', this)">🥛 Süt</div>
                     <div class="chip" onclick="loadOrderTemplate('Su', this)">💧 Su</div>
+                    <div class="chip" onclick="loadOrderTemplate('Soda', this)">🥤 Soda</div>
                 </div>
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                     <h3 id="currentTemplateTitle" style="font-size: 16px; font-weight: 800;">Manav Listesi</h3>
                     <button onclick="resetCounters()" style="background:none; border:none; color:var(--text-muted); font-size:12px; font-weight:700;"><i class="fa-solid fa-rotate-left"></i> Sıfırla</button>
                 </div>
-                <div id="orderTemplateList" class="list-grid" style="margin-bottom: 20px;"></div>
+                <div id="orderTemplateList" class="list-grid mb-4"></div>
                 <button class="btn" style="background:#25D366; color:white; margin-top:15px;" onclick="sendOrderViaWhatsApp()"><i class="fa-brands fa-whatsapp"></i> Siparişi Gönder</button>
             </div>
 
@@ -302,7 +303,16 @@
         });
 
         function initDatabase() {
+            // Güvenlik: Firebase 8 saniyede yanıt vermezse dönen ikonu durdur ve hata göster.
+            let dbTimeout = setTimeout(() => {
+                const spinner = document.getElementById('fullScreenSpinner');
+                if(spinner.style.display !== 'none') {
+                    spinner.innerHTML = '<i class="fa-solid fa-triangle-exclamation fa-3x" style="color:var(--danger); margin-bottom:15px;"></i><span style="color:var(--text-main);">İnternet Bağlantısı Hatası.<br>Lütfen sayfayı yenileyin.</span>';
+                }
+            }, 8000);
+
             db.ref(dbRoot + '/users').on('value', snap => {
+                clearTimeout(dbTimeout);
                 const data = snap.val();
                 if(!data) {
                     const masterUser = { name: "Yusuf (Yönetici)", role: "admin", pin: "1923" };
@@ -391,11 +401,14 @@
             { id: "g1", name: "Dilim Limon", hours: 24, icon: "fa-lemon", cat: "Garnitür" },
             { id: "g2", name: "Çilek", hours: 48, icon: "fa-seedling", cat: "Garnitür" },
             { id: "g3", name: "Nane", hours: 24, icon: "fa-leaf", cat: "Garnitür" },
+            { id: "g4", name: "Dilim Elma", hours: 24, icon: "fa-apple-whole", cat: "Garnitür" },
             { id: "d1", name: "Cold Brew", hours: 72, icon: "fa-glass-whiskey", cat: "Demleme" },
             { id: "d2", name: "Limonata", hours: 48, icon: "fa-glass-water", cat: "Demleme" },
             { id: "d3", name: "Soğuk Espresso", hours: 24, icon: "fa-coffee", cat: "Demleme" },
+            { id: "d4", name: "Çikosüt", hours: 24, icon: "fa-mug-hot", cat: "Demleme" },
             { id: "dr1", name: "Draft Latte", hours: 24, icon: "fa-beer-mug-empty", cat: "Draft" },
-            { id: "dr2", name: "Draft Americano", hours: 24, icon: "fa-beer-mug-empty", cat: "Draft" }
+            { id: "dr2", name: "Draft Americano", hours: 24, icon: "fa-beer-mug-empty", cat: "Draft" },
+            { id: "dr3", name: "Draft Cold Brew", hours: 72, icon: "fa-beer-mug-empty", cat: "Draft" }
         ];
         let currentLibFilter = 'Tümü';
 
@@ -475,11 +488,29 @@
             if(navigator.vibrate) navigator.vibrate([50, 50]);
         }
 
-        // SİPARİŞ MODÜLÜ
+        // SİPARİŞ MODÜLÜ (EKSİKSİZ LİSTE)
         const orderDB = {
-            "Manav": [{n:"Brokoli", b:"Kilo"},{n:"Çilek", b:"Kilo"},{n:"Limon", b:"Kilo"},{n:"Muz", b:"Kilo"},{n:"Nane", b:"Bağ"}],
-            "Süt": [{n:"Burger Peyniri", b:"Paket"},{n:"Cheddar", b:"Paket"},{n:"Laktozsuz Süt", b:"Koli"},{n:"Tam Yağlı Süt", b:"Koli"}],
-            "Su": [{n:"1.5L Su", b:"Koli"},{n:"Pet Şişe", b:"Koli"}]
+            "Manav": [
+                {n:"Brokoli", b:"Kilo"}, {n:"Çilek", b:"Kilo"}, {n:"Domates", b:"Kilo"}, 
+                {n:"Elma", b:"Kilo"}, {n:"Greyfurt", b:"Kilo"}, {n:"Havuç", b:"Kilo"},
+                {n:"Karpuz", b:"Adet"}, {n:"Kereviz Sapı", b:"Adet"}, {n:"Limon", b:"Kilo"}, 
+                {n:"Maydanoz", b:"Bağ"}, {n:"Muz", b:"Kilo"}, {n:"Nane", b:"Bağ"},
+                {n:"Pancar", b:"Kilo"}, {n:"Portakal", b:"Kilo"}, {n:"Rezene", b:"Adet"}, 
+                {n:"Salatalık", b:"Kilo"}, {n:"Zencefil", b:"Kilo"}
+            ],
+            "Süt": [
+                {n:"Burger Peyniri", b:"Paket"}, {n:"Cheddar Peyniri", b:"Paket"}, 
+                {n:"Dana Jambon", b:"Paket"}, {n:"Hindi Füme", b:"Paket"},
+                {n:"Krema", b:"Koli"}, {n:"Laktozsuz Süt", b:"Koli"}, 
+                {n:"Laktozsuz Yoğurt", b:"Adet"}, {n:"Tam Yağlı Süt", b:"Koli"},
+                {n:"Tost Peyniri", b:"Paket"}, {n:"Yağsız Süt", b:"Koli"}
+            ],
+            "Su": [
+                {n:"1.5 Litre Su", b:"Koli"}, {n:"Cam Şişe", b:"Koli"}, {n:"Pet Şişe", b:"Koli"}
+            ],
+            "Soda": [
+                {n:"Soda", b:"Koli"}
+            ]
         };
         let currentOrderCat = "Manav", orderCounts = {};
         
@@ -494,6 +525,7 @@
         }
         function uc(n, ch, b) { if(!orderCounts[n]) orderCounts[n] = {c:0, b:b}; orderCounts[n].c += ch; if(orderCounts[n].c < 0) orderCounts[n].c = 0; loadOrderTemplate(currentOrderCat, null); }
         function resetCounters() { orderCounts = {}; loadOrderTemplate(currentOrderCat, null); }
+        
         function sendOrderViaWhatsApp() {
             let items = [];
             for(const [n, d] of Object.entries(orderCounts)) { if(d.c > 0) items.push("- " + d.c + " " + d.b + " " + n); }
@@ -502,8 +534,12 @@
             logAction("Sipariş Verildi", currentOrderCat + " listesi oluşturuldu.");
             sendPushNotification("📋 Sipariş Verildi", currentOrderCat + " siparişi verildi. Veren: " + currentUser.name);
             
-            var waText = "*KORDON SİPARİŞ (" + currentOrderCat + ")*\nSiparişi Veren: " + currentUser.name + "\n\n" + items.join("\n");
-            window.open("https://wa.me/?text=" + encodeURIComponent(waText), "_blank");
+            // %0A kullanılarak WhatsApp API için güvenli alt satıra geçiş sağlandı
+            var waText = "*KORDON SİPARİŞ (" + currentOrderCat + ")*%0A" + 
+                         "Siparişi Veren: " + currentUser.name + "%0A%0A" + 
+                         items.join("%0A");
+            
+            window.open("https://wa.me/?text=" + waText, "_blank");
             
             orderCounts = {}; loadOrderTemplate(currentOrderCat, null);
         }
@@ -515,6 +551,7 @@
             db.ref(dbRoot + '/todos/' + newTodo.id).set(newTodo);
             document.getElementById('todoInput').value = "";
             logAction("Görev Eklendi", "Yeni görev: " + txt);
+            sendPushNotification("📌 Yeni Görev", "Eklenen görev: " + txt);
         }
         function renderTodos() {
             const container = document.getElementById('todoContainer'); container.innerHTML = '';
@@ -543,11 +580,17 @@
 
         function sendAuditReport() {
             if(allLogs.length === 0) return alert("Arşivde hiç işlem yok.");
-            let csv = "data:text/csv;charset=utf-8,\uFEFFTarih;Personel;Islem Tipi;Detay\n";
+            // \r\n kullanarak Excel (CSV) için güvenli alt satıra geçiş sağlandı
+            let csv = "data:text/csv;charset=utf-8,\uFEFFTarih;Personel;Islem Tipi;Detay\r\n";
             [...allLogs].reverse().forEach(l => { 
-                csv += '"' + l.date + '";"' + l.user + '";"' + l.action + '";"' + l.detail + '"\n'; 
+                csv += '"' + l.date + '";"' + l.user + '";"' + l.action + '";"' + l.detail + '"\r\n'; 
             });
-            const link = document.createElement("a"); link.setAttribute("href", encodeURI(csv)); link.setAttribute("download", "Denetim_Raporu.csv"); document.body.appendChild(link); link.click(); document.body.removeChild(link);
+            const link = document.createElement("a"); 
+            link.setAttribute("href", encodeURI(csv)); 
+            link.setAttribute("download", "Denetim_Raporu.csv"); 
+            document.body.appendChild(link); 
+            link.click(); 
+            document.body.removeChild(link);
         }
 
         // PERSONEL YÖNETİMİ
