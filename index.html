@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KD Kordon Pro - Phase 5 (Autopilot & Gamification)</title>
+    <title>KD Kordon Pro - Phase 5 (Gamification & Performance)</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -120,7 +120,7 @@
         .drumpad-grid.edit-mode .pad { border: 2px dashed var(--danger-light); background: var(--bg-color); box-shadow: none; }
         .drumpad-grid.edit-mode .pad i, .drumpad-grid.edit-mode .pad-name { opacity: 0.5; }
 
-        /* Aktif SKT Swipe & Toplu Seçim - FAZ 4 UI DÜZELTMESİ */
+        /* Aktif SKT Swipe & Toplu Seçim */
         .swipe-container { position: relative; overflow: hidden; border-radius: var(--radius-md); background: var(--bg-color); margin-bottom:12px; border: 1px solid var(--border); }
         .swipe-bg { position: absolute; inset:0; display:flex; justify-content:space-between; align-items:center; color:white; font-size:22px; font-weight:800; border-radius: var(--radius-md); overflow:hidden; }
         .bg-left { background: var(--accent); width: 50%; height: 100%; display:flex; align-items:center; padding-left: 20px; }
@@ -214,8 +214,6 @@
             <div class="user-badge" onclick="triggerLogoutFlow()">
                 <i class="fa-solid fa-user-circle" style="font-size: 16px;"></i> 
                 <span id="headerUserName">Personel</span> 
-                <!-- PUAN SİSTEMİ GÖSTERGESİ -->
-                <span id="headerUserPoints" style="color:var(--warning); font-size:12px; margin-left:8px; border-left:1px solid var(--danger); padding-left:8px;"><i class="fa-solid fa-star"></i> 0</span>
             </div>
             <div class="header-actions">
                 <button class="icon-btn" onclick="requestNotificationPermission()" id="bellBtn"><i class="fa-regular fa-bell"></i></button>
@@ -244,8 +242,8 @@
 
             <!-- 2. ÜRETİM (DRUMPAD) -->
             <div id="tab-library" class="tab-pane active">
-
-                <!-- ŞİMŞEK ARAMA, BARKOD VE SESLİ ASİSTAN (FAZ 4 - ARAMA OPTİMİZASYONU) -->
+                
+                <!-- ŞİMŞEK ARAMA, BARKOD VE SESLİ ASİSTAN -->
                 <div style="display:flex; gap:10px; margin-bottom: 20px; align-items:center;">
                     <div style="position: relative; flex: 1;">
                         <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 18px; top: 16px; color: var(--text-muted);"></i>
@@ -301,12 +299,6 @@
             <!-- 4. GÖREVLER & DİJİTAL PANO -->
             <div id="tab-todos" class="tab-pane">
                 <h3 style="font-size: 22px; font-weight: 700; color: var(--text-main); margin-bottom: 20px;">Görev Panosu</h3>
-                
-                <!-- EKİPMAN BAKIM RADARI (FAZ 5 - FONKSİYONEL) -->
-                <h4 style="font-size:14px; font-weight:700; color:var(--text-main); margin-bottom:10px;">Demirbaş Bakım Radarı</h4>
-                <div class="chips-container" id="maintenanceRadarContainer" style="margin-bottom: 25px;">
-                    <!-- JS ile Doldurulacak -->
-                </div>
 
                 <div style="background:var(--warning-light); padding:16px; border-radius:var(--radius-md); margin-bottom:20px;">
                     <h4 style="font-size:13px; font-weight:700; color:var(--warning); margin-bottom:10px; display:flex; align-items:center; gap:8px;">
@@ -364,14 +356,15 @@
         <div class="modal-content">
             <div class="drag-handle"></div>
             <h3 style="font-size:24px; font-weight:800; color:var(--text-main); margin-bottom:10px;">Çıkış Protokolü</h3>
-            <p style="color:var(--text-muted); font-size:14px; margin-bottom: 25px; line-height:1.5;">Güvenli bir şekilde vardiyayı devretmek için lütfen aşağıdaki adımları doğrulayın:</p>
+            <p style="color:var(--text-muted); font-size:14px; margin-bottom: 25px; line-height:1.5;">Vardiya puanını yükseltmek için görevleri tamamla.</p>
             
             <label class="closing-cb-label"><input type="checkbox" class="closing-cb"> Kasa sayımı eksiksiz tamamlandı.</label>
             <label class="closing-cb-label"><input type="checkbox" class="closing-cb"> Çöpler atıldı, bar temizlendi.</label>
             <label class="closing-cb-label"><input type="checkbox" class="closing-cb"> Dolap dereceleri (+4 / -18) kontrol edildi.</label>
             <label class="closing-cb-label"><input type="checkbox" class="closing-cb"> Gün sonu fişleri ve evraklar düzenlendi.</label>
 
-            <button class="btn btn-primary" id="finishClosingBtn" disabled style="margin-top:25px; opacity:0.4; transition: opacity 0.3s;" onclick="showSummary()">Vardiyayı Tamamla</button>
+            <!-- FAZ 5: DISABLED KALDIRILDI -->
+            <button class="btn btn-primary" id="finishClosingBtn" style="margin-top:25px; transition: var(--transition);" onclick="showSummary()">Vardiyayı Tamamla</button>
             <button class="btn" style="margin-top:10px; background:transparent; color:var(--text-muted);" onclick="closeModal('checklistModal')">İptal Et</button>
         </div>
     </div>
@@ -383,7 +376,7 @@
             <div style="width:80px; height:80px; background:var(--success-light); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
                 <i class="fa-solid fa-star" style="font-size: 36px; color: var(--success);"></i>
             </div>
-            <h3 style="font-size:24px; font-weight:800; margin-bottom:15px; color:var(--text-main);">Harika İş Çıkardın!</h3>
+            <h3 style="font-size:24px; font-weight:800; margin-bottom:15px; color:var(--text-main);">Vardiya Tamamlandı!</h3>
             <p id="summaryText" style="color:var(--text-muted); font-size:15px; margin-bottom:30px; line-height:1.6;"></p>
             <button class="btn btn-primary" onclick="executeLogout()">Sistemden Çık ve Dinlen</button>
         </div>
@@ -405,7 +398,7 @@
             <div class="admin-grid" style="margin-top:15px;">
                 <div class="admin-card" onclick="openModal('usersModal');" style="background:var(--bg-color); border:none; padding:15px; border-radius:var(--radius-md); text-align:center; cursor:pointer;">
                     <i class="fa-solid fa-users" style="color:var(--accent); font-size:24px; margin-bottom:8px;"></i>
-                    <div style="font-weight:600; font-size:13px; color:var(--text-main);">Personel Yönetimi & Puanlar</div>
+                    <div style="font-weight:600; font-size:13px; color:var(--text-main);">Personel Yönetimi</div>
                 </div>
             </div>
             <button class="btn" style="margin-top:25px; background:var(--danger-light); color:var(--danger);" onclick="confirmLogout()">Sistemden Çıkış Yap</button>
@@ -482,7 +475,7 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-        const dbRoot = 'kd_kordon_pro_v15'; // Gamification & Maintenance Root
+        const dbRoot = 'kd_kordon_pro_v11'; 
 
         let currentUser = null; 
         let currentPin = "";
@@ -495,15 +488,6 @@
         
         let lastActionData = null;
         let undoTimeout = null;
-
-        // DEMİRBAŞ BAKIM VERİTABANI
-        const defaultMaintenance = {
-            "m1": { name: "Espresso Ters Yıkama", periodDays: 3, lastDone: Date.now() - (4*86400000) }, // Süresi dolmuş simülasyon
-            "m2": { name: "Buz Makinesi Temizliği", periodDays: 30, lastDone: Date.now() - (28*86400000) }, // Yaklaşmış simülasyon
-            "m3": { name: "Su Arıtma Filtresi", periodDays: 180, lastDone: Date.now() - (10*86400000) },
-            "m4": { name: "Değirmen Dişli Temizliği", periodDays: 7, lastDone: Date.now() - (2*86400000) }
-        };
-        let maintenanceDB = {};
 
         window.addEventListener('offline', () => { document.getElementById('offlineBanner').style.display = 'block'; });
         window.addEventListener('online', () => { document.getElementById('offlineBanner').style.display = 'none'; showToast("Bağlantı sağlandı."); });
@@ -578,7 +562,7 @@
                 clearTimeout(dbTimeout);
                 const data = snap.val();
                 if(!data) {
-                    const masterUser = { name: "Yusuf (Yönetici)", role: "admin", pin: "1923", points: 0 };
+                    const masterUser = { name: "Yusuf (Yönetici)", role: "admin", pin: "1923" };
                     db.ref(`${dbRoot}/users/1923`).set(masterUser);
                     usersDB = { "1923": masterUser };
                 } else {
@@ -619,19 +603,9 @@
             }
         }
         
-        // PUAN SİSTEMİ (GAMIFICATION) FAZ 5
-        function addPoints(pts) {
-            if(!currentUser.points) currentUser.points = 0;
-            currentUser.points += pts;
-            db.ref(`${dbRoot}/users/${currentUser.pin}/points`).set(currentUser.points);
-            document.getElementById('headerUserPoints').innerHTML = `<i class="fa-solid fa-star"></i> ${currentUser.points}`;
-        }
-
         function triggerLogoutFlow() {
             closeModal('adminModal');
             document.querySelectorAll('.closing-cb').forEach(cb => { cb.checked = false; cb.parentElement.classList.remove('checked'); });
-            document.getElementById('finishClosingBtn').disabled = true;
-            document.getElementById('finishClosingBtn').style.opacity = '0.4';
             openModal('checklistModal');
         }
 
@@ -639,22 +613,34 @@
             if(e.target.checked) e.target.parentElement.classList.add('checked');
             else e.target.parentElement.classList.remove('checked');
 
-            const allChecked = Array.from(document.querySelectorAll('.closing-cb')).every(cb => cb.checked);
-            const btn = document.getElementById('finishClosingBtn');
-            btn.disabled = !allChecked;
-            btn.style.opacity = allChecked ? '1' : '0.4';
-            if(allChecked && navigator.vibrate) navigator.vibrate(50);
+            if(e.target.checked && navigator.vibrate) navigator.vibrate(50);
         }
 
+        // FAZ 5: PUANLAMA SİSTEMİ
         function showSummary() {
             closeModal('checklistModal');
             const todayStr = new Date().toLocaleDateString('tr-TR');
             const myLogs = allLogs.filter(l => l.user === currentUser.name && l.date.includes(todayStr));
             const completedCount = myLogs.filter(l => l.action.includes('Tüketildi') || l.action.includes('İmha')).length;
             
-            let summaryHtml = `Bugün senin vardiyanda toplam <b>${completedCount}</b> adet ürün başarıyla sistemden düşüldü.<br><br>Günün yorgunluğunu atma vakti geldi. Güncel Puanın: <b style="color:var(--warning);">${currentUser.points || 0}</b>.`;
+            // Puan hesaplama
+            const allCheckboxes = document.querySelectorAll('.closing-cb');
+            let checkedCount = 0;
+            allCheckboxes.forEach(cb => { if(cb.checked) checkedCount++; });
+            const score = Math.round((checkedCount / allCheckboxes.length) * 100);
+
+            let scoreText = score === 100 ? "KUSURSUZ VARDİYA!" : (score >= 50 ? "İDARE EDER" : "DİKKATSİZ!");
+            let scoreColor = score === 100 ? "var(--success)" : (score >= 50 ? "var(--warning)" : "var(--danger)");
+
+            let summaryHtml = `Bugün senin vardiyanda toplam <b>${completedCount}</b> ürün işlemi yapıldı.<br><br>
+            <div style="font-size: 42px; font-weight: 800; color: ${scoreColor}; margin: 10px 0;">%${score}</div>
+            <div style="font-weight:700; color:${scoreColor}; margin-bottom:20px; font-size:14px;">VARDİYA PUANI (${scoreText})</div>
+            Günün yorgunluğunu atma vakti geldi, iyi dinlenmeler!`;
+            
             document.getElementById('summaryText').innerHTML = summaryHtml;
             openModal('summaryModal');
+            
+            logAction("Vardiya Kapanışı", `Puan: %${score}`);
         }
 
         function executeLogout() {
@@ -668,7 +654,6 @@
             appLoadTime = Date.now();
             document.getElementById('appContent').style.display = 'block';
             document.getElementById('headerUserName').innerText = currentUser.name;
-            document.getElementById('headerUserPoints').innerHTML = `<i class="fa-solid fa-star"></i> ${currentUser.points || 0}`;
             
             if(currentUser.role === 'admin') {
                 document.getElementById('adminBtn').style.display = 'flex';
@@ -708,16 +693,6 @@
                 document.getElementById('shiftNoteArea').value = snap.val() || "";
             });
 
-            db.ref(`${dbRoot}/maintenance`).on('value', snap => {
-                if(!snap.val()) {
-                    db.ref(`${dbRoot}/maintenance`).set(defaultMaintenance);
-                    maintenanceDB = defaultMaintenance;
-                } else {
-                    maintenanceDB = snap.val();
-                }
-                renderMaintenanceRadar();
-            });
-
             db.ref(`${dbRoot}/todos`).on('child_added', snap => {
                 const t = snap.val();
                 if(t.timestamp && t.timestamp > appLoadTime && t.addedBy !== currentUser.name) {
@@ -733,61 +708,123 @@
             });
 
             setInterval(renderActiveList, 60000);
-            setInterval(renderMaintenanceRadar, 3600000); // Saatte bir bakım radarını güncelle
         }
 
-        // DEMİRBAŞ BAKIM RADARI İŞLEVİ (FAZ 5)
-        function renderMaintenanceRadar() {
-            const container = document.getElementById('maintenanceRadarContainer');
-            container.innerHTML = '';
-            const now = Date.now();
-
-            Object.keys(maintenanceDB).forEach(key => {
-                const m = maintenanceDB[key];
-                const targetDate = m.lastDone + (m.periodDays * 24 * 60 * 60 * 1000);
-                const diff = targetDate - now;
-                const daysLeft = Math.ceil(diff / (1000 * 60 * 60 * 24));
-
-                let statusClass = "success";
-                let text = `${m.name} (${daysLeft} Gün)`;
-                let icon = "fa-check-circle";
-
-                if (daysLeft <= 0) {
-                    statusClass = "danger";
-                    text = `${m.name} (Süresi Doldu)`;
-                    icon = "fa-triangle-exclamation";
-                } else if (daysLeft <= 3) {
-                    statusClass = "warning";
-                    text = `${m.name} (Son ${daysLeft} Gün)`;
-                    icon = "fa-clock";
-                } else {
-                    statusClass = "normal"; 
-                    icon = "fa-shield-halved";
-                }
-
-                let styleStr = "";
-                if(statusClass === "danger") styleStr = "border-color:var(--danger); color:var(--danger); background:var(--danger-light);";
-                else if(statusClass === "warning") styleStr = "border-color:var(--warning); color:var(--warning); background:var(--warning-light);";
-                else styleStr = "border-color:var(--border); color:var(--text-muted); background:var(--surface-solid);";
-
-                container.innerHTML += `
-                    <div class="chip" style="${styleStr} cursor:pointer; flex-shrink:0;" onclick="completeMaintenance('${key}')">
-                        <i class="fa-solid ${icon}"></i> ${text}
-                    </div>
-                `;
-            });
-        }
-
-        function completeMaintenance(key) {
-            const m = maintenanceDB[key];
-            if(confirm(`${m.name} bakımını yaptığınızı onaylıyor musunuz?`)) {
-                db.ref(`${dbRoot}/maintenance/${key}/lastDone`).set(Date.now());
-                logAction("Bakım Yapıldı", `${m.name} bakımı tamamlandı.`);
-                addPoints(20); 
-                showToast("Bakım onaylandı! +20 Puan");
-            }
-        }
-
+        const defaultLibrary = [
+            {id:"L1", kategori:"Şarküteri, Süt ve Soslar", urun:"Süzme Beyaz Peynir", raf_omru:3, birim:"Gün"},
+            {id:"L2", kategori:"Şarküteri, Süt ve Soslar", urun:"Krem Peynir", raf_omru:3, birim:"Gün"},
+            {id:"L3", kategori:"Şarküteri, Süt ve Soslar", urun:"Kaşar Peyniri", raf_omru:5, birim:"Gün"},
+            {id:"L4", kategori:"Şarküteri, Süt ve Soslar", urun:"Mozarella Peyniri", raf_omru:5, birim:"Gün"},
+            {id:"L5", kategori:"Şarküteri, Süt ve Soslar", urun:"Cheddar", raf_omru:5, birim:"Gün"},
+            {id:"L6", kategori:"Şarküteri, Süt ve Soslar", urun:"Burger Peyniri", raf_omru:5, birim:"Gün"},
+            {id:"L7", kategori:"Şarküteri, Süt ve Soslar", urun:"Koyun Peyniri", raf_omru:5, birim:"Gün"},
+            {id:"L8", kategori:"Şarküteri, Süt ve Soslar", urun:"Parmesan Peyniri (Toz)", raf_omru:5, birim:"Gün"},
+            {id:"L9", kategori:"Şarküteri, Süt ve Soslar", urun:"Cheddar Sos", raf_omru:2, birim:"Gün"},
+            {id:"L10", kategori:"Şarküteri, Süt ve Soslar", urun:"Avokado Sos", raf_omru:3, birim:"Gün"},
+            {id:"L11", kategori:"Şarküteri, Süt ve Soslar", urun:"Pesto Sos", raf_omru:5, birim:"Gün"},
+            {id:"L12", kategori:"Şarküteri, Süt ve Soslar", urun:"Sezar Sos", raf_omru:7, birim:"Gün"},
+            {id:"L13", kategori:"Şarküteri, Süt ve Soslar", urun:"Salam", raf_omru:2, birim:"Gün"},
+            {id:"L14", kategori:"Şarküteri, Süt ve Soslar", urun:"Jambon", raf_omru:2, birim:"Gün"},
+            {id:"L15", kategori:"Şarküteri, Süt ve Soslar", urun:"Hindi Füme", raf_omru:2, birim:"Gün"},
+            {id:"L16", kategori:"Şarküteri, Süt ve Soslar", urun:"Yoğurt", raf_omru:3, birim:"Gün"},
+            {id:"L17", kategori:"Şarküteri, Süt ve Soslar", urun:"Krema", raf_omru:2, birim:"Gün"},
+            {id:"L18", kategori:"Şarküteri, Süt ve Soslar", urun:"Süt Çeşitleri", raf_omru:2, birim:"Gün"},
+            {id:"L19", kategori:"Şarküteri, Süt ve Soslar", urun:"Laktozsuz Süt", raf_omru:2, birim:"Gün"},
+            {id:"L20", kategori:"Şarküteri, Süt ve Soslar", urun:"Bitkisel Süt Çeşitleri", raf_omru:4, birim:"Gün"},
+            {id:"L21", kategori:"Şarküteri, Süt ve Soslar", urun:"Tereyağı", raf_omru:7, birim:"Gün"},
+            {id:"L22", kategori:"Şarküteri, Süt ve Soslar", urun:"Yumurta (Kırılmış)", raf_omru:0, birim:"Hemen Kullandır"},
+            {id:"L23", kategori:"Şarküteri, Süt ve Soslar", urun:"Yumurta (Yıkanmış)", raf_omru:1, birim:"Gün"},
+            {id:"L24", kategori:"Şarküteri, Süt ve Soslar", urun:"Yumurta (Kirli)", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L25", kategori:"Şarküteri, Süt ve Soslar", urun:"Mayonez", raf_omru:1, birim:"Ay"},
+            {id:"L26", kategori:"Şarküteri, Süt ve Soslar", urun:"Zeytin Ezmesi", raf_omru:7, birim:"Gün"},
+            {id:"L27", kategori:"Şarküteri, Süt ve Soslar", urun:"Turşu", raf_omru:15, birim:"Gün"},
+            {id:"L28", kategori:"Meyve ve Sebze", urun:"Çilek", raf_omru:3, birim:"Gün"},
+            {id:"L29", kategori:"Meyve ve Sebze", urun:"Karpuz", raf_omru:3, birim:"Gün"},
+            {id:"L30", kategori:"Meyve ve Sebze", urun:"Domates", raf_omru:5, birim:"Gün"},
+            {id:"L31", kategori:"Meyve ve Sebze", urun:"Salatalık", raf_omru:5, birim:"Gün"},
+            {id:"L32", kategori:"Meyve ve Sebze", urun:"Muz", raf_omru:5, birim:"Gün"},
+            {id:"L33", kategori:"Meyve ve Sebze", urun:"Havuç", raf_omru:7, birim:"Gün"},
+            {id:"L34", kategori:"Meyve ve Sebze", urun:"Portakal", raf_omru:7, birim:"Gün"},
+            {id:"L35", kategori:"Meyve ve Sebze", urun:"Greyfurt", raf_omru:7, birim:"Gün"},
+            {id:"L36", kategori:"Meyve ve Sebze", urun:"Limon", raf_omru:7, birim:"Gün"},
+            {id:"L37", kategori:"Meyve ve Sebze", urun:"Kıvırcık", raf_omru:3, birim:"Gün"},
+            {id:"L38", kategori:"Meyve ve Sebze", urun:"Maydanoz", raf_omru:3, birim:"Gün"},
+            {id:"L39", kategori:"Meyve ve Sebze", urun:"Nane", raf_omru:3, birim:"Gün"},
+            {id:"L40", kategori:"Meyve ve Sebze", urun:"Brokoli", raf_omru:3, birim:"Gün"},
+            {id:"L41", kategori:"Meyve ve Sebze", urun:"Pancar", raf_omru:3, birim:"Gün"},
+            {id:"L42", kategori:"Meyve ve Sebze", urun:"Rezene", raf_omru:5, birim:"Gün"},
+            {id:"L43", kategori:"Meyve ve Sebze", urun:"Kereviz Sapı", raf_omru:5, birim:"Gün"},
+            {id:"L44", kategori:"Meyve ve Sebze", urun:"Taze Zencefil", raf_omru:5, birim:"Gün"},
+            {id:"L45", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Kapari Salata", raf_omru:2, birim:"Gün"},
+            {id:"L46", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Tartar Sos", raf_omru:2, birim:"Gün"},
+            {id:"L47", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Tavuklu Sezar Salata", raf_omru:2, birim:"Gün"},
+            {id:"L48", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Ton Balıklı Salata", raf_omru:2, birim:"Gün"},
+            {id:"L49", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Amerikan Salatası", raf_omru:2, birim:"Gün"},
+            {id:"L50", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Hindistan Cevizi Püresi", raf_omru:2, birim:"Gün"},
+            {id:"L51", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Kırmızı Meyve Püresi", raf_omru:3, birim:"Gün"},
+            {id:"L52", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Dondurmalar", raf_omru:15, birim:"Gün"},
+            {id:"L53", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Spesiyal Çikolatalar", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L54", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Trüf Çikolatalar", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L55", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Lavi Çikolatalar", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L56", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Roche Çikolatalar", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L57", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Dondurma Külahı", raf_omru:15, birim:"Gün"},
+            {id:"L58", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Renkli Külahlar", raf_omru:1, birim:"Ay"},
+            {id:"L59", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Kalp Gofret", raf_omru:1, birim:"Ay"},
+            {id:"L60", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Mğz.da Çekilen Türk Kahvesi", raf_omru:0, birim:"Günlük"},
+            {id:"L61", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Öğütülmüş Kahveler", raf_omru:21, birim:"Gün"},
+            {id:"L62", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Çekirdek Kahveler", raf_omru:4, birim:"Ay"},
+            {id:"L63", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Salepli İçecek Tozu", raf_omru:4, birim:"Ay"},
+            {id:"L64", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Tuzlu Krmll. Spesiyal", raf_omru:14, birim:"Gün"},
+            {id:"L65", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Limonata", raf_omru:2, birim:"Gün"},
+            {id:"L66", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Cold Brew", raf_omru:0, birim:"Günlük"},
+            {id:"L67", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Soğuk Espresso", raf_omru:0, birim:"Günlük"},
+            {id:"L68", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Soğuk Türk Kahvesi", raf_omru:0, birim:"Günlük"},
+            {id:"L69", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Sıcak Salepli İçecek", raf_omru:0, birim:"Günlük"},
+            {id:"L70", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Sıcak Çikolatalı İçecek", raf_omru:0, birim:"Günlük"},
+            {id:"L71", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"NO Serisi Hazırlık", raf_omru:0, birim:"Günlük"},
+            {id:"L72", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Choco Süt", raf_omru:1, birim:"Gün"},
+            {id:"L73", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"DRAFT Latte", raf_omru:3, birim:"Gün"},
+            {id:"L74", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"DRAFT Cold Brew", raf_omru:3, birim:"Gün"},
+            {id:"L75", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"DRAFT Americano", raf_omru:3, birim:"Gün"},
+            {id:"L76", kategori:"Paketli & Kuru Gıdalar", urun:"Kırık Fındık", raf_omru:1, birim:"Ay"},
+            {id:"L77", kategori:"Paketli & Kuru Gıdalar", urun:"Kırık Ceviz", raf_omru:1, birim:"Ay"},
+            {id:"L78", kategori:"Paketli & Kuru Gıdalar", urun:"Badem Ezmesi", raf_omru:1, birim:"Ay"},
+            {id:"L79", kategori:"Paketli & Kuru Gıdalar", urun:"Gofrik Kreması", raf_omru:3, birim:"Ay"},
+            {id:"L80", kategori:"Paketli & Kuru Gıdalar", urun:"Yer Fıstığı Ezmesi", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L81", kategori:"Paketli & Kuru Gıdalar", urun:"Fındık Kreması", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L82", kategori:"Paketli & Kuru Gıdalar", urun:"Tahin", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L83", kategori:"Paketli & Kuru Gıdalar", urun:"Bal", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L84", kategori:"Paketli & Kuru Gıdalar", urun:"Yoğurtlu Dondurma Tozu", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L85", kategori:"Paketli & Kuru Gıdalar", urun:"Hindistan Cevizi Tozu", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L86", kategori:"Paketli & Kuru Gıdalar", urun:"Karabiber", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L87", kategori:"Paketli & Kuru Gıdalar", urun:"Tarçın", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L88", kategori:"Paketli & Kuru Gıdalar", urun:"Çörekotu", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L89", kategori:"Paketli & Kuru Gıdalar", urun:"Zerdeçal Latte Baharatı", raf_omru:6, birim:"Ay"},
+            {id:"L90", kategori:"Paketli & Kuru Gıdalar", urun:"Nar Ekşisi", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L91", kategori:"Paketli & Kuru Gıdalar", urun:"Renkli Crispy", raf_omru:3, birim:"Ay"},
+            {id:"L92", kategori:"Paketli & Kuru Gıdalar", urun:"Şuruplar", raf_omru:4, birim:"Ay"},
+            {id:"L93", kategori:"Paketli & Kuru Gıdalar", urun:"Meyveli Soslar", raf_omru:1, birim:"Ay"},
+            {id:"L94", kategori:"Paketli & Kuru Gıdalar", urun:"Çikolata Sos", raf_omru:2, birim:"Ay"},
+            {id:"L95", kategori:"Paketli & Kuru Gıdalar", urun:"Karamel Sos", raf_omru:2, birim:"Ay"},
+            {id:"L96", kategori:"Paketli & Kuru Gıdalar", urun:"Pudra Şekeri", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L97", kategori:"Paketli & Kuru Gıdalar", urun:"Küp Şeker", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L98", kategori:"Paketli & Kuru Gıdalar", urun:"Yaban Mersini", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L99", kategori:"Paketli & Kuru Gıdalar", urun:"Yulaf Ezmesi", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L100", kategori:"Paketli & Kuru Gıdalar", urun:"Granola", raf_omru:1, birim:"Ay"},
+            {id:"L101", kategori:"Paketli & Kuru Gıdalar", urun:"Müsli", raf_omru:2, birim:"Ay"},
+            {id:"L102", kategori:"Paketli & Kuru Gıdalar", urun:"Chia Tohumu", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L103", kategori:"Paketli & Kuru Gıdalar", urun:"Protein Tozu", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L104", kategori:"Paketli & Kuru Gıdalar", urun:"Rende Çikolata", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L105", kategori:"Paketli & Kuru Gıdalar", urun:"Para Çikolata", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L106", kategori:"Paketli & Kuru Gıdalar", urun:"Beyaz Kuvertür", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L107", kategori:"Paketli & Kuru Gıdalar", urun:"Sütlü Kuvertür", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L108", kategori:"Paketli & Kuru Gıdalar", urun:"Bitter Kuvertür", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L109", kategori:"Paketli & Kuru Gıdalar", urun:"Toz Bisküvi", raf_omru:21, birim:"Gün"},
+            {id:"L110", kategori:"Paketli & Kuru Gıdalar", urun:"Fıstık Toz", raf_omru:21, birim:"Gün"},
+            {id:"L111", kategori:"Paketli & Kuru Gıdalar", urun:"Fıstık Tane", raf_omru:1, birim:"Ay"},
+            {id:"L112", kategori:"Paketli & Kuru Gıdalar", urun:"Kavanoz Vişne Sos", raf_omru:3, birim:"Gün"}
+        ];
+        
         let currentLibFilter = 'Tümü';
 
         function toggleEditMode() {
@@ -850,15 +887,8 @@
             
             if(navigator.vibrate) navigator.vibrate([50, 50]);
             
-            let ptsText = "";
-            if(resultType === 'Tüketildi') {
-                const totalPts = itemsToProcess.length * 5;
-                addPoints(totalPts);
-                ptsText = ` <span style="color:var(--warning);">+${totalPts} Puan</span>`;
-            }
-
             const t = document.getElementById('toastNotification');
-            t.innerHTML = `<span style="font-weight:600;">${itemsToProcess.length} ürün işlendi.${ptsText}</span> <button id="undoBtn" style="margin-left:15px; background:var(--accent-light); color:var(--accent); border:none; padding:6px 14px; border-radius:20px; font-weight:700; cursor:pointer; font-family:inherit;">Geri Al</button>`;
+            t.innerHTML = `<span style="font-weight:600;">${itemsToProcess.length} ürün işlendi.</span> <button id="undoBtn" style="margin-left:15px; background:var(--accent-light); color:var(--accent); border:none; padding:6px 14px; border-radius:20px; font-weight:700; cursor:pointer; font-family:inherit;">Geri Al</button>`;
             t.style.background = 'var(--surface-solid)';
             t.classList.add('show');
             
@@ -867,7 +897,6 @@
                 clearTimeout(undoTimeout);
                 if(lastActionData && lastActionData.type === 'bulk') {
                     lastActionData.items.forEach(item => { db.ref(`${dbRoot}/active/${item.id}`).set(item); });
-                    if(resultType === 'Tüketildi') addPoints(-(itemsToProcess.length * 5)); // Geri alırsak puanı düş
                     lastActionData = null;
                 }
             };
@@ -1022,7 +1051,6 @@
             if(navigator.vibrate) navigator.vibrate(50);
         }
 
-        // FAZ 4: GÜÇLENDİRİLMİŞ SESLİ ARAMA (DİREKT FİLTRELEME YAPAR)
         function startVoiceSearch() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRecognition) {
@@ -1042,11 +1070,11 @@
             recognition.onspeechend = () => { recognition.stop(); };
             
             recognition.onresult = (event) => {
-                const transcript = event.results[0][0].transcript.toLowerCase().trim();
+                const transcript = event.results[0][0].transcript.trim();
                 const searchInput = document.getElementById('libSearchInput');
                 searchInput.value = transcript.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,""); 
                 
-                document.querySelector('#libChips .chip').click();
+                document.querySelector('#libChips .chip').click(); // Tümü seç
                 renderLibraryDrumpad();
                 showToast(`Arama: "${searchInput.value}"`);
             };
@@ -1059,7 +1087,6 @@
             recognition.start();
         }
 
-        // BARKOD KAMERA ASİSTANI (FAZ 3)
         function startBarcodeScanner() {
             openModal('barcodeModal');
             const video = document.getElementById('cameraStream');
@@ -1068,7 +1095,6 @@
                 .then(function(stream) {
                     video.srcObject = stream;
                     video.play();
-                    // Demo için 3 saniye sonra otomatik "Süt" ürününü eşleştir
                     setTimeout(() => {
                         if(!document.getElementById('barcodeModal').classList.contains('active')) return;
                         stopBarcodeScanner();
@@ -1091,7 +1117,6 @@
             if(video.srcObject) { video.srcObject.getTracks().forEach(track => track.stop()); }
         }
 
-        // BLUETOOTH ETİKET YAZICI (FAZ 3)
         async function printLabel(name, expires) {
             if (!navigator.bluetooth) {
                 alert("Cihazınız Bluetooth bağlantısını desteklemiyor (Chrome gereklidir).");
@@ -1195,14 +1220,8 @@
             
             if(navigator.vibrate) navigator.vibrate([50, 50]);
             
-            let ptsText = "";
-            if(result === 'Tüketildi') {
-                addPoints(5);
-                ptsText = ` <span style="color:var(--warning);">+5 Puan</span>`;
-            }
-
             const t = document.getElementById('toastNotification');
-            t.innerHTML = `<span style="font-weight:600;">${item.name} ${result.toLowerCase()}${ptsText}</span> <button id="undoBtn" style="margin-left:15px; background:var(--accent-light); color:var(--accent); border:none; padding:6px 14px; border-radius:20px; font-weight:700; cursor:pointer; font-family:inherit;">Geri Al</button>`;
+            t.innerHTML = `<span style="font-weight:600;">${item.name} ${result.toLowerCase()}</span> <button id="undoBtn" style="margin-left:15px; background:var(--accent-light); color:var(--accent); border:none; padding:6px 14px; border-radius:20px; font-weight:700; cursor:pointer; font-family:inherit;">Geri Al</button>`;
             t.style.background = 'var(--surface-solid)';
             t.classList.add('show');
             
@@ -1211,7 +1230,6 @@
                 clearTimeout(undoTimeout);
                 if(lastActionData && lastActionData.type === 'single') {
                     db.ref(`${dbRoot}/active/${lastActionData.item.id}`).set(lastActionData.item);
-                    if(result === 'Tüketildi') addPoints(-5); // Geri alırsak puanı düş
                     lastActionData = null;
                 }
             };
@@ -1300,14 +1318,7 @@
                 `;
             });
         }
-        function toggleTodo(id, currentStatus) { 
-            db.ref(`${dbRoot}/todos/${id}`).update({ done: !currentStatus }); 
-            if(!currentStatus) {
-                logAction("Görev Tamamlandı", "Bir görev işaretlendi.");
-                addPoints(10);
-                showToast("Görev Tamamlandı! <span style='color:var(--warning);'>+10 Puan</span>");
-            }
-        }
+        function toggleTodo(id, currentStatus) { db.ref(`${dbRoot}/todos/${id}`).update({ done: !currentStatus }); }
         function deleteTodo(id) { db.ref(`${dbRoot}/todos/${id}`).remove(); }
 
         function openModal(id) { 
@@ -1359,19 +1370,13 @@
             for(const [pin, u] of Object.entries(usersDB)) {
                 const roleClass = u.role === 'admin' ? 'role-admin' : 'role-staff';
                 const roleText = u.role === 'admin' ? 'Yönetici' : 'Personel';
-                const pts = u.points || 0;
                 container.innerHTML += `
                     <div class="user-row">
-                        <div style="flex:1;">
+                        <div>
                             <div style="font-weight:700; font-size:15px; color:var(--text-main);">${u.name}</div>
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
-                                <div style="font-size:12px; color:var(--text-muted); font-family:monospace;">PIN: ${pin}</div>
-                                <div style="font-size:12px; font-weight:700; color:var(--warning); display:flex; align-items:center; gap:4px;">
-                                    <i class="fa-solid fa-star"></i> ${pts} Puan
-                                </div>
-                            </div>
+                            <div style="font-size:12px; color:var(--text-muted); margin-top:4px; font-family:monospace;">PIN: ${pin}</div>
                         </div>
-                        <div style="display:flex; align-items:center; gap:12px; margin-left:15px;">
+                        <div style="display:flex; align-items:center; gap:12px;">
                             <span class="role-badge ${roleClass}">${roleText}</span>
                             ${pin !== '1923' ? `<button onclick="deleteUser('${pin}')" style="background:var(--danger-light); width:32px; height:32px; border-radius:50%; border:none; color:var(--danger); cursor:pointer; transition:var(--transition); display:flex; align-items:center; justify-content:center;"><i class="fa-solid fa-trash"></i></button>` : ''}
                         </div>
@@ -1388,7 +1393,7 @@
             if(!name || pin.length !== 4) return alert("Lütfen eksiksiz ve 4 haneli PIN girin.");
             if(usersDB[pin]) return alert("Bu PIN kullanımda.");
 
-            db.ref(`${dbRoot}/users/${pin}`).set({ name: name, role: role, pin: pin, points: 0 });
+            db.ref(`${dbRoot}/users/${pin}`).set({ name: name, role: role, pin: pin });
             document.getElementById('newUserName').value = ""; document.getElementById('newUserPin').value = "";
             showToast("Personel başarıyla eklendi.");
             renderUsersList();
