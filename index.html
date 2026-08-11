@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KD Kordon Pro - Audit Edition</title>
+    <title>KD Kordon Pro - Full Control Edition</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -83,6 +83,9 @@
         .pad i { font-size: 22px; margin-bottom: 6px; color: var(--kd-gold); }
         .pad-name { font-size: 10px; font-weight: 800; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         .pad-time { position:absolute; top:4px; right:4px; font-size:8px; background:var(--bg-color); padding:2px 4px; border-radius:4px; font-weight:bold; color:var(--text-muted); border:1px solid var(--border);}
+        
+        /* Ürün silme çarpı butonu */
+        .pad-delete { position:absolute; bottom:4px; right:4px; font-size:10px; background:var(--danger-light); color:var(--danger); width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:none; z-index:3; cursor:pointer; }
 
         /* Aktif SKT Swipe */
         .swipe-container { position: relative; overflow: hidden; border-radius: var(--radius-md); background: var(--border); margin-bottom:10px; }
@@ -90,7 +93,7 @@
         .bg-left { background: var(--success); width: 50%; height: 100%; display:flex; align-items:center; }
         .bg-right { background: var(--danger); width: 50%; height: 100%; display:flex; justify-content:flex-end; align-items:center; position:absolute; right:0; top:0; padding-right:25px;}
         .active-card { background: var(--surface); position: relative; z-index: 2; box-shadow: var(--shadow-sm); padding: 14px; transition: transform 0.2s ease-out; border-left:4px solid var(--success); }
-        .timer-display { font-size: 18px; font-weight: 800; margin: 4px 0; color: var(--success); }
+        .timer-display { font-size: 16px; font-weight: 800; margin: 4px 0; color: var(--success); }
         .progress-track { background: var(--bg-color); height: 6px; border-radius: 10px; overflow: hidden; margin-top: 8px; }
         .progress-fill { height: 100%; background: var(--success); border-radius: 10px; transition: width 1s linear; }
 
@@ -209,7 +212,7 @@
                 <div id="activeList" class="list-grid"></div>
             </div>
 
-            <!-- 4. GÖREVLER & DİJİTAL PANO -->
+            <!-- 4. GÖREVLER -->
             <div id="tab-todos" class="tab-pane">
                 <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 15px;">Vardiya Panosu</h3>
                 
@@ -222,7 +225,7 @@
                 </div>
 
                 <div style="display:flex; gap:8px; margin-bottom:15px;">
-                    <input type="text" id="todoInput" class="form-input" style="margin-bottom:0;" placeholder="Yeni görev yazın...">
+                    <input type="text" id="todoInput" class="form-input" style="margin-bottom:0;" placeholder="Görev yazın...">
                     <button class="btn btn-primary" style="width:50px; padding:0;" onclick="addTodo()"><i class="fa-solid fa-plus"></i></button>
                 </div>
                 <div class="modern-card" id="todoContainer" style="padding:10px 15px;"></div>
@@ -335,7 +338,7 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-        const dbRoot = 'kd_kordon_pro_v8'; 
+        const dbRoot = 'kd_kordon_pro_v9'; 
 
         let isDark = localStorage.getItem('kd_theme') === 'dark';
         if(isDark) document.body.classList.add('dark-mode'); 
@@ -344,7 +347,6 @@
         let currentPin = "";
         let usersDB = {};
         
-        // Broadcast Bildirimleri için yüklenme zamanı
         let appLoadTime = 0;
 
         document.addEventListener("DOMContentLoaded", () => {
@@ -417,16 +419,14 @@
             document.getElementById('appContent').style.display = 'block';
             document.getElementById('headerUserName').innerText = currentUser.name;
             
-            // --- ROL KONTROLÜ VE EKRAN DÜZENLEMESİ ---
             if(currentUser.role === 'admin') {
                 document.getElementById('adminBtn').style.display = 'flex';
                 document.getElementById('addProdBtn').style.display = 'block';
-                document.getElementById('navOrder').style.display = 'flex'; // Siparişi admin görebilir
-                switchTab('tab-order', document.getElementById('navOrder')); // Admin için default Sipariş sekmesi açılır
+                document.getElementById('navOrder').style.display = 'flex';
+                switchTab('tab-order', document.getElementById('navOrder'));
             } else {
-                // Personel için Sipariş gizlenir
                 document.getElementById('navOrder').style.display = 'none';
-                switchTab('tab-library', document.getElementById('navLibrary')); // Personel için default Üretim açılır
+                switchTab('tab-library', document.getElementById('navLibrary'));
             }
             
             showToast(`Hoşgeldin, ${currentUser.name}`);
@@ -455,12 +455,10 @@
                 allLogs = snap.val() ? Object.values(snap.val()) : [];
             });
             
-            // Vardiya Notu Dinleyicisi
             db.ref(`${dbRoot}/shiftNote`).on('value', snap => {
                 document.getElementById('shiftNoteArea').value = snap.val() || "";
             });
 
-            // YAYIN (BROADCAST) DİNLEYİCİLERİ
             db.ref(`${dbRoot}/todos`).on('child_added', snap => {
                 const t = snap.val();
                 if(t.timestamp && t.timestamp > appLoadTime && t.addedBy !== currentUser.name) {
@@ -477,7 +475,7 @@
                 }
             });
 
-            setInterval(renderActiveList, 60000);
+            setInterval(renderActiveList, 1000); // Sayaç her saniye güncellensin
         }
 
         const catIcons = { "Şarküteri, Süt ve Soslar": "fa-cheese", "Paketli & Kuru Gıdalar": "fa-box", "Meyve ve Sebze": "fa-apple-whole", "Çözündürülen / Dökme / Teşhir": "fa-ice-cream", "Kahveler, İçecekler ve Ön Hazırlık": "fa-mug-hot", "Paketli Şarküteri": "fa-bacon" };
@@ -549,14 +547,30 @@
             libraryDB.filter(p => currentLibFilter === 'Tümü' || p.kategori === currentLibFilter).forEach(p => {
                 let omurStr = (p.birim === "Günlük" || p.birim === "Hemen Kullandır" || p.birim === "ORJ SKT") ? p.birim : `${p.raf_omru} ${p.birim}`;
                 let icon = catIcons[p.kategori] || "fa-box";
+                
+                // Sadece yönetici (admin) ise ürün kartının üzerinde silme (X) butonu görünür
+                let deleteBtnHtml = (currentUser && currentUser.role === 'admin') ? 
+                    `<button class="pad-delete" onclick="event.stopPropagation(); deleteProduct('${p.id}')" title="Ürünü Sil"><i class="fa-solid fa-xmark"></i></button>` : '';
+
                 container.innerHTML += `
                     <div class="pad" onclick="startTracking('${p.id}')">
                         <div class="pad-time">${omurStr}</div>
                         <i class="fa-solid ${icon}"></i>
                         <div class="pad-name">${p.urun}</div>
+                        ${deleteBtnHtml}
                     </div>
                 `;
             });
+        }
+
+        // Yönetici için ürün silme fonksiyonu
+        function deleteProduct(id) {
+            if(currentUser.role !== 'admin') return alert("Bu işlem için yönetici yetkisi gerekiyor.");
+            if(confirm("Bu ürünü kütüphaneden silmek istediğinize emin misiniz?")) {
+                libraryDB = libraryDB.filter(p => p.id !== id);
+                db.ref(`${dbRoot}/library`).set(libraryDB);
+                showToast("Ürün silindi!");
+            }
         }
 
         function saveCustomProduct() {
@@ -603,7 +617,7 @@
             if(navigator.vibrate) navigator.vibrate(50);
         }
 
-        // AKTİF TAKİP VE KAYDIRMA
+        // AKTİF TAKİP VE GÜN / SAAT / DAKİKA HESAPLAMA
         function renderActiveList() {
             const container = document.getElementById('activeList'); container.innerHTML = '';
             if(activeItems.length === 0) { container.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted); font-size:13px;">Aktif takipte ürün yok.</div>`; return; }
@@ -617,11 +631,23 @@
                 let timeStr = "", color = "var(--success)";
                 let percent = Math.max(0, Math.min(100, (diff / total) * 100));
 
-                if(diff <= 0) { timeStr = "SÜRESİ DOLDU!"; color = "var(--danger)"; percent = 0; }
-                else {
-                    const h = Math.floor(diff / 3600000); const m = Math.floor((diff % 3600000) / 60000);
-                    timeStr = `${h}s ${m}d kaldı`;
-                    if(percent < 20) color = "var(--danger)"; else if(percent < 40) color = "var(--warning)";
+                if(diff <= 0) { 
+                    timeStr = "SÜRESİ DOLDU!"; 
+                    color = "var(--danger)"; 
+                    percent = 0; 
+                } else {
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    
+                    if (days > 0) {
+                        timeStr = `${days} Gün ${hours}s ${mins}d kaldı`;
+                    } else {
+                        timeStr = `${hours} Saat ${mins} Dakika kaldı`;
+                    }
+
+                    if(percent < 20) color = "var(--danger)"; 
+                    else if(percent < 40) color = "var(--warning)";
                 }
 
                 container.innerHTML += `
@@ -710,7 +736,7 @@
             orderCounts = {}; loadOrderTemplate(currentOrderCat, null);
         }
 
-        // GÖREVLER VE DİJİTAL PANO
+        // GÖREVLER
         function updateShiftNote() {
             db.ref(`${dbRoot}/shiftNote`).set(document.getElementById('shiftNoteArea').value);
         }
