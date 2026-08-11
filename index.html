@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KD Kordon Pro - Audit Edition</title>
+    <title>KD Kordon Pro - Full Library Edition</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -77,11 +77,11 @@
 
         /* SKT Drumpad */
         .drumpad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .pad { background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius-md); min-height: 100px; padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-sm); position: relative;}
+        .pad { background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius-md); min-height: 95px; padding: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-sm); position: relative;}
         .pad:active { transform: scale(0.95); background: var(--kd-gold-light); border-color: var(--kd-gold); }
-        .pad i { font-size: 24px; margin-bottom: 8px; color: var(--kd-gold); }
-        .pad-name { font-size: 11px; font-weight: 800; line-height: 1.2; }
-        .pad-time { position:absolute; top:4px; right:4px; font-size:9px; background:var(--bg-color); padding:2px 4px; border-radius:4px; font-weight:bold; color:var(--text-muted); border:1px solid var(--border);}
+        .pad i { font-size: 22px; margin-bottom: 6px; color: var(--kd-gold); }
+        .pad-name { font-size: 10px; font-weight: 800; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .pad-time { position:absolute; top:4px; right:4px; font-size:8px; background:var(--bg-color); padding:2px 4px; border-radius:4px; font-weight:bold; color:var(--text-muted); border:1px solid var(--border);}
 
         /* Aktif SKT Swipe */
         .swipe-container { position: relative; overflow: hidden; border-radius: var(--radius-md); background: var(--border); margin-bottom:10px; }
@@ -173,19 +173,28 @@
                     <h3 id="currentTemplateTitle" style="font-size: 16px; font-weight: 800;">Manav Listesi</h3>
                     <button onclick="resetCounters()" style="background:none; border:none; color:var(--text-muted); font-size:12px; font-weight:700;"><i class="fa-solid fa-rotate-left"></i> Sıfırla</button>
                 </div>
-                <div id="orderTemplateList" class="list-grid mb-4"></div>
+                <div id="orderTemplateList" class="list-grid" style="margin-bottom: 20px;"></div>
                 <button class="btn" style="background:#25D366; color:white; margin-top:15px;" onclick="sendOrderViaWhatsApp()"><i class="fa-brands fa-whatsapp"></i> Siparişi Gönder</button>
             </div>
 
             <!-- 2. ÜRETİM (DRUMPAD) -->
             <div id="tab-library" class="tab-pane">
-                <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 4px;">Bar & Ön Hazırlık</h3>
-                <p style="font-size:11px; color:var(--text-muted); margin-bottom:15px;">Takibini başlatacağınız ürüne dokunun.</p>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <div>
+                        <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 2px;">Üretim & SKT</h3>
+                        <p style="font-size:11px; color:var(--text-muted);">Takibini başlatacağınız ürüne dokunun.</p>
+                    </div>
+                    <button id="addProdBtn" onclick="openModal('addProdModal')" style="display:none; background:var(--kd-gold-light); color:var(--kd-dark); border:1px solid var(--kd-gold); padding:6px 12px; border-radius:12px; font-size:11px; font-weight:800;"><i class="fa-solid fa-plus"></i> Ekle</button>
+                </div>
+                
                 <div class="chips-container" id="libChips">
                     <div class="chip active" onclick="filterLib('Tümü', this)">Tümü</div>
-                    <div class="chip" onclick="filterLib('Garnitür', this)">🍋 Garnitür</div>
-                    <div class="chip" onclick="filterLib('Demleme', this)">☕ Demleme</div>
-                    <div class="chip" onclick="filterLib('Draft', this)">🍺 Draft</div>
+                    <div class="chip" onclick="filterLib('Şarküteri, Süt ve Soslar', this)">🥛 Süt & Sos</div>
+                    <div class="chip" onclick="filterLib('Paketli Şarküteri', this)">🧀 P. Şarküteri</div>
+                    <div class="chip" onclick="filterLib('Meyve ve Sebze', this)">🍎 Meyve</div>
+                    <div class="chip" onclick="filterLib('Paketli & Kuru Gıdalar', this)">🥫 Kuru Gıda</div>
+                    <div class="chip" onclick="filterLib('Çözündürülen / Dökme / Teşhir', this)">🍨 Çözündürülen</div>
+                    <div class="chip" onclick="filterLib('Kahveler, İçecekler ve Ön Hazırlık', this)">☕ Kahve/Ön Haz.</div>
                 </div>
                 <div class="drumpad-grid" id="drumpadContainer"></div>
             </div>
@@ -271,6 +280,35 @@
         </div>
     </div>
 
+    <!-- YENİ ÜRÜN EKLE MODALI -->
+    <div class="modal-overlay" id="addProdModal" onclick="closeOnOutsideClick(event, 'addProdModal')">
+        <div class="modal-content">
+            <div class="drag-handle"></div>
+            <h3 style="font-size:18px; margin-bottom:15px;">Yeni Ürün Ekle</h3>
+            <input type="text" id="newProdName" class="form-input" placeholder="Ürün Adı">
+            <select id="newProdCat" class="form-input">
+                <option value="Şarküteri, Süt ve Soslar">Süt ve Soslar</option>
+                <option value="Paketli & Kuru Gıdalar">Kuru Gıdalar</option>
+                <option value="Meyve ve Sebze">Meyve/Sebze</option>
+                <option value="Çözündürülen / Dökme / Teşhir">Teşhir/Çözündürülen</option>
+                <option value="Kahveler, İçecekler ve Ön Hazırlık">Kahveler/Ön Haz.</option>
+                <option value="Paketli Şarküteri">Paketli Şarküteri</option>
+            </select>
+            <div style="display:flex; gap:10px; margin-bottom: 20px;">
+                <input type="number" id="newProdTime" class="form-input" placeholder="Süre" style="flex:1; margin-bottom: 0;">
+                <select id="newProdUnit" class="form-input" style="flex:1; margin-bottom: 0;">
+                    <option value="Gün">Gün</option>
+                    <option value="Ay">Ay</option>
+                    <option value="Yıl">Yıl</option>
+                    <option value="Günlük">Gün Sonu</option>
+                    <option value="ORJ SKT">ORJ SKT</option>
+                    <option value="Hemen Kullandır">Hemen</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="saveCustomProduct()"><i class="fa-solid fa-plus"></i> Kütüphaneye Ekle</button>
+        </div>
+    </div>
+
     <div id="toastNotification" class="toast"><span id="toastText"></span></div>
 
     <!-- Firebase SDK -->
@@ -287,7 +325,7 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-        const dbRoot = 'kd_kordon_pro_v1';
+        const dbRoot = 'kd_kordon_pro_v3'; 
 
         let isDark = localStorage.getItem('kd_theme') === 'dark';
         if(isDark) document.body.classList.add('dark-mode'); 
@@ -303,7 +341,6 @@
         });
 
         function initDatabase() {
-            // Güvenlik: Firebase 8 saniyede yanıt vermezse dönen ikonu durdur ve hata göster.
             let dbTimeout = setTimeout(() => {
                 const spinner = document.getElementById('fullScreenSpinner');
                 if(spinner.style.display !== 'none') {
@@ -334,12 +371,8 @@
             });
         }
 
-        // --- PIN GİRİŞ SİSTEMİ ---
         function addPin(num) {
-            if(currentPin.length < 4) {
-                currentPin += num;
-                updatePinDisplay();
-            }
+            if(currentPin.length < 4) { currentPin += num; updatePinDisplay(); }
             if(currentPin.length === 4) submitPin();
         }
         function clearPin() { currentPin = ""; updatePinDisplay(); }
@@ -361,25 +394,30 @@
                 if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
             }
         }
-        function logout() {
-            localStorage.removeItem('kd_saved_pin');
-            location.reload();
-        }
+        function logout() { localStorage.removeItem('kd_saved_pin'); location.reload(); }
 
-        // --- UYGULAMA BAŞLATMA VE VERİ ÇEKME ---
-        let activeItems = [];
-        let todos = [];
-        let allLogs = [];
+        let activeItems = [], todos = [], allLogs = [];
 
         function launchApp() {
             document.getElementById('appContent').style.display = 'block';
             document.getElementById('headerUserName').innerText = currentUser.name;
-            if(currentUser.role === 'admin') document.getElementById('adminBtn').style.display = 'flex';
-            
+            if(currentUser.role === 'admin') {
+                document.getElementById('adminBtn').style.display = 'flex';
+                document.getElementById('addProdBtn').style.display = 'block';
+            }
             showToast("Hoşgeldin, " + currentUser.name);
-            
             loadOrderTemplate('Manav', document.querySelector('.chip'));
-            renderLibraryDrumpad();
+
+            db.ref(dbRoot + '/library').on('value', snap => {
+                const data = snap.val();
+                if(!data) {
+                    libraryDB = [...defaultLibrary];
+                    db.ref(dbRoot + '/library').set(libraryDB);
+                } else {
+                    libraryDB = Object.values(data);
+                }
+                renderLibraryDrumpad();
+            });
 
             db.ref(dbRoot + '/active').on('value', snap => {
                 activeItems = snap.val() ? Object.values(snap.val()) : [];
@@ -396,20 +434,63 @@
             setInterval(renderActiveList, 60000);
         }
 
-        // KÜTÜPHANE VE ÜRETİM (DRUMPAD)
-        const libraryDB = [
-            { id: "g1", name: "Dilim Limon", hours: 24, icon: "fa-lemon", cat: "Garnitür" },
-            { id: "g2", name: "Çilek", hours: 48, icon: "fa-seedling", cat: "Garnitür" },
-            { id: "g3", name: "Nane", hours: 24, icon: "fa-leaf", cat: "Garnitür" },
-            { id: "g4", name: "Dilim Elma", hours: 24, icon: "fa-apple-whole", cat: "Garnitür" },
-            { id: "d1", name: "Cold Brew", hours: 72, icon: "fa-glass-whiskey", cat: "Demleme" },
-            { id: "d2", name: "Limonata", hours: 48, icon: "fa-glass-water", cat: "Demleme" },
-            { id: "d3", name: "Soğuk Espresso", hours: 24, icon: "fa-coffee", cat: "Demleme" },
-            { id: "d4", name: "Çikosüt", hours: 24, icon: "fa-mug-hot", cat: "Demleme" },
-            { id: "dr1", name: "Draft Latte", hours: 24, icon: "fa-beer-mug-empty", cat: "Draft" },
-            { id: "dr2", name: "Draft Americano", hours: 24, icon: "fa-beer-mug-empty", cat: "Draft" },
-            { id: "dr3", name: "Draft Cold Brew", hours: 72, icon: "fa-beer-mug-empty", cat: "Draft" }
+        const catIcons = { "Şarküteri, Süt ve Soslar": "fa-cheese", "Paketli & Kuru Gıdalar": "fa-box", "Meyve ve Sebze": "fa-apple-whole", "Çözündürülen / Dökme / Teşhir": "fa-ice-cream", "Kahveler, İçecekler ve Ön Hazırlık": "fa-mug-hot", "Paketli Şarküteri": "fa-bacon" };
+
+        let libraryDB = [];
+        const defaultLibrary = [
+            {id:"L1", kategori:"Şarküteri, Süt ve Soslar", urun:"Koyun Peyniri", raf_omru:5, birim:"Gün"},
+            {id:"L2", kategori:"Şarküteri, Süt ve Soslar", urun:"Yumurta (Kırılmış)", raf_omru:0, birim:"Hemen Kullandır"},
+            {id:"L3", kategori:"Şarküteri, Süt ve Soslar", urun:"Parmesan (Toz)", raf_omru:5, birim:"Gün"},
+            {id:"L4", kategori:"Şarküteri, Süt ve Soslar", urun:"Yumurta (Yıkanmış)", raf_omru:1, birim:"Gün"},
+            {id:"L5", kategori:"Şarküteri, Süt ve Soslar", urun:"Cheddar Sos", raf_omru:2, birim:"Gün"},
+            {id:"L6", kategori:"Şarküteri, Süt ve Soslar", urun:"Kirli Yumurta", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L7", kategori:"Şarküteri, Süt ve Soslar", urun:"Avokado Sos", raf_omru:3, birim:"Gün"},
+            {id:"L8", kategori:"Şarküteri, Süt ve Soslar", urun:"Mayonez", raf_omru:1, birim:"Ay"},
+            {id:"L9", kategori:"Şarküteri, Süt ve Soslar", urun:"Pesto Sos", raf_omru:5, birim:"Gün"},
+            {id:"L10", kategori:"Şarküteri, Süt ve Soslar", urun:"Zeytin Ezmesi", raf_omru:7, birim:"Gün"},
+            {id:"L11", kategori:"Şarküteri, Süt ve Soslar", urun:"Turşu", raf_omru:15, birim:"Gün"},
+            {id:"L12", kategori:"Şarküteri, Süt ve Soslar", urun:"Sezar Sos", raf_omru:7, birim:"Gün"},
+            {id:"L13", kategori:"Paketli & Kuru Gıdalar", urun:"Kırık Fındık/Ceviz", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L14", kategori:"Paketli & Kuru Gıdalar", urun:"Badem Ezmesi", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L15", kategori:"Paketli & Kuru Gıdalar", urun:"Fıstık Püresi", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L16", kategori:"Paketli & Kuru Gıdalar", urun:"Granola / Müsli", raf_omru:1, birim:"Ay"},
+            {id:"L17", kategori:"Paketli & Kuru Gıdalar", urun:"Rende Çikolata", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L18", kategori:"Paketli & Kuru Gıdalar", urun:"Baharatlar", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L19", kategori:"Paketli & Kuru Gıdalar", urun:"Crispy Çeşitleri", raf_omru:3, birim:"Ay"},
+            {id:"L20", kategori:"Paketli & Kuru Gıdalar", urun:"Kare Bisküvi", raf_omru:21, birim:"Gün"},
+            {id:"L21", kategori:"Paketli & Kuru Gıdalar", urun:"Şuruplar", raf_omru:1, birim:"Ay"},
+            {id:"L22", kategori:"Paketli & Kuru Gıdalar", urun:"Meyveli Soslar", raf_omru:1, birim:"Ay"},
+            {id:"L23", kategori:"Paketli & Kuru Gıdalar", urun:"Çiko/Karamel Sos", raf_omru:2, birim:"Ay"},
+            {id:"L24", kategori:"Paketli & Kuru Gıdalar", urun:"Kavanoz Vişne Sos", raf_omru:3, birim:"Gün"},
+            {id:"L25", kategori:"Meyve ve Sebze", urun:"Çilek (Yıkanmış)", raf_omru:1, birim:"Gün"},
+            {id:"L26", kategori:"Meyve ve Sebze", urun:"Çilek (Yıkanmamış)", raf_omru:3, birim:"Gün"},
+            {id:"L27", kategori:"Meyve ve Sebze", urun:"Yeşillikler", raf_omru:3, birim:"Gün"},
+            {id:"L28", kategori:"Meyve ve Sebze", urun:"Karpuz", raf_omru:3, birim:"Gün"},
+            {id:"L29", kategori:"Meyve ve Sebze", urun:"Domates/Salatalık", raf_omru:3, birim:"Gün"},
+            {id:"L30", kategori:"Meyve ve Sebze", urun:"Muz", raf_omru:5, birim:"Gün"},
+            {id:"L31", kategori:"Meyve ve Sebze", urun:"Havuç / Narenciye", raf_omru:7, birim:"Gün"},
+            {id:"L32", kategori:"Meyve ve Sebze", urun:"Kereviz / Zencefil", raf_omru:5, birim:"Gün"},
+            {id:"L33", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Kapari / Somon Salata", raf_omru:2, birim:"Gün"},
+            {id:"L34", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Tavuklu/Ton Salata", raf_omru:2, birim:"Gün"},
+            {id:"L35", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Dondurmalar", raf_omru:15, birim:"Gün"},
+            {id:"L36", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Spesiyal Çikolatalar", raf_omru:1, birim:"Ay"},
+            {id:"L37", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Külah Çeşitleri", raf_omru:1, birim:"Ay"},
+            {id:"L38", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Meyve Püreleri", raf_omru:5, birim:"Gün"},
+            {id:"L39", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Glazür Sos", raf_omru:5, birim:"Gün"},
+            {id:"L40", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Çekilen Türk Kahvesi", raf_omru:0, birim:"Günlük"},
+            {id:"L41", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Cold Brew", raf_omru:21, birim:"Gün"},
+            {id:"L42", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Soğuk Espresso", raf_omru:21, birim:"Gün"},
+            {id:"L43", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Soğuk Türk Kahvesi", raf_omru:0, birim:"Günlük"},
+            {id:"L44", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Salepli İçecek Tozu", raf_omru:4, birim:"Ay"},
+            {id:"L45", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"NO Serisi Hazırlık", raf_omru:0, birim:"Günlük"},
+            {id:"L46", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Cacaonly", raf_omru:2, birim:"Ay"},
+            {id:"L47", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Draft İçecekler", raf_omru:3, birim:"Gün"},
+            {id:"L48", kategori:"Paketli Şarküteri", urun:"Süt Çeşitleri", raf_omru:2, birim:"Gün"},
+            {id:"L49", kategori:"Paketli Şarküteri", urun:"Süzme / Füme", raf_omru:3, birim:"Gün"},
+            {id:"L50", kategori:"Paketli Şarküteri", urun:"Mozarella / Cheddar", raf_omru:5, birim:"Gün"},
+            {id:"L51", kategori:"Paketli Şarküteri", urun:"Tereyağı", raf_omru:5, birim:"Gün"}
         ];
+        
         let currentLibFilter = 'Tümü';
 
         function filterLib(cat, el) {
@@ -419,30 +500,54 @@
 
         function renderLibraryDrumpad() {
             const container = document.getElementById('drumpadContainer'); container.innerHTML = '';
-            libraryDB.filter(p => currentLibFilter === 'Tümü' || p.cat === currentLibFilter).forEach(p => {
-                container.innerHTML += '<div class="pad" onclick="startTracking(\'' + p.id + '\')"><div class="pad-time">' + p.hours + 's</div><i class="fa-solid ' + p.icon + '"></i><div class="pad-name">' + p.name + '</div></div>';
+            libraryDB.filter(p => currentLibFilter === 'Tümü' || p.kategori === currentLibFilter).forEach(p => {
+                let omurStr = (p.birim === "Günlük" || p.birim === "Hemen Kullandır" || p.birim === "ORJ SKT") ? p.birim : p.raf_omru + " " + p.birim;
+                let icon = catIcons[p.kategori] || "fa-box";
+                container.innerHTML += '<div class="pad" onclick="startTracking(\'' + p.id + '\')"><div class="pad-time">' + omurStr + '</div><i class="fa-solid ' + icon + '"></i><div class="pad-name">' + p.urun + '</div></div>';
             });
+        }
+
+        function saveCustomProduct() {
+            const urun = document.getElementById('newProdName').value.trim();
+            if(!urun) return;
+            const newItem = {
+                id: Date.now().toString(),
+                kategori: document.getElementById('newProdCat').value,
+                urun: urun + " (Özel)",
+                raf_omru: parseInt(document.getElementById('newProdTime').value || 0),
+                birim: document.getElementById('newProdUnit').value
+            };
+            libraryDB.unshift(newItem);
+            db.ref(dbRoot + '/library').set(libraryDB);
+            closeModal('addProdModal');
+            showToast("Ürün kütüphaneye eklendi!");
+            document.getElementById('newProdName').value = "";
         }
 
         function startTracking(id) {
             const prod = libraryDB.find(p => p.id === id);
             const now = new Date();
-            const expiresAt = new Date(now.getTime() + (prod.hours * 3600000));
-            
+            let target = new Date(now.getTime());
+
+            if (prod.birim === "Günlük") { target.setHours(23, 59, 59); }
+            else if (prod.birim === "Hemen Kullandır") { target = new Date(now.getTime() + 60000); }
+            else if (prod.birim === "Gün") { target.setDate(now.getDate() + prod.raf_omru); }
+            else if (prod.birim === "Ay") { target.setMonth(now.getMonth() + prod.raf_omru); }
+            else if (prod.birim === "Yıl") { target.setFullYear(now.getFullYear() + prod.raf_omru); }
+            else if (prod.birim === "ORJ SKT") { target.setFullYear(now.getFullYear() + 1); }
+
             const newItem = {
-                id: Date.now().toString(),
-                prodId: prod.id, name: prod.name, icon: prod.icon,
-                hours: prod.hours,
+                id: Date.now().toString() + Math.floor(Math.random()*1000),
+                prodId: prod.id, name: prod.urun, icon: catIcons[prod.kategori] || "fa-box",
                 startedAt: now.toISOString(),
-                expiresAt: expiresAt.toISOString(),
+                expiresAt: target.toISOString(),
                 startedBy: currentUser.name
             };
             
             db.ref(dbRoot + '/active/' + newItem.id).set(newItem);
-            logAction("SKT Başlatıldı", prod.name + " takibe alındı.");
-            
-            showToast(prod.name + " takibe alındı!");
-            sendPushNotification("⏳ Üretim Başladı", prod.name + " yapıldı. Başlatan: " + currentUser.name);
+            logAction("SKT Başlatıldı", prod.urun + " takibe alındı.");
+            showToast(prod.urun + " takibe alındı!");
+            sendPushNotification("⏳ Üretim Başladı", prod.urun + " yapıldı. Başlatan: " + currentUser.name);
             
             if(navigator.vibrate) navigator.vibrate(50);
         }
@@ -488,29 +593,12 @@
             if(navigator.vibrate) navigator.vibrate([50, 50]);
         }
 
-        // SİPARİŞ MODÜLÜ (EKSİKSİZ LİSTE)
+        // SİPARİŞ MODÜLÜ
         const orderDB = {
-            "Manav": [
-                {n:"Brokoli", b:"Kilo"}, {n:"Çilek", b:"Kilo"}, {n:"Domates", b:"Kilo"}, 
-                {n:"Elma", b:"Kilo"}, {n:"Greyfurt", b:"Kilo"}, {n:"Havuç", b:"Kilo"},
-                {n:"Karpuz", b:"Adet"}, {n:"Kereviz Sapı", b:"Adet"}, {n:"Limon", b:"Kilo"}, 
-                {n:"Maydanoz", b:"Bağ"}, {n:"Muz", b:"Kilo"}, {n:"Nane", b:"Bağ"},
-                {n:"Pancar", b:"Kilo"}, {n:"Portakal", b:"Kilo"}, {n:"Rezene", b:"Adet"}, 
-                {n:"Salatalık", b:"Kilo"}, {n:"Zencefil", b:"Kilo"}
-            ],
-            "Süt": [
-                {n:"Burger Peyniri", b:"Paket"}, {n:"Cheddar Peyniri", b:"Paket"}, 
-                {n:"Dana Jambon", b:"Paket"}, {n:"Hindi Füme", b:"Paket"},
-                {n:"Krema", b:"Koli"}, {n:"Laktozsuz Süt", b:"Koli"}, 
-                {n:"Laktozsuz Yoğurt", b:"Adet"}, {n:"Tam Yağlı Süt", b:"Koli"},
-                {n:"Tost Peyniri", b:"Paket"}, {n:"Yağsız Süt", b:"Koli"}
-            ],
-            "Su": [
-                {n:"1.5 Litre Su", b:"Koli"}, {n:"Cam Şişe", b:"Koli"}, {n:"Pet Şişe", b:"Koli"}
-            ],
-            "Soda": [
-                {n:"Soda", b:"Koli"}
-            ]
+            "Manav": [{n:"Brokoli", b:"Kilo"},{n:"Çilek", b:"Kilo"},{n:"Domates", b:"Kilo"},{n:"Elma", b:"Kilo"},{n:"Greyfurt", b:"Kilo"},{n:"Havuç", b:"Kilo"},{n:"Karpuz", b:"Adet"},{n:"Kereviz Sapı", b:"Adet"},{n:"Limon", b:"Kilo"},{n:"Maydanoz", b:"Bağ"},{n:"Muz", b:"Kilo"},{n:"Nane", b:"Bağ"},{n:"Pancar", b:"Kilo"},{n:"Portakal", b:"Kilo"},{n:"Rezene", b:"Adet"},{n:"Salatalık", b:"Kilo"},{n:"Zencefil", b:"Kilo"}],
+            "Süt": [{n:"Burger Peyniri", b:"Paket"},{n:"Cheddar Peyniri", b:"Paket"},{n:"Dana Jambon", b:"Paket"},{n:"Hindi Füme", b:"Paket"},{n:"Krema", b:"Koli"},{n:"Laktozsuz Süt", b:"Koli"},{n:"Laktozsuz Yoğurt", b:"Adet"},{n:"Tam Yağlı Süt", b:"Koli"},{n:"Tost Peyniri", b:"Paket"},{n:"Yağsız Süt", b:"Koli"}],
+            "Su": [{n:"1.5 Litre Su", b:"Koli"},{n:"Cam Şişe", b:"Koli"},{n:"Pet Şişe", b:"Koli"}],
+            "Soda": [{n:"Soda", b:"Koli"}]
         };
         let currentOrderCat = "Manav", orderCounts = {};
         
@@ -525,7 +613,6 @@
         }
         function uc(n, ch, b) { if(!orderCounts[n]) orderCounts[n] = {c:0, b:b}; orderCounts[n].c += ch; if(orderCounts[n].c < 0) orderCounts[n].c = 0; loadOrderTemplate(currentOrderCat, null); }
         function resetCounters() { orderCounts = {}; loadOrderTemplate(currentOrderCat, null); }
-        
         function sendOrderViaWhatsApp() {
             let items = [];
             for(const [n, d] of Object.entries(orderCounts)) { if(d.c > 0) items.push("- " + d.c + " " + d.b + " " + n); }
@@ -534,11 +621,7 @@
             logAction("Sipariş Verildi", currentOrderCat + " listesi oluşturuldu.");
             sendPushNotification("📋 Sipariş Verildi", currentOrderCat + " siparişi verildi. Veren: " + currentUser.name);
             
-            // %0A kullanılarak WhatsApp API için güvenli alt satıra geçiş sağlandı
-            var waText = "*KORDON SİPARİŞ (" + currentOrderCat + ")*%0A" + 
-                         "Siparişi Veren: " + currentUser.name + "%0A%0A" + 
-                         items.join("%0A");
-            
+            var waText = "*KORDON SİPARİŞ (" + currentOrderCat + ")*%0A" + "Siparişi Veren: " + currentUser.name + "%0A%0A" + items.join("%0A");
             window.open("https://wa.me/?text=" + waText, "_blank");
             
             orderCounts = {}; loadOrderTemplate(currentOrderCat, null);
@@ -568,29 +651,15 @@
 
         // --- YÖNETİCİ VE AUDIT TRAIL SİSTEMİ ---
         function logAction(actionType, detail) {
-            const logItem = {
-                id: Date.now().toString(),
-                date: new Date().toLocaleString('tr-TR'),
-                user: currentUser.name,
-                action: actionType,
-                detail: detail
-            };
+            const logItem = { id: Date.now().toString(), date: new Date().toLocaleString('tr-TR'), user: currentUser.name, action: actionType, detail: detail };
             db.ref(dbRoot + '/logs/' + logItem.id).set(logItem);
         }
 
         function sendAuditReport() {
             if(allLogs.length === 0) return alert("Arşivde hiç işlem yok.");
-            // \r\n kullanarak Excel (CSV) için güvenli alt satıra geçiş sağlandı
             let csv = "data:text/csv;charset=utf-8,\uFEFFTarih;Personel;Islem Tipi;Detay\r\n";
-            [...allLogs].reverse().forEach(l => { 
-                csv += '"' + l.date + '";"' + l.user + '";"' + l.action + '";"' + l.detail + '"\r\n'; 
-            });
-            const link = document.createElement("a"); 
-            link.setAttribute("href", encodeURI(csv)); 
-            link.setAttribute("download", "Denetim_Raporu.csv"); 
-            document.body.appendChild(link); 
-            link.click(); 
-            document.body.removeChild(link);
+            [...allLogs].reverse().forEach(l => { csv += '"' + l.date + '";"' + l.user + '";"' + l.action + '";"' + l.detail + '"\r\n'; });
+            const link = document.createElement("a"); link.setAttribute("href", encodeURI(csv)); link.setAttribute("download", "Denetim_Raporu.csv"); document.body.appendChild(link); link.click(); document.body.removeChild(link);
         }
 
         // PERSONEL YÖNETİMİ
@@ -630,9 +699,7 @@
         function checkNotificationStatus() { if("Notification" in window && Notification.permission === "granted") document.getElementById('bellBtn').style.display = 'none'; }
         function requestNotificationPermission() {
             if(!("Notification" in window)) return alert("Tarayıcı desteklemiyor.");
-            Notification.requestPermission().then(p => {
-                if(p === "granted") { document.getElementById('bellBtn').style.display = 'none'; showToast("Bildirimler aktif!"); }
-            });
+            Notification.requestPermission().then(p => { if(p === "granted") { document.getElementById('bellBtn').style.display = 'none'; showToast("Bildirimler aktif!"); } });
         }
         function sendPushNotification(title, body) {
             if ("Notification" in window && Notification.permission === "granted") {
