@@ -3,189 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KD Kordon Pro - Y2K Cyberpunk Edition</title>
+    <title>KD Kordon Pro - Minimalist iOS Edition</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3003/3003984.png">
     
-    <!-- Y2K & Retro Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&family=VT323&display=swap" rel="stylesheet">
+    <!-- Clean, Modern Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            /* CYBERPUNK NEON PALETİ */
-            --kd-dark: #000000; 
-            --kd-brown: #11001c; 
-            --kd-gold: #ff00ff; /* Neon Magenta */
-            --kd-gold-light: rgba(255, 0, 255, 0.15);
-            --bg-color: #05050a; /* Zifiri siber siyah */
-            --surface: #0a0a14; 
-            --text-main: #00ffcc; /* Neon Cyan */
-            --text-muted: #5e7399; /* Muted tech blue */
-            --danger: #ff003c; /* Cyber Red */
-            --danger-light: rgba(255, 0, 60, 0.15); 
-            --success: #39ff14; /* Hacker Green */
-            --success-light: rgba(57, 255, 20, 0.15); 
-            --warning: #facc15; 
-            --border: #00ffcc; /* Cyan border */
+            /* APPLE iOS / GLASSMORPHISM PALETİ */
+            --bg-color: #F2F4F7; /* Çok açık, göz yormayan gri */
+            --surface-solid: #FFFFFF; /* Tam beyaz kartlar */
+            --surface-glass: rgba(255, 255, 255, 0.75); /* Buzlu cam efekti */
+            --text-main: #1E293B; /* Koyu antrasit yazı */
+            --text-muted: #94A3B8; /* Yumuşak gri yazı */
             
-            /* KÖŞELİ Y2K HATLAR */
-            --radius-lg: 0px; 
-            --radius-md: 0px; 
-            --radius-sm: 0px; 
-            --shadow-sm: 3px 3px 0px rgba(0, 255, 204, 0.3); 
-            --shadow-neon: 0 0 5px var(--text-main), 0 0 10px var(--text-main);
-            --transition: all 0.2s ease;
+            --accent: #007AFF; /* Apple Mavi */
+            --accent-light: rgba(0, 122, 255, 0.1);
+            --danger: #FF3B30; /* Apple Kırmızı */
+            --danger-light: rgba(255, 59, 48, 0.1);
+            --success: #34C759; /* Apple Yeşil */
+            --success-light: rgba(52, 199, 89, 0.1);
+            --warning: #FF9500; /* Apple Turuncu */
+            --warning-light: rgba(255, 149, 0, 0.1);
+            
+            --border: rgba(0, 0, 0, 0.06); /* Çok hafif sınır çizgisi */
+            
+            /* YUMUŞAK HATLAR */
+            --radius-lg: 24px; 
+            --radius-md: 16px; 
+            --radius-sm: 10px; 
+            --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.04); 
+            --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        body.dark-mode {
+            /* İsteğe bağlı Dark Mode - Çok yumuşak antrasit */
+            --bg-color: #0F172A;
+            --surface-solid: #1E293B;
+            --surface-glass: rgba(30, 41, 59, 0.75);
+            --text-main: #F8FAFC;
+            --text-muted: #64748B;
+            --border: rgba(255, 255, 255, 0.05);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
-        body { font-family: 'Space Mono', monospace; background-color: var(--bg-color); color: var(--text-main); overflow-x: hidden; text-transform: uppercase; }
-        
-        /* RETRO CRT EKRAN EFEKTİ (SCANLINES) */
-        body::after {
-            content: " "; display: block; position: fixed; top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 999999; background-size: 100% 2px, 3px 100%; pointer-events: none; opacity: 0.15;
-        }
-
-        h1, h2, h3, .pad-time, .timer-display { font-family: 'VT323', monospace; letter-spacing: 2px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-color); color: var(--text-main); transition: background-color 0.3s; overflow-x: hidden; }
 
         /* GİRİŞ EKRANI */
         #authScreen { position: fixed; inset: 0; background: var(--bg-color); z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
-        .auth-card { background: var(--surface); padding: 40px 25px; border: 1px solid var(--border); box-shadow: var(--shadow-sm); width: 100%; max-width: 380px; }
-        .pin-display { font-size: 32px; letter-spacing: 8px; font-weight: 800; color: var(--text-main); margin: 20px 0; height: 40px; display: flex; justify-content: center; align-items: center; text-shadow: var(--shadow-neon); }
-        .pin-dot { width: 16px; height: 16px; border: 1px solid var(--border); margin: 0 8px; transition: var(--transition); }
-        .pin-dot.filled { background: var(--kd-gold); border-color: var(--kd-gold); box-shadow: 0 0 10px var(--kd-gold); }
+        .auth-card { background: var(--surface-solid); padding: 40px 25px; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); width: 100%; max-width: 380px; }
+        .pin-display { font-size: 32px; letter-spacing: 8px; font-weight: 800; color: var(--text-main); margin: 20px 0; height: 40px; display: flex; justify-content: center; align-items: center; }
+        .pin-dot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--text-muted); margin: 0 8px; transition: var(--transition); }
+        .pin-dot.filled { background: var(--accent); border-color: var(--accent); }
         .numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
-        .num-btn { background: transparent; border: 1px solid var(--border); font-family: 'Space Mono', monospace; font-size: 24px; font-weight: 700; color: var(--text-main); padding: 15px 0; cursor: pointer; transition: var(--transition); box-shadow: 2px 2px 0px rgba(0,255,204,0.3); }
-        .num-btn:active { transform: translate(2px, 2px); box-shadow: 0px 0px 0px transparent; background: var(--kd-gold-light); color: var(--kd-gold); border-color: var(--kd-gold); }
+        .num-btn { background: var(--bg-color); border: none; border-radius: var(--radius-md); font-family: inherit; font-size: 24px; font-weight: 700; color: var(--text-main); padding: 15px 0; cursor: pointer; transition: var(--transition); }
+        .num-btn:active { transform: scale(0.92); background: var(--accent-light); color: var(--accent); }
         
-        #appContent { display: none; padding-bottom: 90px; }
+        #appContent { display: none; padding-bottom: 100px; }
 
-        .app-header { background: var(--surface); padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
-        .user-badge { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 14px; color: var(--danger); background: var(--danger-light); padding: 6px 12px; border: 1px solid var(--danger); cursor: pointer; transition: var(--transition); box-shadow: 2px 2px 0px rgba(255,0,60,0.4); }
-        .user-badge:active { transform: translate(2px,2px); box-shadow: none; }
-        .header-actions { display: flex; align-items: center; gap: 8px; }
-        .icon-btn { background: transparent; border: 1px solid var(--border); width: 40px; height: 40px; color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: var(--transition); box-shadow: 2px 2px 0px rgba(0,255,204,0.3); }
-        .icon-btn:active { transform: translate(2px,2px); box-shadow: none; }
+        /* BUZLU CAM HEADER */
+        .app-header { background: var(--surface-glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
+        .user-badge { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; color: var(--danger); background: var(--danger-light); padding: 8px 16px; border-radius: 30px; cursor: pointer; transition: var(--transition); }
+        .user-badge:active { transform: scale(0.95); opacity: 0.8; }
+        .header-actions { display: flex; align-items: center; gap: 10px; }
+        .icon-btn { background: var(--surface-solid); border: 1px solid var(--border); box-shadow: var(--shadow-sm); width: 40px; height: 40px; border-radius: 50%; color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: var(--transition); }
+        .icon-btn:active { transform: scale(0.9); }
 
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--surface); display: flex; justify-content: space-around; padding: 10px 4px 20px 4px; z-index: 100; border-top: 1px solid var(--border); box-shadow: 0 -5px 15px rgba(0,255,204,0.1); }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-muted); font-size: 10px; font-weight: 700; cursor: pointer; flex: 1; transition: var(--transition); }
-        .nav-item i { font-size: 18px; padding: 8px 18px; transition: var(--transition); border: 1px solid transparent; }
-        .nav-item.active { color: var(--kd-gold); text-shadow: 0 0 5px var(--kd-gold); }
-        .nav-item.active i { background: var(--kd-gold-light); color: var(--kd-gold); border: 1px solid var(--kd-gold); box-shadow: 2px 2px 0px rgba(255,0,255,0.4); }
+        /* BUZLU CAM BOTTOM NAV */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--surface-glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); display: flex; justify-content: space-around; padding: 15px 10px 25px 10px; z-index: 100; border-top: 1px solid var(--border); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--text-muted); font-size: 11px; font-weight: 600; cursor: pointer; flex: 1; transition: var(--transition); }
+        .nav-item i { font-size: 20px; padding: 10px 20px; border-radius: 30px; transition: var(--transition); }
+        .nav-item.active { color: var(--accent); }
+        .nav-item.active i { background: var(--accent-light); color: var(--accent); }
 
-        .app-container { padding: 15px; max-width: 800px; margin: 0 auto; }
-        .tab-pane { display: none; animation: glitchIn 0.3s forwards; }
+        .app-container { padding: 20px 15px; max-width: 800px; margin: 0 auto; }
+        .tab-pane { display: none; animation: fadeIn 0.4s ease forwards; opacity: 0; }
         .tab-pane.active { display: block; }
-        @keyframes glitchIn { 
-            0% { clip-path: polygon(0 2%, 100% 2%, 100% 5%, 0 5%); transform: translate(-5px); opacity: 0; }
-            50% { clip-path: polygon(0 15%, 100% 15%, 100% 15%, 0 15%); transform: translate(5px); opacity: 0.5; }
-            100% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); transform: translate(0); opacity: 1; }
-        }
+        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } from { opacity: 0; transform: translateY(10px); } }
 
-        .btn { border: 1px solid var(--text-main); background: transparent; font-family: 'Space Mono', monospace; font-weight: 700; font-size: 14px; color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: var(--transition); padding: 15px 20px; width: 100%; box-shadow: 3px 3px 0px rgba(0,255,204,0.3); text-transform: uppercase; }
-        .btn:active { transform: translate(3px,3px); box-shadow: none; }
-        .btn-primary { background: var(--text-main); color: var(--bg-color); border-color: var(--text-main); box-shadow: 3px 3px 0px rgba(0,255,204,0.5); }
-        .btn-primary:active { background: var(--text-main); color: var(--bg-color); }
+        .btn { border: none; border-radius: var(--radius-md); font-family: inherit; font-weight: 700; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: var(--transition); padding: 16px 20px; width: 100%; }
+        .btn:active { transform: scale(0.97); opacity: 0.9; }
+        .btn-primary { background: var(--accent); color: white; box-shadow: var(--shadow-sm); }
 
-        /* Ortak Elementler */
-        .chips-container { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 15px; scrollbar-width: none; scroll-behavior: smooth; }
+        /* CHIPS (Kategoriler) */
+        .chips-container { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; scrollbar-width: none; scroll-behavior: smooth; }
         .chips-container::-webkit-scrollbar { display: none; }
-        .chip { background: transparent; border: 1px solid var(--text-muted); padding: 10px 18px; font-size: 12px; font-weight: 700; color: var(--text-muted); white-space: nowrap; cursor: pointer; transition: var(--transition); display:flex; align-items:center; gap:6px; box-shadow: 2px 2px 0px rgba(94,115,153,0.3); }
-        .chip.active { background: var(--kd-gold-light); color: var(--kd-gold); border-color: var(--kd-gold); box-shadow: 2px 2px 0px rgba(255,0,255,0.4); text-shadow: 0 0 5px var(--kd-gold); }
-        .form-input { width: 100%; padding: 14px; background: transparent; border: 1px solid var(--border); font-family: 'Space Mono', monospace; font-size: 14px; color: var(--text-main); margin-bottom: 12px; transition: border-color 0.2s; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.5); text-transform: uppercase; }
-        .form-input:focus { border-color: var(--kd-gold); outline: none; box-shadow: 0 0 8px var(--kd-gold-light); }
+        .chip { background: var(--surface-solid); border: 1px solid var(--border); padding: 12px 20px; border-radius: 30px; font-size: 13px; font-weight: 600; color: var(--text-muted); white-space: nowrap; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-sm); }
+        .chip.active { background: var(--text-main); color: var(--surface-solid); border-color: var(--text-main); }
+        
+        /* INPUTS */
+        .form-input { width: 100%; padding: 16px 20px; background: var(--surface-solid); border: 1px solid var(--border); border-radius: var(--radius-md); font-family: inherit; font-size: 15px; font-weight: 500; color: var(--text-main); margin-bottom: 15px; transition: var(--transition); box-shadow: var(--shadow-sm); outline: none;}
+        .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-light); }
 
         /* Sipariş Satırları */
-        .order-row { background: transparent; padding: 12px 16px; box-shadow: 2px 2px 0px rgba(0,255,204,0.2); display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); margin-bottom:10px; }
-        .order-row.active-row { border-color: var(--success); background: var(--success-light); box-shadow: 2px 2px 0px rgba(0,255,0,0.3); }
-        .counter { display: flex; align-items: center; gap: 12px; background: var(--bg-color); padding: 4px; border: 1px solid var(--border); }
-        .btn-count { background: transparent; border: 1px solid var(--border); width: 30px; height: 30px; font-size: 16px; font-weight: 600; color: var(--text-main); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); }
-        .btn-count:active { transform: scale(0.9); background: var(--text-main); color: var(--bg-color); }
+        .order-row { background: var(--surface-solid); border-radius: var(--radius-md); padding: 16px; box-shadow: var(--shadow-sm); display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); margin-bottom:12px; transition: var(--transition);}
+        .order-row.active-row { border-color: var(--success); background: var(--success-light); }
+        .counter { display: flex; align-items: center; gap: 12px; background: var(--bg-color); padding: 6px; border-radius: 30px; }
+        .btn-count { background: var(--surface-solid); border: none; width: 34px; height: 34px; border-radius: 50%; font-size: 18px; font-weight: 500; color: var(--text-main); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); cursor: pointer; transition: var(--transition); }
+        .btn-count:active { transform: scale(0.9); }
 
         /* SKT Drumpad */
-        .drumpad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; min-height: 50vh; align-content: start; }
-        .pad { background: transparent; border: 1px solid var(--text-muted); min-height: 95px; padding: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; cursor: pointer; transition: var(--transition); box-shadow: 2px 2px 0px rgba(94,115,153,0.3); position: relative;}
-        .pad:active { transform: translate(2px, 2px); box-shadow: none; opacity:0.8; }
-        .pad i { font-size: 22px; margin-bottom: 6px; color: var(--text-main); transition: var(--transition); }
-        .pad-name { font-size: 10px; font-weight: 800; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; transition: var(--transition); color: var(--text-main); }
-        .pad-time { position:absolute; top:4px; right:4px; font-size:12px; background: var(--bg-color); padding:2px 4px; font-family: 'VT323', monospace; color:var(--kd-gold); border:1px solid var(--kd-gold); }
+        .drumpad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; min-height: 50vh; align-content: start; }
+        .pad { background: var(--surface-solid); border: 1px solid var(--border); border-radius: var(--radius-md); min-height: 105px; padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-sm); position: relative;}
+        .pad:active { transform: scale(0.95); background: var(--bg-color); }
+        .pad i { font-size: 26px; margin-bottom: 8px; transition: var(--transition); }
+        .pad-name { font-size: 11px; font-weight: 600; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: var(--text-main); }
+        .pad-time { position:absolute; top:6px; right:6px; font-size:9px; background: var(--bg-color); padding:4px 6px; border-radius:8px; font-weight:700; color:var(--text-muted); }
         
-        /* Estetik Düzenleme Modu */
-        .pad-delete { position: absolute; top: -6px; right: -6px; width: 26px; height: 26px; background: var(--danger); color: white; border: 1px solid var(--text-main); display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; box-shadow: 2px 2px 0px rgba(255,0,60,0.5); opacity: 0; visibility: hidden; transform: scale(0.5); transition: all 0.3s; z-index: 10; }
+        /* Düzenleme Modu Tasarımı */
+        .pad-delete { position: absolute; top: -8px; right: -8px; width: 28px; height: 28px; background: var(--danger); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; box-shadow: 0 4px 10px rgba(255, 59, 48, 0.4); opacity: 0; visibility: hidden; transform: scale(0.5); transition: var(--transition); z-index: 10; border: 2px solid var(--surface-solid); }
         .drumpad-grid.edit-mode .pad-delete { opacity: 1; visibility: visible; transform: scale(1); }
-        .drumpad-grid.edit-mode .pad { border-style: dashed; border-color: var(--danger); background: var(--danger-light) !important; box-shadow: none; }
-        .drumpad-grid.edit-mode .pad i, .drumpad-grid.edit-mode .pad-name { color: var(--danger); opacity: 0.8; }
+        .drumpad-grid.edit-mode .pad { border: 2px dashed var(--danger-light); background: var(--bg-color); box-shadow: none; }
+        .drumpad-grid.edit-mode .pad i, .drumpad-grid.edit-mode .pad-name { opacity: 0.5; }
 
         /* Aktif SKT Swipe & Toplu Seçim */
-        .swipe-container { position: relative; overflow: hidden; background: transparent; margin-bottom:10px; border: 1px solid var(--border); box-shadow: 3px 3px 0px rgba(0,255,204,0.2); }
-        .swipe-bg { position: absolute; inset:0; display:flex; justify-content:space-between; align-items:center; padding:0 25px; color:white; font-size:20px; font-weight:800; }
-        .bg-left { background: var(--success); width: 50%; height: 100%; display:flex; align-items:center; }
-        .bg-right { background: var(--danger); width: 50%; height: 100%; display:flex; justify-content:flex-end; align-items:center; position:absolute; right:0; top:0; padding-right:25px;}
-        .active-card { background: var(--surface); position: relative; z-index: 2; padding: 14px; transition: transform 0.2s ease-out; border-left: 4px solid var(--success); display:flex; align-items:center; }
-        .timer-display { font-size: 20px; font-weight: 400; margin: 4px 0; color: var(--success); text-shadow: 0 0 5px var(--success); }
-        .progress-track { background: var(--bg-color); height: 4px; border: 1px solid var(--border); overflow: hidden; margin-top: 8px; }
-        .progress-fill { height: 100%; background: var(--success); box-shadow: 0 0 10px var(--success); transition: width 1s linear; }
+        .swipe-container { position: relative; overflow: hidden; border-radius: var(--radius-md); background: var(--bg-color); margin-bottom:12px; border: 1px solid var(--border); }
+        .swipe-bg { position: absolute; inset:0; display:flex; justify-content:space-between; align-items:center; padding:0 25px; color:white; font-size:22px; font-weight:800; }
+        .bg-left { background: var(--success); width: 50%; height: 100%; display:flex; align-items:center; border-radius: var(--radius-md) 0 0 var(--radius-md); }
+        .bg-right { background: var(--danger); width: 50%; height: 100%; display:flex; justify-content:flex-end; align-items:center; position:absolute; right:0; top:0; padding-right:25px; border-radius: 0 var(--radius-md) var(--radius-md) 0;}
+        .active-card { background: var(--surface-solid); position: relative; z-index: 2; padding: 18px 15px; transition: transform 0.2s ease-out; display:flex; align-items:center; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); }
+        .timer-display { font-size: 18px; font-weight: 700; margin: 6px 0; color: var(--success); }
+        .progress-track { background: var(--bg-color); height: 6px; border-radius: 10px; overflow: hidden; margin-top: 10px; }
+        .progress-fill { height: 100%; background: var(--success); border-radius: 10px; transition: width 1s linear; }
         
         /* Toplu Seçim (Bulk Mode) */
-        .bulk-checkbox { display:none; width:24px; height:24px; border:1px solid var(--text-main); margin-right:12px; align-items:center; justify-content:center; color:var(--bg-color); background:transparent; transition:var(--transition); flex-shrink:0; }
+        .bulk-checkbox { display:none; width:26px; height:26px; border:2px solid var(--border); border-radius:50%; margin-right:15px; align-items:center; justify-content:center; color:white; background:transparent; transition:var(--transition); flex-shrink:0; }
         .bulk-mode .bulk-checkbox { display:flex; }
-        .bulk-mode .active-card { transform: none !important; border-left: none; }
-        .bulk-mode .swipe-container.selected .bulk-checkbox { background:var(--text-main); box-shadow: 0 0 10px var(--text-main); }
-        .bulk-mode .swipe-container.selected .active-card { background: rgba(0,255,204,0.1); }
-        .floating-bulk-bar { position:fixed; bottom:70px; left:0; width:100%; background:var(--surface); border-top: 1px solid var(--border); padding:15px; display:none; gap:10px; z-index:90; box-shadow: 0 -5px 20px rgba(0,255,204,0.2); animation:slideUp 0.3s forwards;}
+        .bulk-mode .active-card { transform: none !important; }
+        .bulk-mode .swipe-container.selected .bulk-checkbox { background:var(--accent); border-color:var(--accent); }
+        .bulk-mode .swipe-container.selected .active-card { background: var(--accent-light); }
+        
+        .floating-bulk-bar { position:fixed; bottom:80px; left:0; width:100%; background: var(--surface-glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-top: 1px solid var(--border); padding:20px; display:none; gap:12px; z-index:90; animation:slideUp 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;}
         @keyframes slideUp { from{transform:translateY(100%);} to{transform:translateY(0);} }
 
-        /* Modals - Terminal Window Style */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(5,5,10,0.85); backdrop-filter: blur(5px); z-index: 1000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: var(--transition); padding: 20px; }
+        /* Modals - Clean iOS Style */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 1000; display: flex; align-items: flex-end; justify-content: center; opacity: 0; visibility: hidden; transition: var(--transition); }
         .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal-content { background: var(--surface); width: 100%; max-width: 450px; border: 2px solid var(--text-main); box-shadow: var(--shadow-neon); padding: 25px 20px; transform: scale(0.95); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); max-height: 85vh; overflow-y: auto; position: relative; }
-        .modal-overlay.active .modal-content { transform: scale(1); }
+        .modal-content { background: var(--surface-solid); width: 100%; max-width: 600px; border-radius: 30px 30px 0 0; padding: 30px 25px 50px; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); max-height: 90vh; overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.1); }
+        .modal-overlay.active .modal-content { transform: translateY(0); }
+        .drag-handle { width: 40px; height: 5px; background: var(--border); border-radius: 10px; margin: 0 auto 25px; }
         
-        /* Terminal Header for Modals */
-        .modal-content::before {
-            content: "SYS_TERMINAL_V9 // OFFLINE_SYNC_ACTIVE";
-            display: block; background: var(--text-main); color: var(--bg-color); font-family: 'VT323', monospace; font-size: 14px; padding: 2px 10px; position: absolute; top: 0; left: 0; right: 0;
-        }
-
         /* Checkbox for Closing Tasks */
-        .closing-cb-label { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; font-size: 13px; color: var(--text-muted); cursor: pointer; }
-        .closing-cb-label input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--text-main); }
-        .closing-cb-label.checked { color: var(--text-main); text-decoration: line-through; }
+        .closing-cb-label { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; font-size: 14px; font-weight: 500; color: var(--text-main); cursor: pointer; background: var(--bg-color); padding: 15px; border-radius: var(--radius-md); transition: var(--transition); }
+        .closing-cb-label input[type="checkbox"] { width: 22px; height: 22px; accent-color: var(--success); cursor: pointer; }
+        .closing-cb-label.checked { background: var(--success-light); color: var(--success); text-decoration: line-through; }
 
         /* Rapor / Kullanıcı listeleri */
-        .user-row { display:flex; justify-content:space-between; align-items:center; padding:12px; background:transparent; border:1px solid var(--border); box-shadow: 2px 2px 0px rgba(0,255,204,0.2); margin-bottom:8px; }
-        .role-badge { font-size:10px; padding:3px 8px; font-weight:800; border: 1px solid; }
-        .role-admin { border-color:var(--danger); color:var(--danger); background:var(--danger-light); }
-        .role-staff { border-color:var(--success); color:var(--success); background:var(--success-light); }
+        .user-row { display:flex; justify-content:space-between; align-items:center; padding:16px; background:var(--surface-solid); border:1px solid var(--border); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); margin-bottom:10px; }
+        .role-badge { font-size:11px; padding:5px 10px; font-weight:700; border-radius: 20px; }
+        .role-admin { color:var(--warning); background:var(--warning-light); }
+        .role-staff { color:var(--accent); background:var(--accent-light); }
 
-        .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); border: 1px solid var(--text-main); color: var(--text-main); background: var(--surface); box-shadow: var(--shadow-neon); padding: 12px 24px; font-size: 13px; font-weight: 700; z-index: 9999; transition: all 0.4s ease; opacity: 0; white-space: nowrap; display:flex; align-items:center;}
+        /* Soft Toast */
+        .toast { position: fixed; top: 30px; left: 50%; transform: translateX(-50%) translateY(-100px); background: var(--surface-solid); color: var(--text-main); box-shadow: var(--shadow-md); padding: 14px 24px; border-radius: 40px; font-size: 14px; font-weight: 600; z-index: 9999; transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); opacity: 0; white-space: nowrap; display:flex; align-items:center; border: 1px solid var(--border);}
         .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
         
-        #fullScreenSpinner { position: fixed; inset:0; background:var(--bg-color); z-index:999999; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--text-main); font-weight:bold; font-size:14px; text-align: center; padding: 20px;}
+        #fullScreenSpinner { position: fixed; inset:0; background:var(--bg-color); z-index:999999; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--text-muted); font-weight:500; font-size:15px; text-align: center; padding: 20px;}
 
         /* Offline Banner */
-        #offlineBanner { display: none; background: var(--warning); color: var(--bg-color); font-family: 'VT323', monospace; text-align: center; padding: 5px; font-size: 16px; position: sticky; top: 0; z-index: 51; box-shadow: 0 0 10px var(--warning); }
+        #offlineBanner { display: none; background: var(--warning); color: white; text-align: center; padding: 8px; font-size: 12px; font-weight: 700; position: sticky; top: 0; z-index: 51; }
     </style>
 </head>
 <body>
 
     <!-- YÜKLENİYOR / OFFLINE EKRANI -->
     <div id="fullScreenSpinner">
-        <i class="fa-solid fa-satellite-dish fa-beat-fade fa-3x" style="margin-bottom: 15px; color: var(--text-main);"></i>
-        <span id="spinnerText" style="font-family: 'VT323', monospace; font-size: 20px;">[ SİSTEM AĞA BAĞLANIYOR ]</span>
+        <i class="fa-solid fa-spinner fa-spin fa-2x" style="margin-bottom: 15px; color: var(--accent);"></i>
+        <span id="spinnerText">Sistem Bulutla Eşleşiyor...</span>
     </div>
 
     <!-- GİRİŞ EKRANI (PIN) -->
     <div id="authScreen" style="display:none;">
         <div class="auth-card">
-            <i class="fa-solid fa-terminal" style="font-size: 40px; color: var(--text-main); margin-bottom:10px; text-shadow: var(--shadow-neon);"></i>
-            <h2 style="color:var(--text-main); font-weight:800; font-size:20px; font-family:'VT323', monospace;">>_ KORDON_OS GİRİŞİ</h2>
-            <p style="color:var(--text-muted); font-size:11px; margin-top:5px;">AUTHORIZATION REQUIRED</p>
+            <i class="fa-solid fa-shield-check" style="font-size: 40px; color: var(--accent); margin-bottom:15px;"></i>
+            <h2 style="color:var(--text-main); font-weight:700; font-size:22px;">Personel Girişi</h2>
+            <p style="color:var(--text-muted); font-size:14px; margin-top:5px;">Lütfen PIN kodunuzu girin.</p>
             
             <div class="pin-display" id="pinDisplay">
                 <div class="pin-dot" id="dot1"></div><div class="pin-dot" id="dot2"></div>
@@ -196,22 +195,26 @@
                 <button class="num-btn" onclick="addPin(1)">1</button><button class="num-btn" onclick="addPin(2)">2</button><button class="num-btn" onclick="addPin(3)">3</button>
                 <button class="num-btn" onclick="addPin(4)">4</button><button class="num-btn" onclick="addPin(5)">5</button><button class="num-btn" onclick="addPin(6)">6</button>
                 <button class="num-btn" onclick="addPin(7)">7</button><button class="num-btn" onclick="addPin(8)">8</button><button class="num-btn" onclick="addPin(9)">9</button>
-                <button class="num-btn" style="color:var(--danger); border-color:var(--danger);" onclick="clearPin()">C</button>
+                <button class="num-btn" style="color:var(--danger);" onclick="clearPin()"><i class="fa-solid fa-delete-left"></i></button>
                 <button class="num-btn" onclick="addPin(0)">0</button>
-                <button class="num-btn" style="color:var(--success); border-color:var(--success);" onclick="submitPin()">OK</button>
+                <button class="num-btn" style="color:var(--success);" onclick="submitPin()"><i class="fa-solid fa-check"></i></button>
             </div>
         </div>
     </div>
 
     <!-- ANA UYGULAMA -->
     <div id="appContent">
-        <div id="offlineBanner">>_ UYARI: OFFLINE MOD AKTİF. YEREL ÖNBELLEK KULLANILIYOR.</div>
+        <div id="offlineBanner"><i class="fa-solid fa-wifi" style="text-decoration: line-through;"></i> Çevrimdışı mod aktif. Veriler cihaza kaydediliyor.</div>
         <header class="app-header">
             <!-- ÇIKIŞ YAPILABİLİR KULLANICI ROZETİ -->
-            <div class="user-badge" onclick="triggerLogoutFlow()"><i class="fa-solid fa-user-ninja"></i> <span id="headerUserName">Personel</span> <i class="fa-solid fa-power-off" style="margin-left: 4px; font-size: 11px;"></i></div>
+            <div class="user-badge" onclick="triggerLogoutFlow()">
+                <i class="fa-solid fa-user-circle" style="font-size: 16px;"></i> 
+                <span id="headerUserName">Personel</span> 
+            </div>
             <div class="header-actions">
-                <button class="icon-btn" onclick="requestNotificationPermission()" id="bellBtn"><i class="fa-solid fa-satellite-dish"></i></button>
-                <button class="icon-btn" onclick="openModal('adminModal')" id="adminBtn" style="display:none; color:var(--warning); border-color:var(--warning);"><i class="fa-solid fa-code"></i></button>
+                <button class="icon-btn" onclick="requestNotificationPermission()" id="bellBtn"><i class="fa-regular fa-bell"></i></button>
+                <button class="icon-btn" onclick="toggleTheme()" id="themeBtn"><i class="fa-regular fa-moon" id="themeIcon"></i></button>
+                <button class="icon-btn" onclick="openModal('adminModal')" id="adminBtn" style="display:none; color:var(--warning);"><i class="fa-solid fa-sliders"></i></button>
             </div>
         </header>
 
@@ -220,47 +223,47 @@
             <!-- 1. SİPARİŞ (SADECE YÖNETİCİ GÖREBİLİR) -->
             <div id="tab-order" class="tab-pane">
                 <div class="chips-container" id="categoryChips">
-                    <div class="chip active" onclick="loadOrderTemplate('Manav', this)">[ MANAV ]</div>
-                    <div class="chip" onclick="loadOrderTemplate('Süt', this)">[ SÜT ]</div>
-                    <div class="chip" onclick="loadOrderTemplate('Su', this)">[ SU ]</div>
-                    <div class="chip" onclick="loadOrderTemplate('Soda', this)">[ SODA ]</div>
+                    <div class="chip active" onclick="loadOrderTemplate('Manav', this)">🥦 Manav</div>
+                    <div class="chip" onclick="loadOrderTemplate('Süt', this)">🥛 Süt</div>
+                    <div class="chip" onclick="loadOrderTemplate('Su', this)">💧 Su</div>
+                    <div class="chip" onclick="loadOrderTemplate('Soda', this)">🥤 Soda</div>
                 </div>
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                    <h3 id="currentTemplateTitle" style="font-size: 20px; color: var(--text-main);">> MANAV LİSTESİ</h3>
-                    <button onclick="resetCounters()" style="background:none; border:none; color:var(--text-muted); font-size:12px; font-family:'Space Mono', monospace; cursor:pointer;">[ RESET ]</button>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <h3 id="currentTemplateTitle" style="font-size: 22px; font-weight: 700; color: var(--text-main);">Manav Listesi</h3>
+                    <button onclick="resetCounters()" style="background:none; border:none; color:var(--accent); font-size:14px; font-weight: 600; cursor:pointer;">Sıfırla</button>
                 </div>
                 <div id="orderTemplateList" class="list-grid mb-4"></div>
-                <button class="btn" style="background:var(--success); color:var(--bg-color); border-color:var(--success); margin-top:15px;" onclick="sendOrderViaWhatsApp()"><i class="fa-brands fa-whatsapp"></i> DATA GÖNDER</button>
+                <button class="btn btn-primary" style="margin-top:20px; background: #25D366;" onclick="sendOrderViaWhatsApp()"><i class="fa-brands fa-whatsapp" style="font-size: 18px;"></i> WhatsApp'a Gönder</button>
             </div>
 
             <!-- 2. ÜRETİM (DRUMPAD) -->
             <div id="tab-library" class="tab-pane active">
                 
                 <!-- ŞİMŞEK ARAMA ÇUBUĞU -->
-                <div style="position: relative; margin-bottom: 15px;">
-                    <i class="fa-solid fa-terminal" style="position: absolute; left: 15px; top: 16px; color: var(--text-main);"></i>
-                    <input type="text" id="libSearchInput" class="form-input" style="padding-left: 40px; margin-bottom: 0;" placeholder="> SEARCH_DB..." onkeyup="renderLibraryDrumpad()">
+                <div style="position: relative; margin-bottom: 20px;">
+                    <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 18px; top: 18px; color: var(--text-muted);"></i>
+                    <input type="text" id="libSearchInput" class="form-input" style="padding-left: 45px; margin-bottom: 0; border-radius: 30px;" placeholder="Ürün ara..." onkeyup="renderLibraryDrumpad()">
                 </div>
 
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                     <div>
-                        <h3 style="font-size: 20px; color: var(--text-main); margin-bottom: 2px;">> ÜRETİM_DB</h3>
-                        <p style="font-size:10px; color:var(--text-muted);">BASILI TUTARAK REÇETEYİ GÖRÜNTÜLE.</p>
+                        <h3 style="font-size: 22px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Üretim</h3>
+                        <p style="font-size:12px; color:var(--text-muted);">Reçeteler için ürüne basılı tutun.</p>
                     </div>
-                    <div style="display:flex; gap:8px;">
-                        <button id="editModeBtn" onclick="toggleEditMode()" style="background:transparent; color:var(--kd-gold); border:1px solid var(--kd-gold); padding:6px 14px; font-family:'Space Mono', monospace; font-size:11px; cursor:pointer;">[ EDIT ]</button>
-                        <button id="addProdBtn" onclick="openModal('addProdModal')" style="display:none; background:var(--text-main); color:var(--bg-color); border:1px solid var(--text-main); padding:6px 14px; font-family:'Space Mono', monospace; font-size:11px; cursor:pointer;">[ ADD ]</button>
+                    <div style="display:flex; gap:10px;">
+                        <button id="editModeBtn" onclick="toggleEditMode()" style="background:var(--accent-light); color:var(--accent); border:none; border-radius:20px; padding:8px 16px; font-weight:600; font-size:13px; cursor:pointer; transition:var(--transition);">Düzenle</button>
+                        <button id="addProdBtn" onclick="openModal('addProdModal')" style="display:none; background:var(--text-main); color:var(--surface-solid); border:none; border-radius:20px; padding:8px 16px; font-weight:600; font-size:13px; cursor:pointer; transition:var(--transition);"><i class="fa-solid fa-plus"></i> Ekle</button>
                     </div>
                 </div>
                 
                 <div class="chips-container" id="libChips">
-                    <div class="chip active" onclick="filterLib('Tümü', this)">ALL</div>
-                    <div class="chip" onclick="filterLib('Şarküteri, Süt ve Soslar', this)">SÜT&SOS</div>
-                    <div class="chip" onclick="filterLib('Paketli Şarküteri', this)">ŞARKÜTERİ</div>
-                    <div class="chip" onclick="filterLib('Meyve ve Sebze', this)">MEYVE</div>
-                    <div class="chip" onclick="filterLib('Paketli & Kuru Gıdalar', this)">KURU GIDA</div>
-                    <div class="chip" onclick="filterLib('Çözündürülen / Dökme / Teşhir', this)">TEŞHİR</div>
-                    <div class="chip" onclick="filterLib('Kahveler, İçecekler ve Ön Hazırlık', this)">İÇECEK</div>
+                    <div class="chip active" onclick="filterLib('Tümü', this)">Tümü</div>
+                    <div class="chip" onclick="filterLib('Şarküteri, Süt ve Soslar', this)">Süt & Sos</div>
+                    <div class="chip" onclick="filterLib('Paketli Şarküteri', this)">Şarküteri</div>
+                    <div class="chip" onclick="filterLib('Meyve ve Sebze', this)">Meyve</div>
+                    <div class="chip" onclick="filterLib('Paketli & Kuru Gıdalar', this)">Kuru Gıda</div>
+                    <div class="chip" onclick="filterLib('Çözündürülen / Dökme / Teşhir', this)">Teşhir</div>
+                    <div class="chip" onclick="filterLib('Kahveler, İçecekler ve Ön Hazırlık', this)">İçecek</div>
                 </div>
                 
                 <!-- TINDER TİPİ KAYDIRMA ALANI -->
@@ -269,130 +272,141 @@
 
             <!-- 3. AKTİF TAKİP -->
             <div id="tab-active" class="tab-pane">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                     <div>
-                        <h3 style="font-size: 20px; color: var(--text-main);">> AKTİF_PROSESLER</h3>
-                        <span style="font-size:10px; color:var(--text-muted);"><i class="fa-solid fa-arrows-left-right"></i> SWIPE TO EXECUTE</span>
+                        <h3 style="font-size: 22px; font-weight: 700; color: var(--text-main); margin-bottom:4px;">Aktif Takip</h3>
+                        <span style="font-size:12px; color:var(--text-muted);">Sola kaydırarak işlemi tamamlayın.</span>
                     </div>
                     <!-- TOPLU SEÇİM BUTONU -->
-                    <button id="bulkModeBtn" onclick="toggleBulkMode()" style="background:transparent; color:var(--text-main); border:1px solid var(--text-main); padding:6px 14px; font-family:'Space Mono', monospace; font-size:11px; cursor:pointer;">[ BULK ]</button>
+                    <button id="bulkModeBtn" onclick="toggleBulkMode()" style="background:var(--surface-solid); color:var(--text-main); border:1px solid var(--border); box-shadow: var(--shadow-sm); padding:8px 16px; border-radius:20px; font-weight:600; font-size:13px; cursor:pointer; transition:var(--transition);">Toplu Seç</button>
                 </div>
                 
                 <div id="activeList" class="list-grid"></div>
                 
                 <!-- TOPLU İŞLEM ALT BARI -->
                 <div class="floating-bulk-bar" id="bulkActionBar">
-                    <button class="btn" style="flex:1; background:var(--success-light); color:var(--success); border-color:var(--success);" onclick="processBulkItems('Tüketildi')">[ CONSUMED ]</button>
-                    <button class="btn" style="flex:1; background:var(--danger-light); color:var(--danger); border-color:var(--danger);" onclick="processBulkItems('İmha Edildi')">[ DESTROY ]</button>
+                    <button class="btn" style="flex:1; background:var(--success); color:white;" onclick="processBulkItems('Tüketildi')"><i class="fa-solid fa-check"></i> Tüketildi</button>
+                    <button class="btn" style="flex:1; background:var(--danger); color:white;" onclick="processBulkItems('İmha Edildi')"><i class="fa-solid fa-trash"></i> İmha Et</button>
                 </div>
             </div>
 
             <!-- 4. GÖREVLER & DİJİTAL PANO -->
             <div id="tab-todos" class="tab-pane">
-                <h3 style="font-size: 20px; color: var(--text-main); margin-bottom: 15px;">> SYS_LOGS</h3>
+                <h3 style="font-size: 22px; font-weight: 700; color: var(--text-main); margin-bottom: 20px;">Görev Panosu</h3>
                 
                 <!-- VARDİYA TESLİM NOTU -->
-                <div style="background:transparent; padding:12px; border:1px solid var(--warning); margin-bottom:15px; position:relative; box-shadow: 2px 2px 0px rgba(250,204,21,0.2);">
-                    <h4 style="font-size:12px; color:var(--warning); margin-bottom:8px; display:flex; align-items:center; gap:6px;">
-                        <i class="fa-solid fa-triangle-exclamation"></i> DEVİR NOTU
+                <div style="background:var(--warning-light); padding:16px; border-radius:var(--radius-md); margin-bottom:20px;">
+                    <h4 style="font-size:13px; font-weight:700; color:var(--warning); margin-bottom:10px; display:flex; align-items:center; gap:8px;">
+                        <i class="fa-solid fa-clipboard"></i> VARDİYA TESLİM NOTU
                     </h4>
-                    <textarea id="shiftNoteArea" onchange="updateShiftNote()" placeholder=">_ Insert override logic here..." style="width:100%; border:none; background:transparent; outline:none; font-family:'Space Mono', monospace; font-size:12px; color:var(--text-main); resize:none; min-height:60px; text-transform:uppercase;"></textarea>
+                    <textarea id="shiftNoteArea" onchange="updateShiftNote()" placeholder="Bir sonraki vardiyaya not bırakın..." style="width:100%; border:none; background:transparent; outline:none; font-family:inherit; font-size:14px; font-weight:500; color:var(--text-main); resize:none; min-height:60px;"></textarea>
                 </div>
 
-                <div style="display:flex; gap:8px; margin-bottom:15px;">
-                    <input type="text" id="todoInput" class="form-input" style="margin-bottom:0;" placeholder=">_ NEW TASK...">
-                    <button class="btn btn-primary" style="width:50px; padding:0;" onclick="addTodo()">+</button>
+                <div style="display:flex; gap:10px; margin-bottom:20px;">
+                    <input type="text" id="todoInput" class="form-input" style="margin-bottom:0; border-radius:30px;" placeholder="Yeni görev ekle...">
+                    <button class="btn btn-primary" style="width:55px; border-radius:30px; padding:0;" onclick="addTodo()"><i class="fa-solid fa-plus" style="font-size:18px;"></i></button>
                 </div>
-                <div class="modern-card" id="todoContainer" style="padding:10px 15px;"></div>
+                <div id="todoContainer"></div>
             </div>
 
         </div>
 
         <!-- BOTTOM NAV -->
         <nav class="bottom-nav">
-            <div class="nav-item" id="navOrder" onclick="switchTab('tab-order', this)" style="display:none;"><i class="fa-solid fa-database"></i><span>DATA</span></div>
-            <div class="nav-item active" id="navLibrary" onclick="switchTab('tab-library', this)"><i class="fa-solid fa-microchip"></i><span>ÜRETİM</span></div>
-            <div class="nav-item" id="navActive" onclick="switchTab('tab-active', this)"><i class="fa-solid fa-radar"></i><span>RADAR</span></div>
-            <div class="nav-item" id="navTodos" onclick="switchTab('tab-todos', this)"><i class="fa-solid fa-list-check"></i><span>LOGS</span></div>
+            <div class="nav-item" id="navOrder" onclick="switchTab('tab-order', this)" style="display:none;"><i class="fa-solid fa-cart-shopping"></i><span>Sipariş</span></div>
+            <div class="nav-item active" id="navLibrary" onclick="switchTab('tab-library', this)"><i class="fa-solid fa-layer-group"></i><span>Üretim</span></div>
+            <div class="nav-item" id="navActive" onclick="switchTab('tab-active', this)"><i class="fa-solid fa-clock-rotate-left"></i><span>Takip</span></div>
+            <div class="nav-item" id="navTodos" onclick="switchTab('tab-todos', this)"><i class="fa-solid fa-clipboard-check"></i><span>Görevler</span></div>
         </nav>
     </div>
 
-    <!-- GİZLİ REÇETE KİTAPÇIĞI MODALI (FAZ 1 YENİ) -->
+    <!-- GİZLİ REÇETE KİTAPÇIĞI MODALI -->
     <div class="modal-overlay" id="recipeModal" onclick="closeOnOutsideClick(event, 'recipeModal')">
-        <div class="modal-content" style="padding-top: 35px;">
-            <h3 id="recipeTitle" style="font-size:20px; color:var(--kd-gold); margin-bottom:15px; text-shadow: var(--shadow-neon-magenta);"></h3>
-            <p id="recipeContent" style="color:var(--text-main); font-size:13px; line-height:1.6; white-space: pre-wrap; background: var(--bg-color); padding: 15px; border: 1px solid var(--text-muted);"></p>
-            <button class="btn" style="margin-top:20px; border-color:var(--text-muted); color:var(--text-muted);" onclick="closeModal('recipeModal')">[ KAPAT ]</button>
+        <div class="modal-content">
+            <div class="drag-handle"></div>
+            <h3 id="recipeTitle" style="font-size:22px; font-weight:700; color:var(--text-main); margin-bottom:15px;"></h3>
+            <div id="recipeContent" style="color:var(--text-main); font-size:15px; font-weight:500; line-height:1.6; white-space: pre-wrap; background: var(--bg-color); padding: 20px; border-radius: var(--radius-md);"></div>
+            <button class="btn" style="margin-top:25px; background:var(--bg-color); color:var(--text-main);" onclick="closeModal('recipeModal')">Kapat</button>
         </div>
     </div>
 
-    <!-- ZORUNLU KAPANIŞ KONTROL LİSTESİ MODALI (FAZ 1 YENİ) -->
+    <!-- ZORUNLU KAPANIŞ KONTROL LİSTESİ MODALI -->
     <div class="modal-overlay" id="checklistModal" onclick="closeOnOutsideClick(event, 'checklistModal')">
-        <div class="modal-content" style="padding-top: 35px;">
-            <h3 style="font-size:22px; color:var(--danger); margin-bottom:15px; text-shadow: 0 0 5px var(--danger);">>_ SYSTEM_SHUTDOWN</h3>
-            <p style="color:var(--text-muted); font-size:12px; margin-bottom: 20px;">Güvenli çıkış için aşağıdaki protokolleri doğrulayın:</p>
+        <div class="modal-content">
+            <div class="drag-handle"></div>
+            <h3 style="font-size:24px; font-weight:800; color:var(--text-main); margin-bottom:10px;">Çıkış Protokolü</h3>
+            <p style="color:var(--text-muted); font-size:14px; margin-bottom: 25px; line-height:1.5;">Güvenli bir şekilde vardiyayı devretmek için lütfen aşağıdaki adımları doğrulayın:</p>
             
-            <label class="closing-cb-label"><input type="checkbox" class="closing-cb"> KASA SAYIMI EKSİKSİZ TAMAMLANDI</label>
-            <label class="closing-cb-label"><input type="checkbox" class="closing-cb"> ÇÖPLER ATILDI, BAR TEMİZLENDİ</label>
-            <label class="closing-cb-label"><input type="checkbox" class="closing-cb"> DOLAP DERECELERİ (+4 / -18) KONTROL EDİLDİ</label>
-            <label class="closing-cb-label"><input type="checkbox" class="closing-cb"> GÜN SONU FİŞLERİ ZIMBALANDI</label>
+            <label class="closing-cb-label"><input type="checkbox" class="closing-cb"> Kasa sayımı eksiksiz tamamlandı.</label>
+            <label class="closing-cb-label"><input type="checkbox" class="closing-cb"> Çöpler atıldı, bar temizlendi.</label>
+            <label class="closing-cb-label"><input type="checkbox" class="closing-cb"> Dolap dereceleri (+4 / -18) kontrol edildi.</label>
+            <label class="closing-cb-label"><input type="checkbox" class="closing-cb"> Gün sonu fişleri ve evraklar düzenlendi.</label>
 
-            <button class="btn btn-primary" id="finishClosingBtn" disabled style="margin-top:20px; opacity:0.5;" onclick="showSummary()">[ SHUTDOWN INITIATE ]</button>
-            <button class="btn" style="margin-top:10px; border-color:var(--text-muted); color:var(--text-muted);" onclick="closeModal('checklistModal')">[ İPTAL ]</button>
+            <button class="btn btn-primary" id="finishClosingBtn" disabled style="margin-top:25px; opacity:0.4; transition: opacity 0.3s;" onclick="showSummary()">Vardiyayı Tamamla</button>
+            <button class="btn" style="margin-top:10px; background:transparent; color:var(--text-muted);" onclick="closeModal('checklistModal')">İptal Et</button>
         </div>
     </div>
 
     <!-- VARDİYA SONU ÖZETİ -->
     <div class="modal-overlay" id="summaryModal">
-        <div class="modal-content" style="text-align:center; padding-top: 40px;">
-            <i class="fa-solid fa-user-astronaut" style="font-size: 40px; color: var(--success); margin-bottom:15px; text-shadow: 0 0 10px var(--success);"></i>
-            <h3 style="font-size:22px; margin-bottom:10px; color:var(--text-main);">> MISSION_PASSED</h3>
-            <p id="summaryText" style="color:var(--text-muted); font-size:13px; margin-bottom:25px; line-height:1.5;"></p>
-            <button class="btn btn-primary" onclick="executeLogout()">[ SİSTEMDEN ÇIK ]</button>
+        <div class="modal-content" style="text-align:center;">
+            <div class="drag-handle"></div>
+            <div style="width:80px; height:80px; background:var(--success-light); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
+                <i class="fa-solid fa-star" style="font-size: 36px; color: var(--success);"></i>
+            </div>
+            <h3 style="font-size:24px; font-weight:800; margin-bottom:15px; color:var(--text-main);">Harika İş Çıkardın!</h3>
+            <p id="summaryText" style="color:var(--text-muted); font-size:15px; margin-bottom:30px; line-height:1.6;"></p>
+            <button class="btn btn-primary" onclick="executeLogout()">Sistemden Çık ve Dinlen</button>
         </div>
     </div>
 
     <!-- YÖNETİCİ MENÜSÜ MODALI -->
     <div class="modal-overlay" id="adminModal" onclick="closeOnOutsideClick(event, 'adminModal')">
-        <div class="modal-content" style="padding-top: 35px;">
-            <h3 style="font-size:20px; margin-bottom:20px; color:var(--warning);">>_ ROOT_ACCESS</h3>
+        <div class="modal-content">
+            <div class="drag-handle"></div>
+            <h3 style="font-size:22px; font-weight:700; margin-bottom:25px; color:var(--text-main);">Yönetici Paneli</h3>
             <div class="admin-grid">
-                <div class="admin-card" onclick="openModal('usersModal'); closeModal('adminModal');" style="border-color:var(--warning); color:var(--warning);"><i class="fa-solid fa-users-gear"></i><div>USER_MANAGEMENT</div></div>
+                <div class="admin-card" onclick="openModal('usersModal'); closeModal('adminModal');" style="background:var(--bg-color); border:none;">
+                    <i class="fa-solid fa-users" style="color:var(--accent);"></i>
+                    <div style="font-weight:600;">Personel Yönetimi</div>
+                </div>
             </div>
-            <button class="btn" style="margin-top:20px; border-color:var(--text-muted); color:var(--text-muted);" onclick="closeModal('adminModal')">[ İPTAL ]</button>
+            <button class="btn" style="margin-top:25px; background:var(--danger-light); color:var(--danger);" onclick="confirmLogout()">Sistemden Çıkış Yap</button>
         </div>
     </div>
 
     <!-- PERSONEL YÖNETİMİ MODALI -->
     <div class="modal-overlay" id="usersModal" onclick="closeOnOutsideClick(event, 'usersModal')">
-        <div class="modal-content" style="padding-top: 35px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                <h3 style="font-size:18px; color:var(--text-main);">> USER_DB</h3>
-                <button onclick="openModal('adminModal'); closeModal('usersModal');" style="background:none; border:none; font-size:16px; color:var(--text-muted); cursor:pointer;">[ BACK ]</button>
+        <div class="modal-content">
+            <div class="drag-handle"></div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h3 style="font-size:22px; font-weight:700; color:var(--text-main);">Kullanıcılar</h3>
+                <button onclick="openModal('adminModal'); closeModal('usersModal');" style="background:none; border:none; font-size:16px; font-weight:600; color:var(--accent); cursor:pointer;">Geri</button>
             </div>
-            <div id="usersList" style="margin-bottom:20px;"></div>
+            <div id="usersList" style="margin-bottom:25px;"></div>
             
-            <div style="background:transparent; padding:15px; border:1px solid var(--text-main); box-shadow: inset 0 0 10px rgba(0,255,204,0.1);">
-                <h4 style="font-size:13px; margin-bottom:10px; color:var(--text-main);">> ADD_NEW_ENTITY</h4>
-                <input type="text" id="newUserName" class="form-input" placeholder="ID (AD SOYAD)">
-                <div style="display:flex; gap:10px; margin-bottom:12px;">
-                    <input type="number" id="newUserPin" class="form-input" style="margin-bottom:0;" placeholder="PIN (4)" maxlength="4">
-                    <select id="newUserRole" class="form-input" style="margin-bottom:0; background:var(--surface);">
-                        <option value="staff">STAFF</option>
-                        <option value="admin">ROOT</option>
+            <div style="background:var(--bg-color); padding:20px; border-radius:var(--radius-md);">
+                <h4 style="font-size:14px; font-weight:700; margin-bottom:15px; color:var(--text-main);">Yeni Personel Ekle</h4>
+                <input type="text" id="newUserName" class="form-input" style="background:var(--surface-solid);" placeholder="Ad Soyad">
+                <div style="display:flex; gap:10px; margin-bottom:15px;">
+                    <input type="number" id="newUserPin" class="form-input" style="margin-bottom:0; background:var(--surface-solid);" placeholder="PIN (4 Haneli)" maxlength="4">
+                    <select id="newUserRole" class="form-input" style="margin-bottom:0; background:var(--surface-solid);">
+                        <option value="staff">Personel</option>
+                        <option value="admin">Yönetici</option>
                     </select>
                 </div>
-                <button class="btn btn-primary" onclick="addUser()">[ DEPLOY USER ]</button>
+                <button class="btn btn-primary" onclick="addUser()">Sisteme Kaydet</button>
             </div>
         </div>
     </div>
 
     <!-- YENİ ÜRÜN EKLE MODALI -->
     <div class="modal-overlay" id="addProdModal" onclick="closeOnOutsideClick(event, 'addProdModal')">
-        <div class="modal-content" style="padding-top: 35px;">
-            <h3 style="font-size:18px; margin-bottom:15px; color:var(--text-main);">> INJECT_NEW_DATA</h3>
-            <input type="text" id="newProdName" class="form-input" placeholder="OBJECT_NAME">
-            <select id="newProdCat" class="form-input" style="background:var(--surface);">
+        <div class="modal-content">
+            <div class="drag-handle"></div>
+            <h3 style="font-size:22px; font-weight:700; margin-bottom:20px; color:var(--text-main);">Yeni Ürün</h3>
+            <input type="text" id="newProdName" class="form-input" placeholder="Ürün Adı">
+            <select id="newProdCat" class="form-input">
                 <option value="Şarküteri, Süt ve Soslar">Süt ve Soslar</option>
                 <option value="Paketli & Kuru Gıdalar">Kuru Gıdalar</option>
                 <option value="Meyve ve Sebze">Meyve/Sebze</option>
@@ -400,19 +414,18 @@
                 <option value="Kahveler, İçecekler ve Ön Hazırlık">Kahveler/Ön Haz.</option>
                 <option value="Paketli Şarküteri">Paketli Şarküteri</option>
             </select>
-            <div style="display:flex; gap:10px; margin-bottom: 20px;">
-                <input type="number" id="newProdTime" class="form-input" placeholder="TIME" style="flex:1; margin-bottom: 0;">
-                <select id="newProdUnit" class="form-input" style="flex:1; margin-bottom: 0; background:var(--surface);">
-                    <option value="Gün">GÜN</option>
-                    <option value="Ay">AY</option>
-                    <option value="Yıl">YIL</option>
-                    <option value="Günlük">GÜN SONU</option>
+            <div style="display:flex; gap:10px; margin-bottom: 25px;">
+                <input type="number" id="newProdTime" class="form-input" placeholder="Süre" style="flex:1; margin-bottom: 0;">
+                <select id="newProdUnit" class="form-input" style="flex:1; margin-bottom: 0;">
+                    <option value="Gün">Gün</option>
+                    <option value="Ay">Ay</option>
+                    <option value="Yıl">Yıl</option>
+                    <option value="Günlük">Gün Sonu</option>
                     <option value="ORJ SKT">ORJ SKT</option>
-                    <option value="Hemen Kullandır">HEMEN</option>
+                    <option value="Hemen Kullandır">Hemen</option>
                 </select>
             </div>
-            <button class="btn btn-primary" onclick="saveCustomProduct()">[ COMMIT INJECTION ]</button>
-            <button class="btn" style="margin-top:10px; border-color:var(--text-muted); color:var(--text-muted);" onclick="closeModal('addProdModal')">[ ABORT ]</button>
+            <button class="btn btn-primary" onclick="saveCustomProduct()">Kütüphaneye Ekle</button>
         </div>
     </div>
 
@@ -432,7 +445,7 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-        const dbRoot = 'kd_kordon_pro_v10'; 
+        const dbRoot = 'kd_kordon_pro_v11'; // Veritabanı yenilendi
 
         let currentUser = null; 
         let currentPin = "";
@@ -446,47 +459,39 @@
         let lastActionData = null;
         let undoTimeout = null;
 
-        // OFFLINE MODE TAKİBİ
-        window.addEventListener('offline', () => {
-            document.getElementById('offlineBanner').style.display = 'block';
-        });
-        window.addEventListener('online', () => {
-            document.getElementById('offlineBanner').style.display = 'none';
-            showToast("SİSTEM YENİDEN ONLİNE.");
-        });
+        window.addEventListener('offline', () => { document.getElementById('offlineBanner').style.display = 'block'; });
+        window.addEventListener('online', () => { document.getElementById('offlineBanner').style.display = 'none'; showToast("Bağlantı sağlandı."); });
 
-        // TEMA ZORLAMASI (Y2K hep Dark)
-        document.body.classList.add('dark-mode');
+        let isDark = localStorage.getItem('kd_theme') === 'dark';
+        if(isDark) document.body.classList.add('dark-mode');
 
+        // iOS Soft Renkler
         const catColors = {
-            "Şarküteri, Süt ve Soslar": "#00ffcc", // Cyan
-            "Paketli Şarküteri": "#ff0055", // Red
-            "Meyve ve Sebze": "#39ff14", // Green
-            "Çözündürülen / Dökme / Teşhir": "#ff00ff", // Magenta
-            "Kahveler, İçecekler ve Ön Hazırlık": "#facc15", // Yellow
-            "Paketli & Kuru Gıdalar": "#5e7399" // Muted Blue
+            "Şarküteri, Süt ve Soslar": "#007AFF", 
+            "Paketli Şarküteri": "#FF3B30", 
+            "Meyve ve Sebze": "#34C759", 
+            "Çözündürülen / Dökme / Teşhir": "#AF52DE", 
+            "Kahveler, İçecekler ve Ön Hazırlık": "#FF9500", 
+            "Paketli & Kuru Gıdalar": "#8E8E93" 
         };
 
         const catIcons = { "Şarküteri, Süt ve Soslar": "fa-cheese", "Paketli & Kuru Gıdalar": "fa-box", "Meyve ve Sebze": "fa-apple-whole", "Çözündürülen / Dökme / Teşhir": "fa-ice-cream", "Kahveler, İçecekler ve Ön Hazırlık": "fa-mug-hot", "Paketli Şarküteri": "fa-bacon" };
 
-        // MOCK RECIPES (FAZ 1 GİZLİ REÇETE KİTAPÇIĞI)
         const secretRecipes = {
             "Cold Brew": "1. 1/10 oranında kalın öğütülmüş kahve tart.\n2. Bez veya kağıt filtreye yerleştir.\n3. Soğuk suyu yavaşça dök, tüm kahvenin ıslandığına emin ol.\n4. Ağzı kapalı şekilde +4°C dolapta 16-20 saat arası demlenmeye bırak.\n5. Süre bitiminde filtreyi al ve ürünü DRAFT fıçısına aktar.",
             "Limonata": "1. 1 LT Taze Sıkılmış Limon Suyu\n2. 1 LT Şeker Şurubu\n3. 3 LT İçme Suyu ekle.\n4. İyice karıştır ve +4°C dolaba al. (Toplam 5 LT ürün elde edilir).",
             "Mğz.da Çekilen Türk Kahvesi": "1. Türk kahvesi değirmenini en ince ayara al.\n2. Sadece günlük tüketilecek kadar (max 1-2 kg) taze çekim yap.\n3. Hava almayan opak kaplarda muhafaza et.\nNot: Kesinlikle ertesi güne çekilmiş kahve devretme.",
-            "default": "Ürün standart porsiyonlama veya yıkama işlemi gerektirir.\n> Paket üzerindeki üretici talimatlarına veya mağaza şefinin belirttiği standart gramaj tablosuna uyunuz."
+            "default": "Bu ürün standart porsiyonlama veya yıkama işlemi gerektirir.\n\nLütfen paket üzerindeki üretici talimatlarına veya mağaza içi standart gramaj tablosuna uyunuz."
         };
 
         document.addEventListener("DOMContentLoaded", () => {
             if(!navigator.onLine) document.getElementById('offlineBanner').style.display = 'block';
+            updateThemeIcon();
             checkNotificationStatus();
             initDatabase();
             initSwipeNavigation();
             
-            // Kapanış Listesi Checkbox Dinleyicileri
-            document.querySelectorAll('.closing-cb').forEach(cb => {
-                cb.addEventListener('change', checkClosingChecklist);
-            });
+            document.querySelectorAll('.closing-cb').forEach(cb => { cb.addEventListener('change', checkClosingChecklist); });
         });
 
         function initSwipeNavigation() {
@@ -516,7 +521,7 @@
             let dbTimeout = setTimeout(() => {
                 const spinner = document.getElementById('fullScreenSpinner');
                 if(spinner.style.display !== 'none') {
-                    spinner.innerHTML = `<i class="fa-solid fa-triangle-exclamation fa-3x" style="color:var(--danger); margin-bottom:15px;"></i><span style="color:var(--text-main);">OFFLINE MODE. LOCAL CACHE LOADED.</span>`;
+                    spinner.innerHTML = `<i class="fa-solid fa-triangle-exclamation fa-3x" style="color:var(--danger); margin-bottom:15px;"></i><span style="color:var(--text-main);">Bağlantı sağlanamadı. Yerel veriler kullanılıyor.</span>`;
                     setTimeout(() => { document.getElementById('fullScreenSpinner').style.display = 'none'; }, 2000);
                 }
             }, 5000);
@@ -550,9 +555,7 @@
         }
         function clearPin() { currentPin = ""; updatePinDisplay(); }
         function updatePinDisplay() {
-            for(let i=1; i<=4; i++) {
-                document.getElementById(`dot${i}`).className = `pin-dot ${i <= currentPin.length ? 'filled' : ''}`;
-            }
+            for(let i=1; i<=4; i++) { document.getElementById(`dot${i}`).className = `pin-dot ${i <= currentPin.length ? 'filled' : ''}`; }
         }
         function submitPin() {
             if(currentPin.length !== 4) return;
@@ -562,23 +565,17 @@
                 document.getElementById('authScreen').style.display = 'none';
                 launchApp();
             } else {
-                showToast("ACCESS DENIED!", true);
+                showToast("Hatalı PIN kodu.", true);
                 clearPin();
                 if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
             }
         }
         
-        // ZORUNLU KAPANIŞ LİSTESİ VE ÇIKIŞ AKIŞI (FAZ 1 YENİ)
         function triggerLogoutFlow() {
             closeModal('adminModal');
-            // Checkboxları sıfırla
-            document.querySelectorAll('.closing-cb').forEach(cb => {
-                cb.checked = false;
-                cb.parentElement.classList.remove('checked');
-            });
+            document.querySelectorAll('.closing-cb').forEach(cb => { cb.checked = false; cb.parentElement.classList.remove('checked'); });
             document.getElementById('finishClosingBtn').disabled = true;
-            document.getElementById('finishClosingBtn').style.opacity = '0.5';
-            
+            document.getElementById('finishClosingBtn').style.opacity = '0.4';
             openModal('checklistModal');
         }
 
@@ -589,19 +586,17 @@
             const allChecked = Array.from(document.querySelectorAll('.closing-cb')).every(cb => cb.checked);
             const btn = document.getElementById('finishClosingBtn');
             btn.disabled = !allChecked;
-            btn.style.opacity = allChecked ? '1' : '0.5';
-            if(allChecked && navigator.vibrate) navigator.vibrate(100);
+            btn.style.opacity = allChecked ? '1' : '0.4';
+            if(allChecked && navigator.vibrate) navigator.vibrate(50);
         }
 
         function showSummary() {
             closeModal('checklistModal');
-            
             const todayStr = new Date().toLocaleDateString('tr-TR');
             const myLogs = allLogs.filter(l => l.user === currentUser.name && l.date.includes(todayStr));
             const completedCount = myLogs.filter(l => l.action.includes('Tüketildi') || l.action.includes('İmha')).length;
             
-            let summaryHtml = `GÜNÜN RAPORU:<br><br>SENİN VARDİYANDA <b>${completedCount}</b> ADET ÜRÜN / GARNİTÜR BAŞARIYLA SİSTEMDEN DÜŞÜLDÜ.<br><br>TÜM PROTOKOLLER ONAYLANDI.<br>DİNLENME MODUNA GEÇİLEBİLİR.`;
-            
+            let summaryHtml = `Bugün senin vardiyanda toplam <b>${completedCount}</b> adet ürün başarıyla sistemden düşüldü.<br><br>Günün yorgunluğunu atma vakti geldi, tüm emeklerin için teşekkürler.`;
             document.getElementById('summaryText').innerHTML = summaryHtml;
             openModal('summaryModal');
         }
@@ -615,7 +610,6 @@
 
         function launchApp() {
             appLoadTime = Date.now();
-            
             document.getElementById('appContent').style.display = 'block';
             document.getElementById('headerUserName').innerText = currentUser.name;
             
@@ -629,7 +623,7 @@
                 switchTab('tab-library', document.getElementById('navLibrary'));
             }
             
-            showToast(`AUTH SUCCESS: ${currentUser.name}`);
+            showToast(`Hoşgeldin, ${currentUser.name}`);
             loadOrderTemplate('Manav', document.querySelector('.chip'));
             
             libraryDB = [...defaultLibrary];
@@ -637,8 +631,7 @@
 
             db.ref(`${dbRoot}/library`).on('value', snap => {
                 const data = snap.val();
-                if(!data) { db.ref(`${dbRoot}/library`).set(libraryDB); } 
-                else { libraryDB = Object.values(data); }
+                if(!data) { db.ref(`${dbRoot}/library`).set(libraryDB); } else { libraryDB = Object.values(data); }
                 renderLibraryDrumpad();
             });
 
@@ -661,14 +654,14 @@
             db.ref(`${dbRoot}/todos`).on('child_added', snap => {
                 const t = snap.val();
                 if(t.timestamp && t.timestamp > appLoadTime && t.addedBy !== currentUser.name) {
-                    sendPushNotification("TASK_INJECTED", `${t.addedBy}: ${t.text}`);
+                    sendPushNotification("Yeni Görev Eklendi", `${t.addedBy}: ${t.text}`);
                 }
             });
 
             db.ref(`${dbRoot}/logs`).on('child_added', snap => {
                 const l = snap.val();
                 if(l.timestamp && l.timestamp > appLoadTime && l.user !== currentUser.name) {
-                    if(l.action === "Sipariş Verildi") { sendPushNotification("DATA_TRANSFERRED", `${l.user} sipariş listesini yolladı.`); }
+                    if(l.action === "Sipariş Verildi") { sendPushNotification("Sipariş İletildi", `${l.user} listeyi yolladı.`); }
                 }
             });
 
@@ -800,14 +793,14 @@
 
             if(isEditMode) {
                 btn.style.background = 'var(--text-main)';
-                btn.style.color = 'var(--bg-color)';
-                btn.innerHTML = '[ DONE ]';
+                btn.style.color = 'var(--surface-solid)';
+                btn.innerHTML = 'Tamam';
                 addBtn.style.display = 'block'; 
                 container.classList.add('edit-mode');
             } else {
-                btn.style.background = 'transparent';
-                btn.style.color = 'var(--kd-gold)';
-                btn.innerHTML = '[ EDIT ]';
+                btn.style.background = 'var(--accent-light)';
+                btn.style.color = 'var(--accent)';
+                btn.innerHTML = 'Düzenle';
                 addBtn.style.display = 'none';
                 container.classList.remove('edit-mode');
             }
@@ -823,11 +816,11 @@
             if(isBulkMode) {
                 btn.style.background = 'var(--text-main)';
                 btn.style.color = 'var(--bg-color)';
-                btn.innerHTML = '[ ABORT ]';
+                btn.innerHTML = 'İptal Et';
             } else {
-                btn.style.background = 'transparent';
+                btn.style.background = 'var(--surface-solid)';
                 btn.style.color = 'var(--text-main)';
-                btn.innerHTML = '[ BULK ]';
+                btn.innerHTML = 'Toplu Seç';
             }
             renderActiveList();
         }
@@ -841,39 +834,34 @@
         }
 
         function processBulkItems(resultType) {
-            if(selectedBulkItems.length === 0) return alert("HİÇBİR VERİ SEÇİLMEDİ.");
+            if(selectedBulkItems.length === 0) return alert("Lütfen işlem yapılacak ürünleri seçin.");
             
             clearTimeout(undoTimeout);
             
             const itemsToProcess = selectedBulkItems.map(id => activeItems.find(i => i.id === id)).filter(Boolean);
             lastActionData = { type: 'bulk', items: itemsToProcess, result: resultType };
             
-            itemsToProcess.forEach(item => {
-                db.ref(`${dbRoot}/active/${item.id}`).remove();
-            });
+            itemsToProcess.forEach(item => { db.ref(`${dbRoot}/active/${item.id}`).remove(); });
             
             if(navigator.vibrate) navigator.vibrate([50, 50]);
             
             const t = document.getElementById('toastNotification');
-            t.innerHTML = `<span>${itemsToProcess.length} BİRİM İŞLENDİ.</span> <button id="undoBtn" style="margin-left:15px; background:transparent; border:1px solid var(--text-main); color:var(--text-main); padding:4px 10px; font-weight:800; cursor:pointer;">[ UNDO ]</button>`;
+            t.innerHTML = `<span style="font-weight:600;">${itemsToProcess.length} ürün işlendi.</span> <button id="undoBtn" style="margin-left:15px; background:var(--accent-light); color:var(--accent); border:none; padding:6px 14px; border-radius:20px; font-weight:700; cursor:pointer; font-family:inherit;">Geri Al</button>`;
+            t.style.background = 'var(--surface-solid)';
             t.classList.add('show');
             
             document.getElementById('undoBtn').onclick = () => {
                 t.classList.remove('show');
                 clearTimeout(undoTimeout);
                 if(lastActionData && lastActionData.type === 'bulk') {
-                    lastActionData.items.forEach(item => {
-                        db.ref(`${dbRoot}/active/${item.id}`).set(item);
-                    });
+                    lastActionData.items.forEach(item => { db.ref(`${dbRoot}/active/${item.id}`).set(item); });
                     lastActionData = null;
                 }
             };
 
             undoTimeout = setTimeout(() => {
                 t.classList.remove('show');
-                if(lastActionData && lastActionData.type === 'bulk') {
-                    lastActionData = null;
-                }
+                if(lastActionData && lastActionData.type === 'bulk') { lastActionData = null; }
             }, 5000);
             
             toggleBulkMode();
@@ -886,7 +874,6 @@
             renderLibraryDrumpad();
         }
 
-        // GİZLİ REÇETE VE UZUN BASMA (LONG PRESS) MANTIĞI EKLENDİ
         let pressTimer;
         let isLongPress = false;
 
@@ -897,18 +884,16 @@
                 isLongPress = true;
                 if(navigator.vibrate) navigator.vibrate([50, 50]);
                 showSecretRecipe(name);
-            }, 600); // 600ms uzun basma süresi
+            }, 600); 
         }
-        function handlePadTouchEnd() {
-            clearTimeout(pressTimer);
-        }
+        function handlePadTouchEnd() { clearTimeout(pressTimer); }
         function handlePadClick(id) {
-            if(isLongPress) return; // Eğer uzun basıldıysa SKT başlatmayı engelle
+            if(isLongPress) return; 
             startTracking(id);
         }
 
         function showSecretRecipe(name) {
-            document.getElementById('recipeTitle').innerText = `> ${name.toUpperCase()} REÇETESİ`;
+            document.getElementById('recipeTitle').innerText = name;
             let rec = secretRecipes[name] || secretRecipes["default"];
             document.getElementById('recipeContent').innerText = rec;
             openModal('recipeModal');
@@ -919,7 +904,7 @@
             container.innerHTML = '';
             
             if (!libraryDB || libraryDB.length === 0) {
-                container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: var(--text-muted);">LOADING_DATA...</div>';
+                container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: var(--text-muted);">Veriler yükleniyor...</div>';
                 return;
             }
             
@@ -936,14 +921,13 @@
                 else omurStr = `${p.raf_omru} ${p.birim}`;
                 
                 let icon = catIcons[p.kategori] || "fa-box";
-                let topBorderColor = catColors[p.kategori] || "var(--border)";
+                let topBorderColor = catColors[p.kategori] || "var(--text-muted)";
                 
                 let deleteBtnHtml = (currentUser && currentUser.role === 'admin') ? 
                     `<div class="pad-delete" onclick="event.stopPropagation(); deleteProduct('${p.id}')"><i class="fa-solid fa-xmark"></i></div>` : '';
 
-                // onclick yerine onmousedown/touchstart ve onclick entegrasyonu
                 container.innerHTML += `
-                    <div class="pad" style="border-top: 4px solid ${topBorderColor};" 
+                    <div class="pad" 
                          ontouchstart="handlePadTouchStart(event, '${p.id}', '${p.urun}')" 
                          ontouchend="handlePadTouchEnd()" 
                          onclick="handlePadClick('${p.id}')">
@@ -958,10 +942,10 @@
 
         function deleteProduct(id) {
             if(!isEditMode) return;
-            if(confirm("DATA SİLİNSİN Mİ?")) {
+            if(confirm("Bu ürünü silmek istediğinize emin misiniz?")) {
                 libraryDB = libraryDB.filter(p => p.id !== id);
                 db.ref(`${dbRoot}/library`).set(libraryDB);
-                showToast("DATA PURGED!");
+                showToast("Ürün silindi.");
             }
         }
 
@@ -978,7 +962,7 @@
             libraryDB.unshift(newItem);
             db.ref(`${dbRoot}/library`).set(libraryDB);
             closeModal('addProdModal');
-            showToast("DATA INJECTED!");
+            showToast("Yeni ürün eklendi.");
             document.getElementById('newProdName').value = "";
         }
 
@@ -1005,14 +989,13 @@
             };
             
             db.ref(`${dbRoot}/active/${newItem.id}`).set(newItem);
-            showToast(`> ${prod.urun} INITIALIZED`);
+            showToast(`${prod.urun} takibe alındı.`);
             if(navigator.vibrate) navigator.vibrate(50);
         }
 
-        // AKTİF TAKİP LİSTESİ VE GERİ AL (UNDO) SİSTEMİ
         function renderActiveList() {
             const container = document.getElementById('activeList'); container.innerHTML = '';
-            if(activeItems.length === 0) { container.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted); font-size:13px;">NO ACTIVE PROCESSES.</div>`; return; }
+            if(activeItems.length === 0) { container.innerHTML = `<div style="text-align:center; padding:40px 20px; color:var(--text-muted); font-size:14px; background:var(--surface-solid); border-radius:var(--radius-md); box-shadow:var(--shadow-sm);">Şu an aktif takip edilen ürün yok.</div>`; return; }
             
             const now = new Date().getTime();
             activeItems.sort((a,b) => new Date(a.expiresAt) - new Date(b.expiresAt)).forEach(item => {
@@ -1024,15 +1007,15 @@
                 let percent = Math.max(0, Math.min(100, (diff / total) * 100));
 
                 if(diff <= 0) { 
-                    timeStr = "SYSTEM FAILURE!"; color = "var(--danger)"; percent = 0; 
+                    timeStr = "SÜRESİ DOLDU"; color = "var(--danger)"; percent = 0; 
                 } else {
                     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
                     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                     const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                     
-                    if (days > 0) { timeStr = `${days}D ${hours}H ${mins}M LEFT`; } 
-                    else if (hours > 0) { timeStr = `${hours}H ${mins}M LEFT`; } 
-                    else { timeStr = `${mins}M LEFT`; }
+                    if (days > 0) { timeStr = `${days} Gün ${hours}s ${mins}d`; } 
+                    else if (hours > 0) { timeStr = `${hours} Saat ${mins} Dak`; } 
+                    else { timeStr = `${mins} Dakika`; }
 
                     if(percent < 20) color = "var(--danger)"; 
                     else if(percent < 40) color = "var(--warning)";
@@ -1055,11 +1038,11 @@
                             
                             <div style="flex:1;">
                                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                                    <div style="font-weight:800; font-size:15px; color:var(--text-main);">
-                                        <i class="fa-solid ${item.icon}" style="color:${color}; margin-right:6px;"></i> ${item.name}
+                                    <div style="font-weight:700; font-size:16px; color:var(--text-main);">
+                                        <i class="fa-solid ${item.icon}" style="color:${color}; margin-right:8px; font-size:14px;"></i> ${item.name}
                                     </div>
-                                    <div style="font-size:10px; color:var(--text-muted); font-weight:700;">
-                                        <i class="fa-solid fa-user-ninja"></i> ${item.startedBy.split(' ')[0]}
+                                    <div style="font-size:11px; color:var(--text-muted); font-weight:600;">
+                                        ${item.startedBy.split(' ')[0]}
                                     </div>
                                 </div>
                                 <div class="timer-display" style="color:${color};">${timeStr}</div>
@@ -1093,7 +1076,8 @@
             if(navigator.vibrate) navigator.vibrate([50, 50]);
             
             const t = document.getElementById('toastNotification');
-            t.innerHTML = `<span>> PROCESS TERMINATED</span> <button id="undoBtn" style="margin-left:15px; background:transparent; border:1px solid var(--text-main); color:var(--text-main); padding:4px 10px; font-weight:800; cursor:pointer;">[ UNDO ]</button>`;
+            t.innerHTML = `<span style="font-weight:600;">${item.name} ${result.toLowerCase()}</span> <button id="undoBtn" style="margin-left:15px; background:var(--accent-light); color:var(--accent); border:none; padding:6px 14px; border-radius:20px; font-weight:700; cursor:pointer; font-family:inherit;">Geri Al</button>`;
+            t.style.background = 'var(--surface-solid)';
             t.classList.add('show');
             
             document.getElementById('undoBtn').onclick = () => {
@@ -1107,14 +1091,10 @@
 
             undoTimeout = setTimeout(() => {
                 t.classList.remove('show');
-                if(lastActionData && lastActionData.type === 'single') {
-                    logAction(`SKT ${lastActionData.result}`, `${lastActionData.item.name} sistemden düşüldü.`);
-                    lastActionData = null;
-                }
+                if(lastActionData && lastActionData.type === 'single') { lastActionData = null; }
             }, 5000);
         }
 
-        // SİPARİŞ MODÜLÜ
         const orderDB = {
             "Manav": [{n:"Brokoli", b:"Kilo"},{n:"Çilek", b:"Kilo"},{n:"Domates", b:"Kilo"},{n:"Elma", b:"Kilo"},{n:"Greyfurt", b:"Kilo"},{n:"Havuç", b:"Kilo"},{n:"Karpuz", b:"Adet"},{n:"Kereviz Sapı", b:"Adet"},{n:"Limon", b:"Kilo"},{n:"Maydanoz", b:"Bağ"},{n:"Muz", b:"Kilo"},{n:"Nane", b:"Bağ"},{n:"Pancar", b:"Kilo"},{n:"Portakal", b:"Kilo"},{n:"Rezene", b:"Adet"},{n:"Salatalık", b:"Kilo"},{n:"Zencefil", b:"Kilo"}],
             "Süt": [{n:"Burger Peyniri", b:"Paket"},{n:"Cheddar Peyniri", b:"Paket"},{n:"Dana Jambon", b:"Paket"},{n:"Hindi Füme", b:"Paket"},{n:"Krema", b:"Koli"},{n:"Laktozsuz Süt", b:"Koli"},{n:"Laktozsuz Yoğurt", b:"Adet"},{n:"Tam Yağlı Süt", b:"Koli"},{n:"Tost Peyniri", b:"Paket"},{n:"Yağsız Süt", b:"Koli"}],
@@ -1125,19 +1105,19 @@
         
         function loadOrderTemplate(cat, el) {
             if(el) { document.querySelectorAll('#tab-order .chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); }
-            currentOrderCat = cat; document.getElementById('currentTemplateTitle').innerText = `> ${cat} LİSTESİ`;
+            currentOrderCat = cat; document.getElementById('currentTemplateTitle').innerText = `${cat} Listesi`;
             const container = document.getElementById('orderTemplateList'); container.innerHTML = '';
             orderDB[cat].forEach(i => {
                 const c = orderCounts[i.n] ? orderCounts[i.n].c : 0;
                 container.innerHTML += `
                     <div class="order-row ${c > 0 ? 'active-row' : ''}">
                         <div style="flex:1;">
-                            <div style="font-weight:700;">${i.n}</div>
-                            <small style="color:var(--text-muted);">${i.b}</small>
+                            <div style="font-weight:600; font-size:15px; color:var(--text-main);">${i.n}</div>
+                            <small style="color:var(--text-muted); font-size:12px;">${i.b}</small>
                         </div>
                         <div class="counter">
                             <button class="btn-count" onclick="uc('${i.n}', -1, '${i.b}')">-</button>
-                            <span style="font-weight:800; min-width:20px; text-align:center;">${c}</span>
+                            <span style="font-weight:700; min-width:24px; text-align:center;">${c}</span>
                             <button class="btn-count add" onclick="uc('${i.n}', 1, '${i.b}')">+</button>
                         </div>
                     </div>
@@ -1150,10 +1130,9 @@
         function sendOrderViaWhatsApp() {
             let items = [];
             for(const [n, d] of Object.entries(orderCounts)) { if(d.c > 0) items.push(`- ${d.c} ${d.b} ${n}`); }
-            if(items.length === 0) return alert("BOŞ LİSTE GÖNDERİLEMEZ.");
+            if(items.length === 0) return alert("Boş sipariş gönderilemez.");
             
-            logAction("Sipariş Verildi", `${currentOrderCat} listesi oluşturuldu.`);
-            showToast("> DATA TRANSFER STARTED.");
+            showToast("Sipariş WhatsApp'a aktarılıyor...");
             
             const waText = `*KORDON SİPARİŞ (${currentOrderCat})*\nSiparişi Veren: ${currentUser.name}\n\n${items.join('\n')}`;
             window.open(`https://wa.me/?text=${encodeURIComponent(waText)}`, "_blank");
@@ -1168,46 +1147,30 @@
             const newTodo = { id: Date.now().toString(), text: txt, done: false, addedBy: currentUser.name, timestamp: Date.now() };
             db.ref(`${dbRoot}/todos/${newTodo.id}`).set(newTodo);
             document.getElementById('todoInput').value = "";
-            logAction("Görev Eklendi", `Yeni görev: ${txt}`);
-            showToast("> TASK ADDED!");
+            showToast("Görev eklendi.");
         }
         function renderTodos() {
             const container = document.getElementById('todoContainer'); container.innerHTML = '';
-            if(todos.length === 0) { container.innerHTML = `<div style="font-size:12px; color:var(--text-muted); text-align:center;">NO PENDING TASKS.</div>`; return; }
+            if(todos.length === 0) { container.innerHTML = `<div style="font-size:13px; color:var(--text-muted); text-align:center; padding:20px; background:var(--surface-solid); border-radius:var(--radius-md);">Bekleyen görev yok.</div>`; return; }
             todos.forEach(t => {
                 container.innerHTML += `
-                    <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; border:1px solid var(--border); margin-bottom:8px; background:transparent; box-shadow: 2px 2px 0px rgba(0,255,204,0.2);">
-                        <div style="display:flex; align-items:center; gap:10px; cursor:pointer; flex:1;" onclick="toggleTodo('${t.id}', ${t.done})">
-                            <div style="width:20px; height:20px; border:1px solid var(--text-main); display:flex; align-items:center; justify-content:center; color:${t.done ? 'var(--text-main)' : 'transparent'};"><i class="fa-solid fa-check"></i></div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:16px; background:var(--surface-solid); border-radius:var(--radius-md); box-shadow:var(--shadow-sm); margin-bottom:10px; border:1px solid var(--border);">
+                        <div style="display:flex; align-items:center; gap:12px; cursor:pointer; flex:1;" onclick="toggleTodo('${t.id}', ${t.done})">
+                            <div style="width:24px; height:24px; border-radius:50%; border:2px solid ${t.done ? 'var(--success)' : 'var(--border)'}; display:flex; align-items:center; justify-content:center; color:white; background:${t.done ? 'var(--success)' : 'transparent'}; transition:var(--transition);"><i class="fa-solid fa-check" style="font-size:12px; opacity:${t.done ? '1' : '0'};"></i></div>
                             <div>
-                                <div style="font-size:13px; font-weight:700; text-decoration:${t.done ? 'line-through' : 'none'}; color:${t.done ? 'var(--text-muted)' : 'var(--text-main)'};">${t.text}</div>
-                                <div style="font-size:9px; color:var(--text-muted); margin-top:2px;">INITIATED BY: ${t.addedBy}</div>
+                                <div style="font-size:14px; font-weight:600; text-decoration:${t.done ? 'line-through' : 'none'}; color:${t.done ? 'var(--text-muted)' : 'var(--text-main)'};">${t.text}</div>
+                                <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">Ekleyen: ${t.addedBy.split(' ')[0]}</div>
                             </div>
                         </div>
-                        <button style="background:none; border:none; color:var(--danger); font-size:16px; cursor:pointer;" onclick="deleteTodo('${t.id}')">
+                        <button style="background:var(--danger-light); border:none; color:var(--danger); width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:var(--transition);" onclick="deleteTodo('${t.id}')">
                             <i class="fa-solid fa-xmark"></i>
                         </button>
                     </div>
                 `;
             });
         }
-        function toggleTodo(id, currentStatus) {
-            db.ref(`${dbRoot}/todos/${id}`).update({ done: !currentStatus });
-            if(!currentStatus) logAction("Görev Tamamlandı", "Bir görev işaretlendi.");
-        }
+        function toggleTodo(id, currentStatus) { db.ref(`${dbRoot}/todos/${id}`).update({ done: !currentStatus }); }
         function deleteTodo(id) { db.ref(`${dbRoot}/todos/${id}`).remove(); }
-
-        function logAction(actionType, detail) {
-            const logItem = { 
-                id: Date.now().toString(), 
-                date: new Date().toLocaleString('tr-TR'), 
-                user: currentUser.name, 
-                action: actionType, 
-                detail: detail,
-                timestamp: Date.now()
-            };
-            db.ref(`${dbRoot}/logs/${logItem.id}`).set(logItem);
-        }
 
         function openModal(id) { document.getElementById(id).classList.add('active'); if(id==='usersModal') renderUsersList(); }
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
@@ -1217,16 +1180,16 @@
             const container = document.getElementById('usersList'); container.innerHTML = '';
             for(const [pin, u] of Object.entries(usersDB)) {
                 const roleClass = u.role === 'admin' ? 'role-admin' : 'role-staff';
-                const roleText = u.role === 'admin' ? 'ROOT' : 'STAFF';
+                const roleText = u.role === 'admin' ? 'Yönetici' : 'Personel';
                 container.innerHTML += `
                     <div class="user-row">
                         <div>
-                            <div style="font-weight:700; font-size:14px; color:var(--text-main);">${u.name}</div>
-                            <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">ID_PIN: ${pin}</div>
+                            <div style="font-weight:700; font-size:15px; color:var(--text-main);">${u.name}</div>
+                            <div style="font-size:12px; color:var(--text-muted); margin-top:4px; font-family:monospace;">PIN: ${pin}</div>
                         </div>
-                        <div style="display:flex; align-items:center; gap:10px;">
+                        <div style="display:flex; align-items:center; gap:12px;">
                             <span class="role-badge ${roleClass}">${roleText}</span>
-                            ${pin !== '1923' ? `<button onclick="deleteUser('${pin}')" style="background:none; border:none; color:var(--danger); cursor:pointer;"><i class="fa-solid fa-trash"></i></button>` : ''}
+                            ${pin !== '1923' ? `<button onclick="deleteUser('${pin}')" style="background:var(--danger-light); width:32px; height:32px; border-radius:50%; border:none; color:var(--danger); cursor:pointer; transition:var(--transition); display:flex; align-items:center; justify-content:center;"><i class="fa-solid fa-trash"></i></button>` : ''}
                         </div>
                     </div>
                 `;
@@ -1238,24 +1201,24 @@
             const pin = document.getElementById('newUserPin').value.trim();
             const role = document.getElementById('newUserRole').value;
             
-            if(!name || pin.length !== 4) return alert("HATA: GEÇERSİZ BİLGİ GİRİŞİ.");
-            if(usersDB[pin]) return alert("HATA: BU ID KULLANIMDA.");
+            if(!name || pin.length !== 4) return alert("Lütfen eksiksiz ve 4 haneli PIN girin.");
+            if(usersDB[pin]) return alert("Bu PIN kullanımda.");
 
             db.ref(`${dbRoot}/users/${pin}`).set({ name: name, role: role, pin: pin });
             document.getElementById('newUserName').value = ""; document.getElementById('newUserPin').value = "";
-            showToast("> USER_DEPLOYED!");
+            showToast("Personel başarıyla eklendi.");
             renderUsersList();
         }
 
         function deleteUser(pin) {
-            if(confirm("DİKKAT: PERSONEL SİLİNECEK. ONAYLIYOR MUSUN?")) db.ref(`${dbRoot}/users/${pin}`).remove();
+            if(confirm("Personeli silmek istediğinize emin misiniz?")) db.ref(`${dbRoot}/users/${pin}`).remove();
             renderUsersList();
         }
 
         function checkNotificationStatus() { if("Notification" in window && Notification.permission === "granted") document.getElementById('bellBtn').style.display = 'none'; }
         function requestNotificationPermission() {
-            if(!("Notification" in window)) return alert("SİSTEM DESTEKLEMİYOR.");
-            Notification.requestPermission().then(p => { if(p === "granted") { document.getElementById('bellBtn').style.display = 'none'; showToast("> UPLINK ESTABLISHED."); } });
+            if(!("Notification" in window)) return alert("Tarayıcınız bildirimleri desteklemiyor.");
+            Notification.requestPermission().then(p => { if(p === "granted") { document.getElementById('bellBtn').style.display = 'none'; showToast("Bildirimler açıldı."); } });
         }
         function sendPushNotification(title, body) {
             if ("Notification" in window && Notification.permission === "granted") {
@@ -1268,15 +1231,14 @@
                 }
             }
         }
-        function toggleTheme() { showToast("> THEME IS LOCKED TO CYBERPUNK."); }
-        function updateThemeIcon() { const i = document.getElementById('themeIcon'); if(i) i.className = "fa-solid fa-lock"; }
+        function toggleTheme() { isDark = !isDark; document.body.classList.toggle('dark-mode', isDark); localStorage.setItem('kd_theme', isDark ? 'dark' : 'light'); updateThemeIcon(); renderLibraryDrumpad(); }
+        function updateThemeIcon() { const i = document.getElementById('themeIcon'); if(i) i.className = isDark ? "fa-solid fa-sun" : "fa-solid fa-moon"; }
         function switchTab(tId, el) { document.querySelectorAll('.tab-pane').forEach(e => e.classList.remove('active')); document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active')); document.getElementById(tId).classList.add('active'); el.classList.add('active'); }
         function showToast(msg, isErr=false) { 
             const t = document.getElementById('toastNotification'); 
-            t.innerHTML = `<span>${msg}</span>`; 
-            t.style.borderColor = isErr ? 'var(--danger)' : 'var(--text-main)'; 
-            t.style.color = isErr ? 'var(--danger)' : 'var(--text-main)'; 
-            t.style.boxShadow = isErr ? '0 0 10px var(--danger)' : '0 0 10px var(--text-main)';
+            t.innerHTML = `<span style="font-weight:600;">${msg}</span>`; 
+            t.style.background = isErr ? 'var(--danger)' : 'var(--surface-solid)'; 
+            t.style.color = isErr ? '#FFF' : 'var(--text-main)'; 
             t.classList.add('show'); 
             setTimeout(()=>t.classList.remove('show'), 2500); 
         }
