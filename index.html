@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KD Kordon Pro - Edit Mode Edition</title>
+    <title>KD Kordon Pro - Final Edition</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -43,7 +43,8 @@
         #appContent { display: none; padding-bottom: 90px; }
 
         .app-header { background: var(--surface); padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
-        .user-badge { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 14px; color: var(--kd-dark); background: var(--kd-gold-light); padding: 6px 12px; border-radius: 20px; border: 1px solid var(--kd-gold); }
+        .user-badge { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 14px; color: var(--kd-dark); background: var(--kd-gold-light); padding: 6px 12px; border-radius: 20px; border: 1px solid var(--kd-gold); cursor: pointer; transition: var(--transition); }
+        .user-badge:active { transform: scale(0.95); }
         .header-actions { display: flex; align-items: center; gap: 8px; }
         .icon-btn { background: var(--bg-color); border: 1px solid var(--border); width: 40px; height: 40px; border-radius: 50%; color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: var(--transition); }
         
@@ -84,8 +85,8 @@
         .pad-name { font-size: 10px; font-weight: 800; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; transition: var(--transition); }
         .pad-time { position:absolute; top:4px; right:4px; font-size:8px; background:var(--bg-color); padding:2px 4px; border-radius:4px; font-weight:bold; color:var(--text-muted); border:1px solid var(--border); transition: var(--transition);}
         
-        /* Düzenleme Modu Tasarımı (SİLME BUTONLARI) */
-        .pad-delete { position: absolute; top: -8px; right: -8px; width: 26px; height: 26px; background: var(--danger); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; border: 2px solid var(--surface); cursor: pointer; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4); opacity: 0; visibility: hidden; transform: scale(0.5); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 10; }
+        /* Estetik Düzenleme Modu Tasarımı (SİLME BUTONLARI) */
+        .pad-delete { position: absolute; top: -6px; right: -6px; width: 26px; height: 26px; background: var(--danger); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; border: 2px solid var(--surface); cursor: pointer; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4); opacity: 0; visibility: hidden; transform: scale(0.5); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 10; }
         .drumpad-grid.edit-mode .pad-delete { opacity: 1; visibility: visible; transform: scale(1); }
         .drumpad-grid.edit-mode .pad { border-style: dashed; border-color: var(--danger-light); background: var(--bg-color); }
         .drumpad-grid.edit-mode .pad i { color: var(--text-muted); opacity: 0.5; }
@@ -159,7 +160,8 @@
     <!-- ANA UYGULAMA -->
     <div id="appContent">
         <header class="app-header">
-            <div class="user-badge"><i class="fa-solid fa-user-check"></i> <span id="headerUserName">Personel</span></div>
+            <!-- ÇIKIŞ YAPILABİLİR KULLANICI ROZETİ -->
+            <div class="user-badge" onclick="confirmLogout()"><i class="fa-solid fa-user-check"></i> <span id="headerUserName">Personel</span></div>
             <div class="header-actions">
                 <button class="icon-btn" onclick="requestNotificationPermission()" id="bellBtn"><i class="fa-solid fa-bell"></i></button>
                 <button class="icon-btn" onclick="toggleTheme()" id="themeBtn"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
@@ -258,7 +260,7 @@
                 <div class="admin-card" onclick="openModal('usersModal'); closeModal('adminModal');"><i class="fa-solid fa-users-gear"></i><div>Personel Yönetimi</div></div>
                 <div class="admin-card" onclick="openModal('reportModal'); closeModal('adminModal');"><i class="fa-solid fa-file-invoice"></i><div>Arşiv & Raporlar</div></div>
             </div>
-            <button class="btn" style="margin-top:20px; background:var(--danger-light); color:var(--danger);" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Sistemden Çıkış Yap</button>
+            <button class="btn" style="margin-top:20px; background:var(--danger-light); color:var(--danger);" onclick="confirmLogout()"><i class="fa-solid fa-right-from-bracket"></i> Sistemden Çıkış Yap</button>
         </div>
     </div>
 
@@ -345,7 +347,9 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-        const dbRoot = 'kd_kordon_pro_final'; // Temiz veritabanı başlangıcı
+        
+        // Tamamen sıfırlanmış yeni bir veritabanı alanı
+        const dbRoot = 'kd_kordon_pro_final'; 
 
         let isDark = localStorage.getItem('kd_theme') === 'dark';
         if(isDark) document.body.classList.add('dark-mode'); 
@@ -417,7 +421,15 @@
                 if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
             }
         }
-        function logout() { localStorage.removeItem('kd_saved_pin'); location.reload(); }
+        
+        // GÜNCELLENMİŞ ÇIKIŞ FONKSİYONU
+        function confirmLogout() {
+            if(confirm("Sistemden çıkış yapmak istediğinize emin misiniz?")) {
+                localStorage.removeItem('kd_saved_pin');
+                location.reload();
+            }
+        }
+        function logout() { confirmLogout(); }
 
         let activeItems = [], todos = [], allLogs = [];
 
@@ -440,11 +452,14 @@
             
             showToast(`Hoşgeldin, ${currentUser.name}`);
             loadOrderTemplate('Manav', document.querySelector('.chip'));
+            
+            // Boş ekranı engellemek için anında render yap
+            libraryDB = [...defaultLibrary];
+            renderLibraryDrumpad();
 
             db.ref(`${dbRoot}/library`).on('value', snap => {
                 const data = snap.val();
                 if(!data) {
-                    libraryDB = [...defaultLibrary];
                     db.ref(`${dbRoot}/library`).set(libraryDB);
                 } else {
                     libraryDB = Object.values(data);
@@ -491,61 +506,123 @@
 
         const catIcons = { "Şarküteri, Süt ve Soslar": "fa-cheese", "Paketli & Kuru Gıdalar": "fa-box", "Meyve ve Sebze": "fa-apple-whole", "Çözündürülen / Dökme / Teşhir": "fa-ice-cream", "Kahveler, İçecekler ve Ön Hazırlık": "fa-mug-hot", "Paketli Şarküteri": "fa-bacon" };
 
-        let libraryDB = [];
+        // --- PDF TABANLI EKSİKSİZ VE AYRIŞTIRILMIŞ ÜRÜN KÜTÜPHANESİ ---
         const defaultLibrary = [
-            {id:"L1", kategori:"Şarküteri, Süt ve Soslar", urun:"Koyun Peyniri", raf_omru:5, birim:"Gün"},
-            {id:"L2", kategori:"Şarküteri, Süt ve Soslar", urun:"Yumurta (Kırılmış)", raf_omru:0, birim:"Hemen Kullandır"},
-            {id:"L3", kategori:"Şarküteri, Süt ve Soslar", urun:"Parmesan (Toz)", raf_omru:5, birim:"Gün"},
-            {id:"L4", kategori:"Şarküteri, Süt ve Soslar", urun:"Yumurta (Yıkanmış)", raf_omru:1, birim:"Gün"},
-            {id:"L5", kategori:"Şarküteri, Süt ve Soslar", urun:"Cheddar Sos", raf_omru:2, birim:"Gün"},
-            {id:"L6", kategori:"Şarküteri, Süt ve Soslar", urun:"Kirli Yumurta", raf_omru:0, birim:"ORJ SKT"},
-            {id:"L7", kategori:"Şarküteri, Süt ve Soslar", urun:"Avokado Sos", raf_omru:3, birim:"Gün"},
-            {id:"L8", kategori:"Şarküteri, Süt ve Soslar", urun:"Mayonez", raf_omru:1, birim:"Ay"},
-            {id:"L9", kategori:"Şarküteri, Süt ve Soslar", urun:"Pesto Sos", raf_omru:5, birim:"Gün"},
-            {id:"L10", kategori:"Şarküteri, Süt ve Soslar", urun:"Zeytin Ezmesi", raf_omru:7, birim:"Gün"},
-            {id:"L11", kategori:"Şarküteri, Süt ve Soslar", urun:"Turşu", raf_omru:15, birim:"Gün"},
+            {id:"L1", kategori:"Şarküteri, Süt ve Soslar", urun:"Süzme Beyaz Peynir", raf_omru:3, birim:"Gün"},
+            {id:"L2", kategori:"Şarküteri, Süt ve Soslar", urun:"Krem Peynir", raf_omru:3, birim:"Gün"},
+            {id:"L3", kategori:"Şarküteri, Süt ve Soslar", urun:"Kaşar Peyniri", raf_omru:5, birim:"Gün"},
+            {id:"L4", kategori:"Şarküteri, Süt ve Soslar", urun:"Mozarella Peyniri", raf_omru:5, birim:"Gün"},
+            {id:"L5", kategori:"Şarküteri, Süt ve Soslar", urun:"Cheddar", raf_omru:5, birim:"Gün"},
+            {id:"L6", kategori:"Şarküteri, Süt ve Soslar", urun:"Burger Peyniri", raf_omru:5, birim:"Gün"},
+            {id:"L7", kategori:"Şarküteri, Süt ve Soslar", urun:"Koyun Peyniri", raf_omru:5, birim:"Gün"},
+            {id:"L8", kategori:"Şarküteri, Süt ve Soslar", urun:"Parmesan Peyniri (Toz)", raf_omru:5, birim:"Gün"},
+            {id:"L9", kategori:"Şarküteri, Süt ve Soslar", urun:"Cheddar Sos", raf_omru:2, birim:"Gün"},
+            {id:"L10", kategori:"Şarküteri, Süt ve Soslar", urun:"Avokado Sos", raf_omru:3, birim:"Gün"},
+            {id:"L11", kategori:"Şarküteri, Süt ve Soslar", urun:"Pesto Sos", raf_omru:5, birim:"Gün"},
             {id:"L12", kategori:"Şarküteri, Süt ve Soslar", urun:"Sezar Sos", raf_omru:7, birim:"Gün"},
-            {id:"L13", kategori:"Paketli & Kuru Gıdalar", urun:"Kırık Fındık/Ceviz", raf_omru:0, birim:"ORJ SKT"},
-            {id:"L14", kategori:"Paketli & Kuru Gıdalar", urun:"Badem Ezmesi", raf_omru:0, birim:"ORJ SKT"},
-            {id:"L15", kategori:"Paketli & Kuru Gıdalar", urun:"Fıstık Püresi", raf_omru:0, birim:"ORJ SKT"},
-            {id:"L16", kategori:"Paketli & Kuru Gıdalar", urun:"Granola / Müsli", raf_omru:1, birim:"Ay"},
-            {id:"L17", kategori:"Paketli & Kuru Gıdalar", urun:"Rende Çikolata", raf_omru:0, birim:"ORJ SKT"},
-            {id:"L18", kategori:"Paketli & Kuru Gıdalar", urun:"Baharatlar", raf_omru:0, birim:"ORJ SKT"},
-            {id:"L19", kategori:"Paketli & Kuru Gıdalar", urun:"Crispy Çeşitleri", raf_omru:3, birim:"Ay"},
-            {id:"L20", kategori:"Paketli & Kuru Gıdalar", urun:"Kare Bisküvi", raf_omru:21, birim:"Gün"},
-            {id:"L21", kategori:"Paketli & Kuru Gıdalar", urun:"Şuruplar", raf_omru:1, birim:"Ay"},
-            {id:"L22", kategori:"Paketli & Kuru Gıdalar", urun:"Meyveli Soslar", raf_omru:1, birim:"Ay"},
-            {id:"L23", kategori:"Paketli & Kuru Gıdalar", urun:"Çiko/Karamel Sos", raf_omru:2, birim:"Ay"},
-            {id:"L24", kategori:"Paketli & Kuru Gıdalar", urun:"Kavanoz Vişne Sos", raf_omru:3, birim:"Gün"},
-            {id:"L25", kategori:"Meyve ve Sebze", urun:"Çilek (Yıkanmış)", raf_omru:1, birim:"Gün"},
-            {id:"L26", kategori:"Meyve ve Sebze", urun:"Çilek (Yıkanmamış)", raf_omru:3, birim:"Gün"},
-            {id:"L27", kategori:"Meyve ve Sebze", urun:"Yeşillikler", raf_omru:3, birim:"Gün"},
-            {id:"L28", kategori:"Meyve ve Sebze", urun:"Karpuz", raf_omru:3, birim:"Gün"},
-            {id:"L29", kategori:"Meyve ve Sebze", urun:"Domates/Salatalık", raf_omru:3, birim:"Gün"},
-            {id:"L30", kategori:"Meyve ve Sebze", urun:"Muz", raf_omru:5, birim:"Gün"},
-            {id:"L31", kategori:"Meyve ve Sebze", urun:"Havuç / Narenciye", raf_omru:7, birim:"Gün"},
-            {id:"L32", kategori:"Meyve ve Sebze", urun:"Kereviz / Zencefil", raf_omru:5, birim:"Gün"},
-            {id:"L33", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Kapari / Somon Salata", raf_omru:2, birim:"Gün"},
-            {id:"L34", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Tavuklu/Ton Salata", raf_omru:2, birim:"Gün"},
-            {id:"L35", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Dondurmalar", raf_omru:15, birim:"Gün"},
-            {id:"L36", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Spesiyal Çikolatalar", raf_omru:1, birim:"Ay"},
-            {id:"L37", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Külah Çeşitleri", raf_omru:1, birim:"Ay"},
-            {id:"L38", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Meyve Püreleri", raf_omru:5, birim:"Gün"},
-            {id:"L39", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Glazür Sos", raf_omru:5, birim:"Gün"},
-            {id:"L40", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Çekilen Türk Kahvesi", raf_omru:0, birim:"Günlük"},
-            {id:"L41", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Cold Brew", raf_omru:21, birim:"Gün"},
-            {id:"L42", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Soğuk Espresso", raf_omru:21, birim:"Gün"},
-            {id:"L43", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Soğuk Türk Kahvesi", raf_omru:0, birim:"Günlük"},
-            {id:"L44", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Salepli İçecek Tozu", raf_omru:4, birim:"Ay"},
-            {id:"L45", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"NO Serisi Hazırlık", raf_omru:0, birim:"Günlük"},
-            {id:"L46", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Cacaonly", raf_omru:2, birim:"Ay"},
-            {id:"L47", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Draft İçecekler", raf_omru:3, birim:"Gün"},
-            {id:"L48", kategori:"Paketli Şarküteri", urun:"Süt Çeşitleri", raf_omru:2, birim:"Gün"},
-            {id:"L49", kategori:"Paketli Şarküteri", urun:"Süzme / Füme", raf_omru:3, birim:"Gün"},
-            {id:"L50", kategori:"Paketli Şarküteri", urun:"Mozarella / Cheddar", raf_omru:5, birim:"Gün"},
-            {id:"L51", kategori:"Paketli Şarküteri", urun:"Tereyağı", raf_omru:5, birim:"Gün"}
+            {id:"L13", kategori:"Şarküteri, Süt ve Soslar", urun:"Salam", raf_omru:2, birim:"Gün"},
+            {id:"L14", kategori:"Şarküteri, Süt ve Soslar", urun:"Jambon", raf_omru:2, birim:"Gün"},
+            {id:"L15", kategori:"Şarküteri, Süt ve Soslar", urun:"Hindi Füme", raf_omru:2, birim:"Gün"},
+            {id:"L16", kategori:"Şarküteri, Süt ve Soslar", urun:"Yoğurt", raf_omru:3, birim:"Gün"},
+            {id:"L17", kategori:"Şarküteri, Süt ve Soslar", urun:"Krema", raf_omru:2, birim:"Gün"},
+            {id:"L18", kategori:"Şarküteri, Süt ve Soslar", urun:"Süt Çeşitleri", raf_omru:2, birim:"Gün"},
+            {id:"L19", kategori:"Şarküteri, Süt ve Soslar", urun:"Laktozsuz Süt", raf_omru:2, birim:"Gün"},
+            {id:"L20", kategori:"Şarküteri, Süt ve Soslar", urun:"Bitkisel Süt Çeşitleri", raf_omru:4, birim:"Gün"},
+            {id:"L21", kategori:"Şarküteri, Süt ve Soslar", urun:"Tereyağı", raf_omru:7, birim:"Gün"},
+            {id:"L22", kategori:"Şarküteri, Süt ve Soslar", urun:"Yumurta (Kırılmış)", raf_omru:0, birim:"Hemen Kullandır"},
+            {id:"L23", kategori:"Şarküteri, Süt ve Soslar", urun:"Yumurta (Yıkanmış)", raf_omru:1, birim:"Gün"},
+            {id:"L24", kategori:"Şarküteri, Süt ve Soslar", urun:"Yumurta (Kirli)", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L25", kategori:"Şarküteri, Süt ve Soslar", urun:"Mayonez", raf_omru:1, birim:"Ay"},
+            {id:"L26", kategori:"Şarküteri, Süt ve Soslar", urun:"Zeytin Ezmesi", raf_omru:7, birim:"Gün"},
+            {id:"L27", kategori:"Şarküteri, Süt ve Soslar", urun:"Turşu", raf_omru:15, birim:"Gün"},
+            {id:"L28", kategori:"Meyve ve Sebze", urun:"Çilek", raf_omru:3, birim:"Gün"},
+            {id:"L29", kategori:"Meyve ve Sebze", urun:"Karpuz", raf_omru:3, birim:"Gün"},
+            {id:"L30", kategori:"Meyve ve Sebze", urun:"Domates", raf_omru:5, birim:"Gün"},
+            {id:"L31", kategori:"Meyve ve Sebze", urun:"Salatalık", raf_omru:5, birim:"Gün"},
+            {id:"L32", kategori:"Meyve ve Sebze", urun:"Muz", raf_omru:5, birim:"Gün"},
+            {id:"L33", kategori:"Meyve ve Sebze", urun:"Havuç", raf_omru:7, birim:"Gün"},
+            {id:"L34", kategori:"Meyve ve Sebze", urun:"Portakal", raf_omru:7, birim:"Gün"},
+            {id:"L35", kategori:"Meyve ve Sebze", urun:"Greyfurt", raf_omru:7, birim:"Gün"},
+            {id:"L36", kategori:"Meyve ve Sebze", urun:"Limon", raf_omru:7, birim:"Gün"},
+            {id:"L37", kategori:"Meyve ve Sebze", urun:"Kıvırcık", raf_omru:3, birim:"Gün"},
+            {id:"L38", kategori:"Meyve ve Sebze", urun:"Maydanoz", raf_omru:3, birim:"Gün"},
+            {id:"L39", kategori:"Meyve ve Sebze", urun:"Nane", raf_omru:3, birim:"Gün"},
+            {id:"L40", kategori:"Meyve ve Sebze", urun:"Brokoli", raf_omru:3, birim:"Gün"},
+            {id:"L41", kategori:"Meyve ve Sebze", urun:"Pancar", raf_omru:3, birim:"Gün"},
+            {id:"L42", kategori:"Meyve ve Sebze", urun:"Rezene", raf_omru:5, birim:"Gün"},
+            {id:"L43", kategori:"Meyve ve Sebze", urun:"Kereviz Sapı", raf_omru:5, birim:"Gün"},
+            {id:"L44", kategori:"Meyve ve Sebze", urun:"Taze Zencefil", raf_omru:5, birim:"Gün"},
+            {id:"L45", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Kapari Salata", raf_omru:2, birim:"Gün"},
+            {id:"L46", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Tartar Sos", raf_omru:2, birim:"Gün"},
+            {id:"L47", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Tavuklu Sezar Salata", raf_omru:2, birim:"Gün"},
+            {id:"L48", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Ton Balıklı Salata", raf_omru:2, birim:"Gün"},
+            {id:"L49", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Amerikan Salatası", raf_omru:2, birim:"Gün"},
+            {id:"L50", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Hindistan Cevizi Püresi", raf_omru:2, birim:"Gün"},
+            {id:"L51", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Kırmızı Meyve Püresi", raf_omru:3, birim:"Gün"},
+            {id:"L52", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Dondurmalar (Teşhir)", raf_omru:15, birim:"Gün"},
+            {id:"L53", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Spesiyal Çikolatalar", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L54", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Trüf Çikolatalar", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L55", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Lavi Çikolatalar", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L56", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Roche Çikolatalar", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L57", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Dondurma Külahı", raf_omru:15, birim:"Gün"},
+            {id:"L58", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Renkli Külahlar", raf_omru:1, birim:"Ay"},
+            {id:"L59", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Kalp Gofret", raf_omru:1, birim:"Ay"},
+            {id:"L60", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Mğz.da Çekilen Türk Kahvesi", raf_omru:0, birim:"Günlük"},
+            {id:"L61", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Öğütülmüş Kahveler", raf_omru:21, birim:"Gün"},
+            {id:"L62", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Çekirdek Kahveler", raf_omru:4, birim:"Ay"},
+            {id:"L63", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Salepli İçecek Tozu", raf_omru:4, birim:"Ay"},
+            {id:"L64", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Tuzlu Krmll. Spesiyal", raf_omru:14, birim:"Gün"},
+            {id:"L65", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Limonata", raf_omru:2, birim:"Gün"},
+            {id:"L66", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Cold Brew", raf_omru:0, birim:"Günlük"},
+            {id:"L67", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Soğuk Espresso", raf_omru:0, birim:"Günlük"},
+            {id:"L68", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Soğuk Türk Kahvesi", raf_omru:0, birim:"Günlük"},
+            {id:"L69", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Sıcak Salepli İçecek", raf_omru:0, birim:"Günlük"},
+            {id:"L70", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Sıcak Çikolatalı İçecek", raf_omru:0, birim:"Günlük"},
+            {id:"L71", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"NO Serisi Hazırlık", raf_omru:0, birim:"Günlük"},
+            {id:"L72", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Choco Süt", raf_omru:1, birim:"Gün"},
+            {id:"L73", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"DRAFT Latte", raf_omru:3, birim:"Gün"},
+            {id:"L74", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"DRAFT Cold Brew", raf_omru:3, birim:"Gün"},
+            {id:"L75", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"DRAFT Americano", raf_omru:3, birim:"Gün"},
+            {id:"L76", kategori:"Paketli & Kuru Gıdalar", urun:"Kırık Fındık", raf_omru:1, birim:"Ay"},
+            {id:"L77", kategori:"Paketli & Kuru Gıdalar", urun:"Kırık Ceviz", raf_omru:1, birim:"Ay"},
+            {id:"L78", kategori:"Paketli & Kuru Gıdalar", urun:"Badem Ezmesi", raf_omru:1, birim:"Ay"},
+            {id:"L79", kategori:"Paketli & Kuru Gıdalar", urun:"Gofrik Kreması", raf_omru:3, birim:"Ay"},
+            {id:"L80", kategori:"Paketli & Kuru Gıdalar", urun:"Yer Fıstığı Ezmesi", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L81", kategori:"Paketli & Kuru Gıdalar", urun:"Fındık Kreması", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L82", kategori:"Paketli & Kuru Gıdalar", urun:"Tahin", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L83", kategori:"Paketli & Kuru Gıdalar", urun:"Bal", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L84", kategori:"Paketli & Kuru Gıdalar", urun:"Yoğurtlu Dondurma Tozu", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L85", kategori:"Paketli & Kuru Gıdalar", urun:"Hindistan Cevizi Tozu", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L86", kategori:"Paketli & Kuru Gıdalar", urun:"Karabiber", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L87", kategori:"Paketli & Kuru Gıdalar", urun:"Tarçın", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L88", kategori:"Paketli & Kuru Gıdalar", urun:"Çörekotu", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L89", kategori:"Paketli & Kuru Gıdalar", urun:"Zerdeçal Latte Baharatı", raf_omru:6, birim:"Ay"},
+            {id:"L90", kategori:"Paketli & Kuru Gıdalar", urun:"Nar Ekşisi", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L91", kategori:"Paketli & Kuru Gıdalar", urun:"Renkli Crispy", raf_omru:3, birim:"Ay"},
+            {id:"L92", kategori:"Paketli & Kuru Gıdalar", urun:"Şuruplar", raf_omru:4, birim:"Ay"},
+            {id:"L93", kategori:"Paketli & Kuru Gıdalar", urun:"Meyveli Soslar", raf_omru:1, birim:"Ay"},
+            {id:"L94", kategori:"Paketli & Kuru Gıdalar", urun:"Çikolata Sos", raf_omru:2, birim:"Ay"},
+            {id:"L95", kategori:"Paketli & Kuru Gıdalar", urun:"Karamel Sos", raf_omru:2, birim:"Ay"},
+            {id:"L96", kategori:"Paketli & Kuru Gıdalar", urun:"Pudra Şekeri", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L97", kategori:"Paketli & Kuru Gıdalar", urun:"Küp Şeker", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L98", kategori:"Paketli & Kuru Gıdalar", urun:"Yaban Mersini", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L99", kategori:"Paketli & Kuru Gıdalar", urun:"Yulaf Ezmesi", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L100", kategori:"Paketli & Kuru Gıdalar", urun:"Granola", raf_omru:1, birim:"Ay"},
+            {id:"L101", kategori:"Paketli & Kuru Gıdalar", urun:"Müsli", raf_omru:2, birim:"Ay"},
+            {id:"L102", kategori:"Paketli & Kuru Gıdalar", urun:"Chia Tohumu", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L103", kategori:"Paketli & Kuru Gıdalar", urun:"Protein Tozu", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L104", kategori:"Paketli & Kuru Gıdalar", urun:"Rende Çikolata", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L105", kategori:"Paketli & Kuru Gıdalar", urun:"Para Çikolata", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L106", kategori:"Paketli & Kuru Gıdalar", urun:"Beyaz Kuvertür", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L107", kategori:"Paketli & Kuru Gıdalar", urun:"Sütlü Kuvertür", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L108", kategori:"Paketli & Kuru Gıdalar", urun:"Bitter Kuvertür", raf_omru:0, birim:"ORJ SKT"},
+            {id:"L109", kategori:"Paketli & Kuru Gıdalar", urun:"Toz Bisküvi", raf_omru:21, birim:"Gün"},
+            {id:"L110", kategori:"Paketli & Kuru Gıdalar", urun:"Fıstık Toz", raf_omru:21, birim:"Gün"},
+            {id:"L111", kategori:"Paketli & Kuru Gıdalar", urun:"Fıstık Tane", raf_omru:1, birim:"Ay"}
         ];
         
+        let currentLibFilter = 'Tümü';
+
         // --- DÜZENLEME MODU MANTIĞI ---
         function toggleEditMode() {
             isEditMode = !isEditMode;
@@ -574,7 +651,14 @@
         }
 
         function renderLibraryDrumpad() {
-            const container = document.getElementById('drumpadContainer'); container.innerHTML = '';
+            const container = document.getElementById('drumpadContainer'); 
+            container.innerHTML = '';
+            
+            if (!libraryDB || libraryDB.length === 0) {
+                container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: var(--text-muted);">Yükleniyor...</div>';
+                return;
+            }
+            
             libraryDB.filter(p => currentLibFilter === 'Tümü' || p.kategori === currentLibFilter).forEach(p => {
                 let omurStr = "";
                 if (p.birim === "Günlük") omurStr = "Gün Sonu";
@@ -586,7 +670,7 @@
                 
                 // Silme butonu sadece adminse render edilir, CSS ile gösterilip gizlenir
                 let deleteBtnHtml = (currentUser && currentUser.role === 'admin') ? 
-                    `<div class="pad-delete" onclick="event.stopPropagation(); deleteProduct('${p.id}')"><i class="fa-solid fa-minus"></i></div>` : '';
+                    `<div class="pad-delete" onclick="event.stopPropagation(); deleteProduct('${p.id}')" title="Ürünü Sil"><i class="fa-solid fa-xmark"></i></div>` : '';
 
                 container.innerHTML += `
                     <div class="pad" onclick="startTracking('${p.id}')">
