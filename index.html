@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KD Kordon Pro - Full Library Edition</title>
+    <title>KD Kordon Pro - Broadcast Edition</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -173,7 +173,7 @@
                     <h3 id="currentTemplateTitle" style="font-size: 16px; font-weight: 800;">Manav Listesi</h3>
                     <button onclick="resetCounters()" style="background:none; border:none; color:var(--text-muted); font-size:12px; font-weight:700;"><i class="fa-solid fa-rotate-left"></i> Sıfırla</button>
                 </div>
-                <div id="orderTemplateList" class="list-grid" style="margin-bottom: 20px;"></div>
+                <div id="orderTemplateList" class="list-grid mb-4"></div>
                 <button class="btn" style="background:#25D366; color:white; margin-top:15px;" onclick="sendOrderViaWhatsApp()"><i class="fa-brands fa-whatsapp"></i> Siparişi Gönder</button>
             </div>
 
@@ -325,7 +325,7 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-        const dbRoot = 'kd_kordon_pro_v3'; 
+        const dbRoot = 'kd_kordon_pro_v4'; 
 
         let isDark = localStorage.getItem('kd_theme') === 'dark';
         if(isDark) document.body.classList.add('dark-mode'); 
@@ -333,6 +333,9 @@
         let currentUser = null; 
         let currentPin = "";
         let usersDB = {};
+        
+        // Broadcast Bildirimleri için yüklenme zamanı (Eski mesajları engellemek için)
+        let appLoadTime = 0;
 
         document.addEventListener("DOMContentLoaded", () => {
             updateThemeIcon();
@@ -399,6 +402,8 @@
         let activeItems = [], todos = [], allLogs = [];
 
         function launchApp() {
+            appLoadTime = Date.now();
+            
             document.getElementById('appContent').style.display = 'block';
             document.getElementById('headerUserName').innerText = currentUser.name;
             if(currentUser.role === 'admin') {
@@ -429,6 +434,28 @@
             });
             db.ref(dbRoot + '/logs').on('value', snap => {
                 allLogs = snap.val() ? Object.values(snap.val()) : [];
+            });
+
+            // YAYIN (BROADCAST) DİNLEYİCİLERİ - Sadece başkalarının işlemlerinde telefon titrer
+            
+            // 1. Yeni Görev Dinleyicisi
+            db.ref(dbRoot + '/todos').on('child_added', snap => {
+                const t = snap.val();
+                // Eski görevleri ve kişinin kendi eklediği görevleri filtrele
+                if(t.timestamp && t.timestamp > appLoadTime && t.addedBy !== currentUser.name) {
+                    sendPushNotification("📌 Yeni Görev", t.addedBy + " yeni bir görev ekledi: " + t.text);
+                }
+            });
+
+            // 2. Yeni Sipariş Dinleyicisi (Loglar üzerinden takip edilir)
+            db.ref(dbRoot + '/logs').on('child_added', snap => {
+                const l = snap.val();
+                // Sadece Siparişleri bildirime yansıt. "Üretim/SKT" bildirimleri engellendi.
+                if(l.timestamp && l.timestamp > appLoadTime && l.user !== currentUser.name) {
+                    if(l.action === "Sipariş Verildi") {
+                        sendPushNotification("📋 Yeni Sipariş", l.user + " WhatsApp'a " + l.detail);
+                    }
+                }
             });
 
             setInterval(renderActiveList, 60000);
@@ -546,9 +573,9 @@
             
             db.ref(dbRoot + '/active/' + newItem.id).set(newItem);
             logAction("SKT Başlatıldı", prod.urun + " takibe alındı.");
-            showToast(prod.urun + " takibe alındı!");
-            sendPushNotification("⏳ Üretim Başladı", prod.urun + " yapıldı. Başlatan: " + currentUser.name);
             
+            // Yayın bildirimi iptal edildi, sadece işlemi yapan kişiye yeşil onay çıkar
+            showToast(prod.urun + " takibe alındı!");
             if(navigator.vibrate) navigator.vibrate(50);
         }
 
@@ -613,13 +640,16 @@
         }
         function uc(n, ch, b) { if(!orderCounts[n]) orderCounts[n] = {c:0, b:b}; orderCounts[n].c += ch; if(orderCounts[n].c < 0) orderCounts[n].c = 0; loadOrderTemplate(currentOrderCat, null); }
         function resetCounters() { orderCounts = {}; loadOrderTemplate(currentOrderCat, null); }
+        
         function sendOrderViaWhatsApp() {
             let items = [];
             for(const [n, d] of Object.entries(orderCounts)) { if(d.c > 0) items.push("- " + d.c + " " + d.b + " " + n); }
             if(items.length === 0) return alert("Boş sipariş gönderilemez.");
             
             logAction("Sipariş Verildi", currentOrderCat + " listesi oluşturuldu.");
-            sendPushNotification("📋 Sipariş Verildi", currentOrderCat + " siparişi verildi. Veren: " + currentUser.name);
+            
+            // İşlemi yapana sadece sessiz bildirim çıkar, gruba (diğer kullanıcılara) Push atılır.
+            showToast("Sipariş WhatsApp'a aktarıldı.");
             
             var waText = "*KORDON SİPARİŞ (" + currentOrderCat + ")*%0A" + "Siparişi Veren: " + currentUser.name + "%0A%0A" + items.join("%0A");
             window.open("https://wa.me/?text=" + waText, "_blank");
@@ -630,11 +660,15 @@
         // GÖREVLER (TO-DO)
         function addTodo() {
             const txt = document.getElementById('todoInput').value.trim(); if(!txt) return;
-            const newTodo = { id: Date.now().toString(), text: txt, done: false, addedBy: currentUser.name };
+            // Timestamp eklenerek eski görevlerin push atması engellendi
+            const newTodo = { id: Date.now().toString(), text: txt, done: false, addedBy: currentUser.name, timestamp: Date.now() };
             db.ref(dbRoot + '/todos/' + newTodo.id).set(newTodo);
+            
             document.getElementById('todoInput').value = "";
             logAction("Görev Eklendi", "Yeni görev: " + txt);
-            sendPushNotification("📌 Yeni Görev", "Eklenen görev: " + txt);
+            
+            // İşlemi yapana yeşil bildirim göster
+            showToast("Görev Eklendi!");
         }
         function renderTodos() {
             const container = document.getElementById('todoContainer'); container.innerHTML = '';
@@ -651,7 +685,14 @@
 
         // --- YÖNETİCİ VE AUDIT TRAIL SİSTEMİ ---
         function logAction(actionType, detail) {
-            const logItem = { id: Date.now().toString(), date: new Date().toLocaleString('tr-TR'), user: currentUser.name, action: actionType, detail: detail };
+            const logItem = { 
+                id: Date.now().toString(), 
+                date: new Date().toLocaleString('tr-TR'), 
+                user: currentUser.name, 
+                action: actionType, 
+                detail: detail,
+                timestamp: Date.now()
+            };
             db.ref(dbRoot + '/logs/' + logItem.id).set(logItem);
         }
 
@@ -703,7 +744,7 @@
         }
         function sendPushNotification(title, body) {
             if ("Notification" in window && Notification.permission === "granted") {
-                if(navigator.serviceWorker) { navigator.serviceWorker.ready.then(reg => { reg.showNotification(title, { body: body, icon: "https://cdn-icons-png.flaticon.com/512/3003/3003984.png" }); }); } 
+                if(navigator.serviceWorker) { navigator.serviceWorker.ready.then(reg => { reg.showNotification(title, { body: body, icon: "https://cdn-icons-png.flaticon.com/512/3003/3003984.png", vibrate: [200, 100, 200] }); }); } 
                 else { new Notification(title, { body: body }); }
             }
         }
