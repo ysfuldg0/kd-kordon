@@ -903,18 +903,41 @@
             db.ref(`${dbRoot}/logs/${logItem.id}`).set(logItem);
         }
 
+
         function sendAuditReport() {
             if(allLogs.length === 0) return alert("Arşivde hiç işlem yok.");
-            let csv = "data:text/csv;charset=utf-8,\uFEFFTarih;Personel;Islem Tipi;Detay\n";
+            
+            // Excel için HTML tablosu oluşturuyoruz (Sütunların asla karışmaması için)
+            let table = '<html xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="utf-8"></head><body>';
+            table += '<table border="1" style="font-family: sans-serif; text-align: left;"><tr>';
+            table += '<th style="background-color:#C29A5B; color:white; padding:10px;">Tarih</th>';
+            table += '<th style="background-color:#C29A5B; color:white; padding:10px;">Personel</th>';
+            table += '<th style="background-color:#C29A5B; color:white; padding:10px;">İşlem Tipi</th>';
+            table += '<th style="background-color:#C29A5B; color:white; padding:10px;">Detay</th>';
+            table += '</tr>';
+
             [...allLogs].reverse().forEach(l => { 
-                csv += `"${l.date}";"${l.user}";"${l.action}";"${l.detail}"\n`; 
+                table += `<tr>
+                    <td style="padding:5px;">${l.date}</td>
+                    <td style="padding:5px;"><b>${l.user}</b></td>
+                    <td style="padding:5px;">${l.action}</td>
+                    <td style="padding:5px;">${l.detail}</td>
+                </tr>`; 
             });
+            
+            table += '</table></body></html>';
+
+            // Blob teknolojisi ile UTF-8 (Türkçe Karakter) sorununu %100 çözüyoruz
+            const blob = new Blob([table], { type: 'application/vnd.ms-excel' });
+            const url = URL.createObjectURL(blob);
+            
             const link = document.createElement("a"); 
-            link.setAttribute("href", encodeURI(csv)); 
-            link.setAttribute("download", "Denetim_Raporu.csv"); 
+            link.href = url; 
+            link.download = "Kordon_Denetim_Raporu.xls"; 
             document.body.appendChild(link); 
             link.click(); 
             document.body.removeChild(link);
+            URL.revokeObjectURL(url);
         }
 
         // PERSONEL YÖNETİMİ
