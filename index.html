@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KD Kordon Pro - God Mode Edition</title>
+    <title>KD Kordon Pro - V9 Edition</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -80,9 +80,9 @@
 
         /* SKT Drumpad */
         .drumpad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; min-height: 50vh; align-content: start; }
-        .pad { border: 2px solid var(--border); border-radius: var(--radius-md); min-height: 95px; padding: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-sm); position: relative;}
+        .pad { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); min-height: 95px; padding: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-sm); position: relative;}
         .pad:active { transform: scale(0.95); opacity:0.8; }
-        .pad i { font-size: 22px; margin-bottom: 6px; color: var(--kd-gold); transition: var(--transition); }
+        .pad i { font-size: 22px; margin-bottom: 6px; color: var(--text-main); transition: var(--transition); }
         .pad-name { font-size: 10px; font-weight: 800; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; transition: var(--transition); color: var(--text-main); }
         .pad-time { position:absolute; top:4px; right:4px; font-size:8px; background:rgba(255,255,255,0.7); padding:2px 4px; border-radius:4px; font-weight:bold; color:var(--text-main); border:1px solid rgba(0,0,0,0.1); transition: var(--transition); backdrop-filter: blur(4px);}
         
@@ -170,7 +170,7 @@
     <!-- ANA UYGULAMA -->
     <div id="appContent">
         <header class="app-header">
-            <!-- ÇIKIŞ YAPILABİLİR KULLANICI ROZETİ (VARDİYA ÖZETİ EKLENDİ) -->
+            <!-- ÇIKIŞ YAPILABİLİR KULLANICI ROZETİ -->
             <div class="user-badge" onclick="confirmLogout()"><i class="fa-solid fa-user-check"></i> <span id="headerUserName">Personel</span> <i class="fa-solid fa-right-from-bracket" style="margin-left: 4px; font-size: 11px;"></i></div>
             <div class="header-actions">
                 <button class="icon-btn" onclick="requestNotificationPermission()" id="bellBtn"><i class="fa-solid fa-bell"></i></button>
@@ -200,7 +200,7 @@
             <!-- 2. ÜRETİM (DRUMPAD) -->
             <div id="tab-library" class="tab-pane active">
                 
-                <!-- ŞİMŞEK ARAMA ÇUBUĞU (YENİ) -->
+                <!-- ŞİMŞEK ARAMA ÇUBUĞU -->
                 <div style="position: relative; margin-bottom: 15px;">
                     <i class="fa-solid fa-search" style="position: absolute; left: 15px; top: 16px; color: var(--text-muted);"></i>
                     <input type="text" id="libSearchInput" class="form-input" style="padding-left: 40px; margin-bottom: 0; border-radius: 20px;" placeholder="Hızlı ürün ara..." onkeyup="renderLibraryDrumpad()">
@@ -238,13 +238,13 @@
                         <h3 style="font-size: 16px; font-weight: 800;">Aktif SKT Takibi</h3>
                         <span style="font-size:11px; color:var(--text-muted);"><i class="fa-solid fa-arrows-left-right"></i> Kaydırarak işlem yap</span>
                     </div>
-                    <!-- TOPLU SEÇİM BUTONU (YENİ) -->
+                    <!-- TOPLU SEÇİM BUTONU -->
                     <button id="bulkModeBtn" onclick="toggleBulkMode()" style="background:var(--bg-color); color:var(--text-muted); border:1px solid var(--border); padding:6px 14px; border-radius:12px; font-size:11px; font-weight:800; transition:var(--transition);"><i class="fa-solid fa-list-check"></i> Çoklu Seç</button>
                 </div>
                 
                 <div id="activeList" class="list-grid"></div>
                 
-                <!-- TOPLU İŞLEM ALT BARI (YENİ) -->
+                <!-- TOPLU İŞLEM ALT BARI -->
                 <div class="floating-bulk-bar" id="bulkActionBar">
                     <button class="btn" style="flex:1; background:var(--success-light); color:var(--success);" onclick="processBulkItems('Tüketildi')"><i class="fa-solid fa-check"></i> Tüketildi</button>
                     <button class="btn" style="flex:1; background:var(--danger-light); color:var(--danger);" onclick="processBulkItems('İmha Edildi')"><i class="fa-solid fa-trash"></i> İmha Et</button>
@@ -293,7 +293,7 @@
         </div>
     </div>
 
-    <!-- VARDİYA SONU ÖZETİ (YENİ) -->
+    <!-- VARDİYA SONU ÖZETİ -->
     <div class="modal-overlay" id="summaryModal" onclick="closeOnOutsideClick(event, 'summaryModal')">
         <div class="modal-content" style="text-align:center; padding-top: 40px;">
             <div class="drag-handle"></div>
@@ -374,7 +374,7 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-        const dbRoot = 'kd_kordon_pro_final_v3'; 
+        const dbRoot = 'kd_kordon_pro_final_v4'; 
 
         let isDark = localStorage.getItem('kd_theme') === 'dark';
         if(isDark) document.body.classList.add('dark-mode'); 
@@ -392,14 +392,14 @@
         let lastActionData = null;
         let undoTimeout = null;
 
-        // Renk Kodlu Kas Hafızası Sözlüğü
+        // Renk Kodlu Kas Hafızası Sözlüğü (Daha zarif, üst çizgi renkleri)
         const catColors = {
-            "Şarküteri, Süt ve Soslar": "var(--surface)",
-            "Paketli Şarküteri": "#FEF2F2", // Uçuk kırmızı/pembe
-            "Meyve ve Sebze": "#ECFDF5", // Uçuk fıstık yeşili
-            "Çözündürülen / Dökme / Teşhir": "#EFF6FF", // Buz mavisi
-            "Kahveler, İçecekler ve Ön Hazırlık": "#FEF3C7", // Latte rengi
-            "Paketli & Kuru Gıdalar": "#F8FAFC" // Gümüş gri
+            "Şarküteri, Süt ve Soslar": "#3B82F6", // Mavi
+            "Paketli Şarküteri": "#EF4444", // Kırmızı
+            "Meyve ve Sebze": "#10B981", // Yeşil
+            "Çözündürülen / Dökme / Teşhir": "#8B5CF6", // Mor
+            "Kahveler, İçecekler ve Ön Hazırlık": "#F59E0B", // Turuncu/Latte
+            "Paketli & Kuru Gıdalar": "#64748B" // Gri
         };
 
         const catIcons = { "Şarküteri, Süt ve Soslar": "fa-cheese", "Paketli & Kuru Gıdalar": "fa-box", "Meyve ve Sebze": "fa-apple-whole", "Çözündürülen / Dökme / Teşhir": "fa-ice-cream", "Kahveler, İçecekler ve Ön Hazırlık": "fa-mug-hot", "Paketli Şarküteri": "fa-bacon" };
@@ -424,10 +424,9 @@
                     let chips = Array.from(document.querySelectorAll('#libChips .chip'));
                     let idx = chips.findIndex(c => c.classList.contains('active'));
                     
-                    if (diff > 0 && idx < chips.length - 1) chips[idx + 1].click(); // Sola Kaydır -> Sonraki Kategori
-                    else if (diff < 0 && idx > 0) chips[idx - 1].click(); // Sağa Kaydır -> Önceki Kategori
+                    if (diff > 0 && idx < chips.length - 1) chips[idx + 1].click();
+                    else if (diff < 0 && idx > 0) chips[idx - 1].click();
                     
-                    // Chip barını otomatik ortala
                     setTimeout(() => {
                         let activeChip = document.querySelector('#libChips .chip.active');
                         if(activeChip) activeChip.scrollIntoView({behavior: "smooth", inline: "center", block: "nearest"});
@@ -491,7 +490,7 @@
             }
         }
         
-        // VARDİYA SONU ÖZETİ (BÖLÜM SONU EKRANI)
+        // VARDİYA SONU ÖZETİ
         function confirmLogout() {
             closeModal('adminModal');
             
@@ -711,7 +710,7 @@
             }
         }
 
-        // TOPLU SEÇİM (BULK MODE) MANTIĞI
+        // TOPLU SEÇİM (BULK MODE) MANTIĞI VE GERİ AL (UNDO) DESTEĞİ
         function toggleBulkMode() {
             isBulkMode = !isBulkMode;
             selectedBulkItems = [];
@@ -742,16 +741,45 @@
         function processBulkItems(resultType) {
             if(selectedBulkItems.length === 0) return alert("Lütfen işlem yapılacak ürünleri seçin.");
             
-            selectedBulkItems.forEach(id => {
-                const item = activeItems.find(i => i.id === id);
-                if(item) {
-                    db.ref(`${dbRoot}/active/${id}`).remove();
-                    logAction(`SKT ${resultType}`, `${item.name} sistemden düşüldü.`);
-                }
+            clearTimeout(undoTimeout);
+            
+            const itemsToProcess = selectedBulkItems.map(id => activeItems.find(i => i.id === id)).filter(Boolean);
+            lastActionData = { type: 'bulk', items: itemsToProcess, result: resultType };
+            
+            itemsToProcess.forEach(item => {
+                db.ref(`${dbRoot}/active/${item.id}`).remove();
             });
             
-            showToast(`${selectedBulkItems.length} ürün başarıyla işlendi.`);
-            toggleBulkMode(); // İşlem bitince modu kapat
+            if(navigator.vibrate) navigator.vibrate([50, 50]);
+            
+            const t = document.getElementById('toastNotification');
+            t.innerHTML = `<span>${itemsToProcess.length} ürün ${resultType.toLowerCase()}</span> <button id="undoBtn" style="margin-left:15px; background:white; color:var(--kd-dark); border:none; padding:4px 10px; border-radius:12px; font-weight:800; cursor:pointer;">Geri Al</button>`;
+            t.style.background = 'var(--kd-dark)';
+            t.classList.add('show');
+            
+            document.getElementById('undoBtn').onclick = () => {
+                t.classList.remove('show');
+                clearTimeout(undoTimeout);
+                if(lastActionData && lastActionData.type === 'bulk') {
+                    lastActionData.items.forEach(item => {
+                        db.ref(`${dbRoot}/active/${item.id}`).set(item);
+                    });
+                    logAction("Toplu İşlem Geri Alındı", `${lastActionData.items.length} ürün tekrar takibe eklendi.`);
+                    lastActionData = null;
+                }
+            };
+
+            undoTimeout = setTimeout(() => {
+                t.classList.remove('show');
+                if(lastActionData && lastActionData.type === 'bulk') {
+                    lastActionData.items.forEach(item => {
+                        logAction(`SKT ${lastActionData.result}`, `${item.name} toplu işlemle sistemden düşüldü.`);
+                    });
+                    lastActionData = null;
+                }
+            }, 5000);
+            
+            toggleBulkMode();
         }
 
         function filterLib(cat, el) {
@@ -761,7 +789,7 @@
             renderLibraryDrumpad();
         }
 
-        // ARAMA VE LİSTELEME
+        // ARAMA VE RENK KODLU LİSTELEME
         function renderLibraryDrumpad() {
             const container = document.getElementById('drumpadContainer'); 
             container.innerHTML = '';
@@ -784,13 +812,13 @@
                 else omurStr = `${p.raf_omru} ${p.birim}`;
                 
                 let icon = catIcons[p.kategori] || "fa-box";
-                let bgColor = catColors[p.kategori] || "var(--surface)";
+                let topBorderColor = catColors[p.kategori] || "var(--border)";
                 
                 let deleteBtnHtml = (currentUser && currentUser.role === 'admin') ? 
                     `<div class="pad-delete" onclick="event.stopPropagation(); deleteProduct('${p.id}')" title="Ürünü Sil"><i class="fa-solid fa-xmark"></i></div>` : '';
 
                 container.innerHTML += `
-                    <div class="pad" style="background: ${bgColor};" onclick="startTracking('${p.id}')">
+                    <div class="pad" style="border-top: 4px solid ${topBorderColor};" onclick="startTracking('${p.id}')">
                         <div class="pad-time">${omurStr}</div>
                         <i class="fa-solid ${icon}"></i>
                         <div class="pad-name">${p.urun}</div>
@@ -849,8 +877,6 @@
             };
             
             db.ref(`${dbRoot}/active/${newItem.id}`).set(newItem);
-            
-            // Başlatıldığında yeşil toast atar, silme geri alma değil
             showToast(`${prod.urun} takibe alındı!`);
             if(navigator.vibrate) navigator.vibrate(50);
         }
@@ -884,7 +910,6 @@
                     else if(percent < 40) color = "var(--warning)";
                 }
 
-                // Çoklu Seçim (Bulk Mode) Aktifse Kaydırma Kapanır, Tıklama Açılır
                 const isSelected = selectedBulkItems.includes(item.id) ? 'selected' : '';
                 const touchEvents = isBulkMode ? `onclick="toggleBulkItem('${item.id}')"` : `ontouchstart="handleTS(event, '${item.id}')" ontouchmove="handleTM(event, '${item.id}')" ontouchend="handleTE(event, '${item.id}')"`;
 
@@ -932,15 +957,14 @@
 
         // SİLME İŞLEMİ VE GERİ AL (UNDO) TOAST'I
         function processItem(id, result) {
+            clearTimeout(undoTimeout);
             const item = activeItems.find(i => i.id === id);
             
-            // Geri alabilmek için hafızaya yaz
-            lastActionData = { item: item, result: result };
+            lastActionData = { type: 'single', item: item, result: result };
             db.ref(`${dbRoot}/active/${id}`).remove();
             
             if(navigator.vibrate) navigator.vibrate([50, 50]);
             
-            // Özel "Geri Al" destekli Toast
             const t = document.getElementById('toastNotification');
             t.innerHTML = `<span>${item.name} ${result.toLowerCase()}</span> <button id="undoBtn" style="margin-left:15px; background:white; color:var(--kd-dark); border:none; padding:4px 10px; border-radius:12px; font-weight:800; cursor:pointer;">Geri Al</button>`;
             t.style.background = 'var(--kd-dark)';
@@ -949,20 +973,16 @@
             document.getElementById('undoBtn').onclick = () => {
                 t.classList.remove('show');
                 clearTimeout(undoTimeout);
-                
-                // Silineni geri yaz
-                if(lastActionData) {
+                if(lastActionData && lastActionData.type === 'single') {
                     db.ref(`${dbRoot}/active/${lastActionData.item.id}`).set(lastActionData.item);
                     logAction("İşlem Geri Alındı", `${lastActionData.item.name} tekrar takibe eklendi.`);
                     lastActionData = null;
                 }
             };
 
-            clearTimeout(undoTimeout);
             undoTimeout = setTimeout(() => {
                 t.classList.remove('show');
-                // 5 saniye içinde geri alınmazsa arşive kesin olarak yaz
-                if(lastActionData) {
+                if(lastActionData && lastActionData.type === 'single') {
                     logAction(`SKT ${lastActionData.result}`, `${lastActionData.item.name} sistemden düşüldü.`);
                     lastActionData = null;
                 }
@@ -1016,16 +1036,12 @@
             orderCounts = {}; loadOrderTemplate(currentOrderCat, null);
         }
 
-        // GÖREVLER VE DİJİTAL PANO
-        function updateShiftNote() {
-            db.ref(`${dbRoot}/shiftNote`).set(document.getElementById('shiftNoteArea').value);
-        }
+        function updateShiftNote() { db.ref(`${dbRoot}/shiftNote`).set(document.getElementById('shiftNoteArea').value); }
 
         function addTodo() {
             const txt = document.getElementById('todoInput').value.trim(); if(!txt) return;
             const newTodo = { id: Date.now().toString(), text: txt, done: false, addedBy: currentUser.name, timestamp: Date.now() };
             db.ref(`${dbRoot}/todos/${newTodo.id}`).set(newTodo);
-            
             document.getElementById('todoInput').value = "";
             logAction("Görev Eklendi", `Yeni görev: ${txt}`);
             showToast("Görev Eklendi!");
@@ -1056,7 +1072,6 @@
         }
         function deleteTodo(id) { db.ref(`${dbRoot}/todos/${id}`).remove(); }
 
-        // --- YÖNETİCİ VE AUDIT TRAIL SİSTEMİ ---
         function logAction(actionType, detail) {
             const logItem = { 
                 id: Date.now().toString(), 
@@ -1069,7 +1084,6 @@
             db.ref(`${dbRoot}/logs/${logItem.id}`).set(logItem);
         }
 
-        // PERSONEL YÖNETİMİ
         function openModal(id) { document.getElementById(id).classList.add('active'); if(id==='usersModal') renderUsersList(); }
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
         function closeOnOutsideClick(e, id) { if(e.target.id === id) closeModal(id); }
@@ -1113,7 +1127,6 @@
             renderUsersList();
         }
 
-        // BİLDİRİM VE UI (Toast güncellendi, dışarıdan HTML alabiliyor)
         function checkNotificationStatus() { if("Notification" in window && Notification.permission === "granted") document.getElementById('bellBtn').style.display = 'none'; }
         function requestNotificationPermission() {
             if(!("Notification" in window)) return alert("Tarayıcı desteklemiyor.");
