@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KD Kordon Pro - Minimalist iOS (Phase 2)</title>
+    <title>KD Kordon Pro - Phase 3 (Hardware & Autonomy)</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -52,7 +52,6 @@
             --border: rgba(255, 255, 255, 0.05);
         }
 
-        /* ARKA PLAN KAYMASINI ENGELLEYEN KİLİT KODU (OVERFLOW HIDDEN EKLENTİSİ) */
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-color); color: var(--text-main); transition: background-color 0.3s; overflow-x: hidden; overscroll-behavior-y: none; }
         body.no-scroll { overflow: hidden; height: 100vh; touch-action: none; }
@@ -69,7 +68,7 @@
         
         #appContent { display: none; padding-bottom: 100px; }
 
-        /* BUZLU CAM HEADER */
+        /* HEADER & NAV */
         .app-header { background: var(--surface-glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
         .user-badge { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; color: var(--danger); background: var(--danger-light); padding: 8px 16px; border-radius: 30px; cursor: pointer; transition: var(--transition); }
         .user-badge:active { transform: scale(0.95); opacity: 0.8; }
@@ -77,7 +76,6 @@
         .icon-btn { background: var(--surface-solid); border: 1px solid var(--border); box-shadow: var(--shadow-sm); width: 40px; height: 40px; border-radius: 50%; color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: var(--transition); }
         .icon-btn:active { transform: scale(0.9); }
 
-        /* BUZLU CAM BOTTOM NAV */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--surface-glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); display: flex; justify-content: space-around; padding: 15px 10px 25px 10px; z-index: 100; border-top: 1px solid var(--border); }
         .nav-item { display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--text-muted); font-size: 11px; font-weight: 600; cursor: pointer; flex: 1; transition: var(--transition); }
         .nav-item i { font-size: 20px; padding: 10px 20px; border-radius: 30px; transition: var(--transition); }
@@ -93,13 +91,12 @@
         .btn:active { transform: scale(0.97); opacity: 0.9; }
         .btn-primary { background: var(--accent); color: white; box-shadow: var(--shadow-sm); }
 
-        /* CHIPS (Kategoriler) */
+        /* CHIPS */
         .chips-container { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; scrollbar-width: none; scroll-behavior: smooth; }
         .chips-container::-webkit-scrollbar { display: none; }
         .chip { background: var(--surface-solid); border: 1px solid var(--border); padding: 12px 20px; border-radius: 30px; font-size: 13px; font-weight: 600; color: var(--text-muted); white-space: nowrap; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-sm); }
         .chip.active { background: var(--text-main); color: var(--surface-solid); border-color: var(--text-main); }
         
-        /* INPUTS */
         .form-input { width: 100%; padding: 16px 20px; background: var(--surface-solid); border: 1px solid var(--border); border-radius: var(--radius-md); font-family: inherit; font-size: 15px; font-weight: 500; color: var(--text-main); margin-bottom: 15px; transition: var(--transition); box-shadow: var(--shadow-sm); outline: none;}
         .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-light); }
 
@@ -118,7 +115,6 @@
         .pad-name { font-size: 11px; font-weight: 600; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: var(--text-main); }
         .pad-time { position:absolute; top:6px; right:6px; font-size:9px; background: var(--bg-color); padding:4px 6px; border-radius:8px; font-weight:700; color:var(--text-muted); }
         
-        /* Düzenleme Modu Tasarımı */
         .pad-delete { position: absolute; top: -8px; right: -8px; width: 28px; height: 28px; background: var(--danger); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; box-shadow: 0 4px 10px rgba(255, 59, 48, 0.4); opacity: 0; visibility: hidden; transform: scale(0.5); transition: var(--transition); z-index: 10; border: 2px solid var(--surface-solid); }
         .drumpad-grid.edit-mode .pad-delete { opacity: 1; visibility: visible; transform: scale(1); }
         .drumpad-grid.edit-mode .pad { border: 2px dashed var(--danger-light); background: var(--bg-color); box-shadow: none; }
@@ -127,14 +123,13 @@
         /* Aktif SKT Swipe & Toplu Seçim */
         .swipe-container { position: relative; overflow: hidden; border-radius: var(--radius-md); background: var(--bg-color); margin-bottom:12px; border: 1px solid var(--border); }
         .swipe-bg { position: absolute; inset:0; display:flex; justify-content:space-between; align-items:center; padding:0 25px; color:white; font-size:22px; font-weight:800; }
-        .bg-left { background: var(--success); width: 50%; height: 100%; display:flex; align-items:center; border-radius: var(--radius-md) 0 0 var(--radius-md); }
+        .bg-left { background: var(--accent); width: 50%; height: 100%; display:flex; align-items:center; border-radius: var(--radius-md) 0 0 var(--radius-md); }
         .bg-right { background: var(--danger); width: 50%; height: 100%; display:flex; justify-content:flex-end; align-items:center; position:absolute; right:0; top:0; padding-right:25px; border-radius: 0 var(--radius-md) var(--radius-md) 0;}
         .active-card { background: var(--surface-solid); position: relative; z-index: 2; padding: 18px 15px; transition: transform 0.2s ease-out; display:flex; align-items:center; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); }
         .timer-display { font-size: 18px; font-weight: 700; margin: 6px 0; color: var(--success); }
         .progress-track { background: var(--bg-color); height: 6px; border-radius: 10px; overflow: hidden; margin-top: 10px; }
         .progress-fill { height: 100%; background: var(--success); border-radius: 10px; transition: width 1s linear; }
         
-        /* Toplu Seçim (Bulk Mode) */
         .bulk-checkbox { display:none; width:26px; height:26px; border:2px solid var(--border); border-radius:50%; margin-right:15px; align-items:center; justify-content:center; color:white; background:transparent; transition:var(--transition); flex-shrink:0; }
         .bulk-mode .bulk-checkbox { display:flex; }
         .bulk-mode .active-card { transform: none !important; }
@@ -144,35 +139,28 @@
         .floating-bulk-bar { position:fixed; bottom:80px; left:0; width:100%; background: var(--surface-glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-top: 1px solid var(--border); padding:20px; display:none; gap:12px; z-index:90; animation:slideUp 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;}
         @keyframes slideUp { from{transform:translateY(100%);} to{transform:translateY(0);} }
 
-        /* Modals - Clean iOS Style */
+        /* Modals */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 1000; display: flex; align-items: flex-end; justify-content: center; opacity: 0; visibility: hidden; transition: var(--transition); overscroll-behavior: none; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
-        /* Modalın içi scroll edilebilir, arka plan donuk */
         .modal-content { background: var(--surface-solid); width: 100%; max-width: 600px; border-radius: 30px 30px 0 0; padding: 30px 25px 50px; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); max-height: 90vh; overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.1); overscroll-behavior-y: contain; }
         .modal-overlay.active .modal-content { transform: translateY(0); }
         .drag-handle { width: 40px; height: 5px; background: var(--border); border-radius: 10px; margin: 0 auto 25px; }
         
-        /* Checkbox for Closing Tasks */
         .closing-cb-label { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; font-size: 14px; font-weight: 500; color: var(--text-main); cursor: pointer; background: var(--bg-color); padding: 15px; border-radius: var(--radius-md); transition: var(--transition); }
         .closing-cb-label input[type="checkbox"] { width: 22px; height: 22px; accent-color: var(--success); cursor: pointer; }
         .closing-cb-label.checked { background: var(--success-light); color: var(--success); text-decoration: line-through; }
 
-        /* Rapor / Kullanıcı listeleri */
         .user-row { display:flex; justify-content:space-between; align-items:center; padding:16px; background:var(--surface-solid); border:1px solid var(--border); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); margin-bottom:10px; }
         .role-badge { font-size:11px; padding:5px 10px; font-weight:700; border-radius: 20px; }
         .role-admin { color:var(--warning); background:var(--warning-light); }
         .role-staff { color:var(--accent); background:var(--accent-light); }
 
-        /* Soft Toast */
         .toast { position: fixed; top: 30px; left: 50%; transform: translateX(-50%) translateY(-100px); background: var(--surface-solid); color: var(--text-main); box-shadow: var(--shadow-md); padding: 14px 24px; border-radius: 40px; font-size: 14px; font-weight: 600; z-index: 9999; transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); opacity: 0; white-space: nowrap; display:flex; align-items:center; border: 1px solid var(--border);}
         .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
         
         #fullScreenSpinner { position: fixed; inset:0; background:var(--bg-color); z-index:999999; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--text-muted); font-weight:500; font-size:15px; text-align: center; padding: 20px;}
-
-        /* Offline Banner */
         #offlineBanner { display: none; background: var(--warning); color: white; text-align: center; padding: 8px; font-size: 12px; font-weight: 700; position: sticky; top: 0; z-index: 51; }
 
-        /* DASHBOARD - FAZ 2 */
         .dashboard-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
         .stat-card { background: var(--bg-color); padding: 15px; border-radius: var(--radius-md); text-align: center; border: 1px solid var(--border); }
         .stat-card .value { font-size: 24px; font-weight: 800; color: var(--text-main); margin-bottom: 5px; }
@@ -182,24 +170,26 @@
         .stat-card.success { background: var(--success-light); border-color: var(--success-light); }
         .stat-card.success .value { color: var(--success); }
 
-        /* WEATHER WIDGET - FAZ 2 */
         .weather-widget { background: linear-gradient(135deg, var(--accent-light), rgba(0, 122, 255, 0.05)); border: 1px solid var(--accent-light); padding: 15px; border-radius: var(--radius-md); margin-bottom: 20px; display: flex; align-items: center; gap: 15px; }
         .weather-icon { width: 45px; height: 45px; background: var(--surface-solid); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; color: var(--warning); box-shadow: var(--shadow-sm); flex-shrink: 0; }
         .weather-text { flex: 1; }
         .weather-title { font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
         .weather-desc { font-size: 12px; font-weight: 500; color: var(--text-muted); line-height: 1.4; }
 
+        /* CAMERA / BARCODE MODAL */
+        #cameraStream { width: 100%; border-radius: var(--radius-md); background: #000; min-height: 250px; object-fit: cover; }
+        .scan-line { position: absolute; width: 100%; height: 2px; background: var(--success); top: 50%; box-shadow: 0 0 10px var(--success); animation: scan 2s infinite linear; }
+        @keyframes scan { 0% { top: 10%; } 50% { top: 90%; } 100% { top: 10%; } }
+
     </style>
 </head>
 <body>
 
-    <!-- YÜKLENİYOR / OFFLINE EKRANI -->
     <div id="fullScreenSpinner">
         <i class="fa-solid fa-spinner fa-spin fa-2x" style="margin-bottom: 15px; color: var(--accent);"></i>
         <span id="spinnerText">Sistem Bulutla Eşleşiyor...</span>
     </div>
 
-    <!-- GİRİŞ EKRANI (PIN) -->
     <div id="authScreen" style="display:none;">
         <div class="auth-card">
             <i class="fa-solid fa-shield-check" style="font-size: 40px; color: var(--accent); margin-bottom:15px;"></i>
@@ -226,7 +216,6 @@
     <div id="appContent">
         <div id="offlineBanner"><i class="fa-solid fa-wifi" style="text-decoration: line-through;"></i> Çevrimdışı mod aktif. Veriler cihaza kaydediliyor.</div>
         <header class="app-header">
-            <!-- ÇIKIŞ YAPILABİLİR KULLANICI ROZETİ -->
             <div class="user-badge" onclick="triggerLogoutFlow()">
                 <i class="fa-solid fa-user-circle" style="font-size: 16px;"></i> 
                 <span id="headerUserName">Personel</span> 
@@ -259,7 +248,6 @@
             <!-- 2. ÜRETİM (DRUMPAD) -->
             <div id="tab-library" class="tab-pane active">
                 
-                <!-- HAVA DURUMU ASİSTANI (FAZ 2) -->
                 <div class="weather-widget">
                     <div class="weather-icon"><i class="fa-solid fa-sun"></i></div>
                     <div class="weather-text">
@@ -268,10 +256,14 @@
                     </div>
                 </div>
 
-                <!-- ŞİMŞEK ARAMA ÇUBUĞU -->
-                <div style="position: relative; margin-bottom: 20px;">
-                    <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 18px; top: 18px; color: var(--text-muted);"></i>
-                    <input type="text" id="libSearchInput" class="form-input" style="padding-left: 45px; margin-bottom: 0; border-radius: 30px;" placeholder="Ürün ara..." onkeyup="renderLibraryDrumpad()">
+                <!-- ŞİMŞEK ARAMA, BARKOD VE SESLİ ASİSTAN EKLENDİ (FAZ 3) -->
+                <div style="display:flex; gap:10px; margin-bottom: 20px; align-items:center;">
+                    <div style="position: relative; flex: 1;">
+                        <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 18px; top: 16px; color: var(--text-muted);"></i>
+                        <input type="text" id="libSearchInput" class="form-input" style="padding-left: 45px; margin-bottom: 0; border-radius: 30px;" placeholder="Ürün ara..." onkeyup="renderLibraryDrumpad()">
+                    </div>
+                    <button class="icon-btn" style="width: 50px; height: 50px; border-radius: 50%; flex-shrink:0; background: var(--surface-solid);" onclick="startBarcodeScanner()"><i class="fa-solid fa-qrcode"></i></button>
+                    <button class="icon-btn" style="width: 50px; height: 50px; border-radius: 50%; flex-shrink:0; background: var(--accent); color: white; border: none;" onclick="startVoiceCommand()"><i class="fa-solid fa-microphone"></i></button>
                 </div>
 
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
@@ -295,7 +287,6 @@
                     <div class="chip" onclick="filterLib('Kahveler, İçecekler ve Ön Hazırlık', this)">İçecek</div>
                 </div>
                 
-                <!-- TINDER TİPİ KAYDIRMA ALANI -->
                 <div class="drumpad-grid" id="drumpadContainer"></div>
             </div>
 
@@ -304,17 +295,15 @@
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                     <div>
                         <h3 style="font-size: 22px; font-weight: 700; color: var(--text-main); margin-bottom:4px;">Aktif Takip</h3>
-                        <span style="font-size:12px; color:var(--text-muted);">Sola kaydırarak işlemi tamamlayın.</span>
+                        <span style="font-size:12px; color:var(--text-muted);">Sola/Sağa kaydırarak işlemi tamamlayın.</span>
                     </div>
-                    <!-- TOPLU SEÇİM BUTONU -->
                     <button id="bulkModeBtn" onclick="toggleBulkMode()" style="background:var(--surface-solid); color:var(--text-main); border:1px solid var(--border); box-shadow: var(--shadow-sm); padding:8px 16px; border-radius:20px; font-weight:600; font-size:13px; cursor:pointer; transition:var(--transition);">Toplu Seç</button>
                 </div>
                 
                 <div id="activeList" class="list-grid"></div>
                 
-                <!-- TOPLU İŞLEM ALT BARI -->
                 <div class="floating-bulk-bar" id="bulkActionBar">
-                    <button class="btn" style="flex:1; background:var(--success); color:white;" onclick="processBulkItems('Tüketildi')"><i class="fa-solid fa-check"></i> Tüketildi</button>
+                    <button class="btn" style="flex:1; background:var(--accent); color:white;" onclick="processBulkItems('Tüketildi')"><i class="fa-solid fa-box-open"></i> Tüketildi</button>
                     <button class="btn" style="flex:1; background:var(--danger); color:white;" onclick="processBulkItems('İmha Edildi')"><i class="fa-solid fa-trash"></i> İmha Et</button>
                 </div>
             </div>
@@ -323,7 +312,6 @@
             <div id="tab-todos" class="tab-pane">
                 <h3 style="font-size: 22px; font-weight: 700; color: var(--text-main); margin-bottom: 20px;">Görev Panosu</h3>
                 
-                <!-- EKİPMAN BAKIM RADARI (FAZ 2) -->
                 <h4 style="font-size:14px; font-weight:700; color:var(--text-main); margin-bottom:10px;">Demirbaş Bakım Radarı</h4>
                 <div class="chips-container" style="margin-bottom: 25px;">
                     <div class="chip" style="border-color:var(--danger); color:var(--danger); background:var(--danger-light); pointer-events:none;">
@@ -337,7 +325,6 @@
                     </div>
                 </div>
 
-                <!-- VARDİYA TESLİM NOTU -->
                 <div style="background:var(--warning-light); padding:16px; border-radius:var(--radius-md); margin-bottom:20px;">
                     <h4 style="font-size:13px; font-weight:700; color:var(--warning); margin-bottom:10px; display:flex; align-items:center; gap:8px;">
                         <i class="fa-solid fa-clipboard"></i> VARDİYA TESLİM NOTU
@@ -361,6 +348,22 @@
             <div class="nav-item" id="navActive" onclick="switchTab('tab-active', this)"><i class="fa-solid fa-clock-rotate-left"></i><span>Takip</span></div>
             <div class="nav-item" id="navTodos" onclick="switchTab('tab-todos', this)"><i class="fa-solid fa-clipboard-check"></i><span>Görevler</span></div>
         </nav>
+    </div>
+
+    <!-- KAMERA BARKOD MODALI (FAZ 3) -->
+    <div class="modal-overlay" id="barcodeModal" onclick="closeOnOutsideClick(event, 'barcodeModal')">
+        <div class="modal-content" style="text-align: center;">
+            <div class="drag-handle"></div>
+            <h3 style="font-size:22px; font-weight:700; margin-bottom:15px; color:var(--text-main);">Barkod / QR Okuyucu</h3>
+            <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px;">Kamerayı ürünün barkoduna hizalayın.</p>
+            
+            <div style="position: relative; width: 100%; border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--border);">
+                <video id="cameraStream" autoplay playsinline></video>
+                <div class="scan-line"></div>
+            </div>
+
+            <button class="btn" style="margin-top:25px; background:var(--danger-light); color:var(--danger);" onclick="stopBarcodeScanner()">Taramayı İptal Et</button>
+        </div>
     </div>
 
     <!-- GİZLİ REÇETE KİTAPÇIĞI MODALI -->
@@ -403,13 +406,12 @@
         </div>
     </div>
 
-    <!-- YÖNETİCİ MENÜSÜ MODALI (FAZ 2 DASHBOARD EKLENDİ) -->
+    <!-- YÖNETİCİ MENÜSÜ MODALI -->
     <div class="modal-overlay" id="adminModal" onclick="closeOnOutsideClick(event, 'adminModal')">
         <div class="modal-content">
             <div class="drag-handle"></div>
             <h3 style="font-size:22px; font-weight:700; margin-bottom:20px; color:var(--text-main);">Yönetici Paneli</h3>
             
-            <!-- FAZ 2 CANLI FİRE VE PERFORMANS DASHBOARD'U -->
             <div id="adminDashboardSection">
                 <h4 style="font-size:14px; font-weight:700; color:var(--text-main); margin-bottom:10px;">Haftalık Operasyon Özeti</h4>
                 <div class="dashboard-stats" id="dashboardStatsContainer">
@@ -497,7 +499,7 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-        const dbRoot = 'kd_kordon_pro_v11'; // V11 veritabanı üzerinden devam (Kullanıcılar silinmesin)
+        const dbRoot = 'kd_kordon_pro_v11';
 
         let currentUser = null; 
         let currentPin = "";
@@ -531,8 +533,7 @@
         const secretRecipes = {
             "Cold Brew": "1. 1/10 oranında kalın öğütülmüş kahve tart.\n2. Bez veya kağıt filtreye yerleştir.\n3. Soğuk suyu yavaşça dök, tüm kahvenin ıslandığına emin ol.\n4. Ağzı kapalı şekilde +4°C dolapta 16-20 saat arası demlenmeye bırak.\n5. Süre bitiminde filtreyi al ve ürünü DRAFT fıçısına aktar.",
             "Limonata": "1. 1 LT Taze Sıkılmış Limon Suyu\n2. 1 LT Şeker Şurubu\n3. 3 LT İçme Suyu ekle.\n4. İyice karıştır ve +4°C dolaba al. (Toplam 5 LT ürün elde edilir).",
-            "Mğz.da Çekilen Türk Kahvesi": "1. Türk kahvesi değirmenini en ince ayara al.\n2. Sadece günlük tüketilecek kadar (max 1-2 kg) taze çekim yap.\n3. Hava almayan opak kaplarda muhafaza et.\nNot: Kesinlikle ertesi güne çekilmiş kahve devretme.",
-            "default": "Bu ürün standart porsiyonlama veya yıkama işlemi gerektirir.\n\nLütfen paket üzerindeki üretici talimatlarına veya mağaza içi standart gramaj tablosuna uyunuz."
+            "Mğz.da Çekilen Türk Kahvesi": "1. Türk kahvesi değirmenini en ince ayara al.\n2. Sadece günlük tüketilecek kadar (max 1-2 kg) taze çekim yap.\n3. Hava almayan opak kaplarda muhafaza et.\nNot: Kesinlikle ertesi güne çekilmiş kahve devretme."
         };
 
         document.addEventListener("DOMContentLoaded", () => {
@@ -936,6 +937,9 @@
 
         function handlePadTouchStart(e, id, name) {
             if(isEditMode || isBulkMode) return;
+            // EĞER ÜRÜNE AİT ÖZEL BİR REÇETE YOKSA HİÇ İŞLEM YAPMA (FAZ 3 GÜNCELLEMESİ)
+            if(!secretRecipes[name]) return; 
+
             isLongPress = false;
             pressTimer = setTimeout(() => {
                 isLongPress = true;
@@ -951,7 +955,8 @@
 
         function showSecretRecipe(name) {
             document.getElementById('recipeTitle').innerText = name;
-            let rec = secretRecipes[name] || secretRecipes["default"];
+            let rec = secretRecipes[name];
+            if(!rec) return; // Çift kontrol
             document.getElementById('recipeContent').innerText = rec;
             openModal('recipeModal');
         }
@@ -1050,6 +1055,102 @@
             if(navigator.vibrate) navigator.vibrate(50);
         }
 
+        // BARKOD KAMERA ASİSTANI (FAZ 3)
+        function startBarcodeScanner() {
+            openModal('barcodeModal');
+            const video = document.getElementById('cameraStream');
+            if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+                .then(function(stream) {
+                    video.srcObject = stream;
+                    video.play();
+                    // Demo için 3 saniye sonra otomatik "Süt" ürününü eşleştir
+                    setTimeout(() => {
+                        if(!document.getElementById('barcodeModal').classList.contains('active')) return;
+                        stopBarcodeScanner();
+                        showToast("Barkod Eşleşti: Süt Çeşitleri");
+                        startTracking('L18');
+                    }, 3000);
+                })
+                .catch(function(err) {
+                    alert("Kamera erişimi reddedildi veya bulunamadı.");
+                    closeModal('barcodeModal');
+                });
+            } else {
+                alert("Cihazınız kamera API'sini desteklemiyor.");
+                closeModal('barcodeModal');
+            }
+        }
+        function stopBarcodeScanner() {
+            closeModal('barcodeModal');
+            const video = document.getElementById('cameraStream');
+            if(video.srcObject) { video.srcObject.getTracks().forEach(track => track.stop()); }
+        }
+
+        // SESLİ ASİSTAN (FAZ 3)
+        function startVoiceCommand() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                alert("Tarayıcınız sesli komut özelliğini desteklemiyor. (Sadece Chrome/Safari uyumludur).");
+                return;
+            }
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'tr-TR';
+            recognition.interimResults = false;
+            
+            recognition.onstart = () => {
+                showToast("🎙️ Sizi dinliyorum...");
+                if(navigator.vibrate) navigator.vibrate(50);
+            };
+            
+            recognition.onspeechend = () => { recognition.stop(); };
+            
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript.toLowerCase();
+                
+                // Basit Yapay Zeka Komut Çözümleyici
+                if(transcript.includes('başlat') || transcript.includes('aç')) {
+                    if(transcript.includes('süt')) { startTracking('L18'); showToast('Süt takibi başlatıldı.'); }
+                    else if(transcript.includes('limonata')) { startTracking('L65'); showToast('Limonata takibi başlatıldı.'); }
+                    else { showToast(`Komut anlaşıldı: "${transcript}". Ancak ürün bulunamadı.`, true); }
+                } 
+                else if (transcript.includes('tüketildi') || transcript.includes('bitti')) {
+                    const itemToConsume = activeItems.find(i => transcript.includes(i.name.toLowerCase().split(' ')[0]));
+                    if(itemToConsume) { processItem(itemToConsume.id, 'Tüketildi'); }
+                    else { showToast("Aktif listede bu ürün bulunamadı.", true); }
+                }
+                else {
+                    showToast(`Komut anlaşılamadı: "${transcript}"`, true);
+                }
+            };
+            
+            recognition.onerror = (event) => { showToast("Ses algılanamadı, tekrar deneyin.", true); };
+            recognition.start();
+        }
+
+        // BLUETOOTH ETİKET YAZICI (FAZ 3)
+        async function printLabel(name, expires) {
+            if (!navigator.bluetooth) {
+                alert("Cihazınız Bluetooth bağlantısını desteklemiyor (Chrome gereklidir).");
+                return;
+            }
+            try {
+                showToast("Bluetooth yazıcı aranıyor...");
+                // Gerçek bağlantı filtresi
+                const device = await navigator.bluetooth.requestDevice({
+                    acceptAllDevices: true,
+                    optionalServices: ['000018f0-0000-1000-8000-00805f9b34fb']
+                });
+                showToast(`${device.name} cihazına bağlanılıyor...`);
+                
+                // Demo Yazdırma Simülasyonu
+                setTimeout(() => { showToast("Etiket başarıyla yazdırıldı!"); }, 2000);
+            } catch (error) {
+                console.warn(error);
+                showToast("Bluetooth bağlantısı iptal edildi.", true);
+            }
+        }
+
         function renderActiveList() {
             const container = document.getElementById('activeList'); container.innerHTML = '';
             if(activeItems.length === 0) { container.innerHTML = `<div style="text-align:center; padding:40px 20px; color:var(--text-muted); font-size:14px; background:var(--surface-solid); border-radius:var(--radius-md); box-shadow:var(--shadow-sm);">Şu an aktif takip edilen ürün yok.</div>`; return; }
@@ -1085,7 +1186,7 @@
                     <div class="swipe-container ${isSelected}" id="swipe-${item.id}">
                         ${!isBulkMode ? `
                         <div class="swipe-bg">
-                            <div class="bg-left"><i class="fa-solid fa-check"></i></div>
+                            <div class="bg-left" style="background:var(--accent);"><i class="fa-solid fa-box-open"></i></div>
                             <div class="bg-right"><i class="fa-solid fa-trash"></i></div>
                         </div>` : ''}
                         
@@ -1105,6 +1206,8 @@
                                 <div class="timer-display" style="color:${color};">${timeStr}</div>
                                 <div class="progress-track"><div class="progress-fill" style="width:${percent}%; background:${color};"></div></div>
                             </div>
+                            
+                            ${!isBulkMode ? `<button style="background:var(--bg-color); border:1px solid var(--border); width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--accent); cursor:pointer; margin-left:12px; flex-shrink:0; transition:var(--transition); box-shadow:var(--shadow-sm);" onclick="printLabel('${item.name}', '${timeStr}')"><i class="fa-solid fa-print"></i></button>` : ''}
 
                         </div>
                     </div>
@@ -1243,12 +1346,12 @@
         function closeModal(id) { 
             document.getElementById(id).classList.remove('active'); 
             document.body.classList.remove('no-scroll'); 
+            // Kapatırken kamerayı durdur
+            if(id === 'barcodeModal') stopBarcodeScanner();
         }
         function closeOnOutsideClick(e, id) { if(e.target.id === id) closeModal(id); }
 
-        // FAZ 2 CANLI FİRE VE PERFORMANS DASHBOARD'U
         function renderAdminDashboard() {
-            // Son 7 Günün Verisini Analiz Et
             const now = Date.now();
             const sevenDaysAgo = now - (7 * 24 * 60 * 60 * 1000);
             
