@@ -161,8 +161,8 @@
 
         <div class="app-container">
             
-            <!-- 1. SİPARİŞ -->
-            <div id="tab-order" class="tab-pane active">
+            <!-- 1. SİPARİŞ (SADECE YÖNETİCİ GÖREBİLİR) -->
+            <div id="tab-order" class="tab-pane">
                 <div class="chips-container" id="categoryChips">
                     <div class="chip active" onclick="loadOrderTemplate('Manav', this)">🥦 Manav</div>
                     <div class="chip" onclick="loadOrderTemplate('Süt', this)">🥛 Süt</div>
@@ -178,7 +178,7 @@
             </div>
 
             <!-- 2. ÜRETİM (DRUMPAD) -->
-            <div id="tab-library" class="tab-pane">
+            <div id="tab-library" class="tab-pane active">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                     <div>
                         <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 2px;">Üretim & SKT</h3>
@@ -222,10 +222,10 @@
 
         <!-- BOTTOM NAV -->
         <nav class="bottom-nav">
-            <div class="nav-item active" onclick="switchTab('tab-order', this)"><i class="fa-solid fa-clipboard-list"></i><span>Sipariş</span></div>
-            <div class="nav-item" onclick="switchTab('tab-library', this)"><i class="fa-solid fa-boxes-stacked"></i><span>Üretim</span></div>
-            <div class="nav-item" onclick="switchTab('tab-active', this)"><i class="fa-solid fa-stopwatch"></i><span>Takip</span></div>
-            <div class="nav-item" onclick="switchTab('tab-todos', this)"><i class="fa-solid fa-check-double"></i><span>Görevler</span></div>
+            <div class="nav-item" id="navOrder" onclick="switchTab('tab-order', this)" style="display:none;"><i class="fa-solid fa-clipboard-list"></i><span>Sipariş</span></div>
+            <div class="nav-item active" id="navLibrary" onclick="switchTab('tab-library', this)"><i class="fa-solid fa-boxes-stacked"></i><span>Üretim</span></div>
+            <div class="nav-item" id="navActive" onclick="switchTab('tab-active', this)"><i class="fa-solid fa-stopwatch"></i><span>Takip</span></div>
+            <div class="nav-item" id="navTodos" onclick="switchTab('tab-todos', this)"><i class="fa-solid fa-check-double"></i><span>Görevler</span></div>
         </nav>
     </div>
 
@@ -334,7 +334,6 @@
         let currentPin = "";
         let usersDB = {};
         
-        // Broadcast Bildirimleri için yüklenme zamanı (Eski mesajları engellemek için)
         let appLoadTime = 0;
 
         document.addEventListener("DOMContentLoaded", () => {
@@ -406,10 +405,19 @@
             
             document.getElementById('appContent').style.display = 'block';
             document.getElementById('headerUserName').innerText = currentUser.name;
+            
+            // --- ROL KONTROLÜ VE EKRAN DÜZENLEMESİ ---
             if(currentUser.role === 'admin') {
                 document.getElementById('adminBtn').style.display = 'flex';
                 document.getElementById('addProdBtn').style.display = 'block';
+                document.getElementById('navOrder').style.display = 'flex'; // Siparişi admin görebilir
+                switchTab('tab-order', document.getElementById('navOrder')); // Admin için default Sipariş sekmesi açılır
+            } else {
+                // Personel için Sipariş gizlenir
+                document.getElementById('navOrder').style.display = 'none';
+                switchTab('tab-library', document.getElementById('navLibrary')); // Personel için default Üretim açılır
             }
+            
             showToast("Hoşgeldin, " + currentUser.name);
             loadOrderTemplate('Manav', document.querySelector('.chip'));
 
@@ -436,21 +444,16 @@
                 allLogs = snap.val() ? Object.values(snap.val()) : [];
             });
 
-            // YAYIN (BROADCAST) DİNLEYİCİLERİ - Sadece başkalarının işlemlerinde telefon titrer
-            
-            // 1. Yeni Görev Dinleyicisi
+            // YAYIN (BROADCAST) DİNLEYİCİLERİ
             db.ref(dbRoot + '/todos').on('child_added', snap => {
                 const t = snap.val();
-                // Eski görevleri ve kişinin kendi eklediği görevleri filtrele
                 if(t.timestamp && t.timestamp > appLoadTime && t.addedBy !== currentUser.name) {
                     sendPushNotification("📌 Yeni Görev", t.addedBy + " yeni bir görev ekledi: " + t.text);
                 }
             });
 
-            // 2. Yeni Sipariş Dinleyicisi (Loglar üzerinden takip edilir)
             db.ref(dbRoot + '/logs').on('child_added', snap => {
                 const l = snap.val();
-                // Sadece Siparişleri bildirime yansıt. "Üretim/SKT" bildirimleri engellendi.
                 if(l.timestamp && l.timestamp > appLoadTime && l.user !== currentUser.name) {
                     if(l.action === "Sipariş Verildi") {
                         sendPushNotification("📋 Yeni Sipariş", l.user + " WhatsApp'a " + l.detail);
@@ -530,7 +533,7 @@
             libraryDB.filter(p => currentLibFilter === 'Tümü' || p.kategori === currentLibFilter).forEach(p => {
                 let omurStr = (p.birim === "Günlük" || p.birim === "Hemen Kullandır" || p.birim === "ORJ SKT") ? p.birim : p.raf_omru + " " + p.birim;
                 let icon = catIcons[p.kategori] || "fa-box";
-                container.innerHTML += '<div class="pad" onclick="startTracking(\'' + p.id + '\')"><div class="pad-time">' + omurStr + '</div><i class="fa-solid ' + icon + '"></i><div class="pad-name">' + p.urun + '</div></div>';
+                container.innerHTML += '<div class="pad" onclick="startTracking('' + p.id + '')"><div class="pad-time">' + omurStr + '</div><i class="fa-solid ' + icon + '"></i><div class="pad-name">' + p.urun + '</div></div>';
             });
         }
 
@@ -574,7 +577,6 @@
             db.ref(dbRoot + '/active/' + newItem.id).set(newItem);
             logAction("SKT Başlatıldı", prod.urun + " takibe alındı.");
             
-            // Yayın bildirimi iptal edildi, sadece işlemi yapan kişiye yeşil onay çıkar
             showToast(prod.urun + " takibe alındı!");
             if(navigator.vibrate) navigator.vibrate(50);
         }
@@ -600,7 +602,7 @@
                     if(percent < 20) color = "var(--danger)"; else if(percent < 40) color = "var(--warning)";
                 }
 
-                container.innerHTML += '<div class="swipe-container" id="swipe-' + item.id + '"><div class="swipe-bg"><div class="bg-left"><i class="fa-solid fa-check"></i></div><div class="bg-right"><i class="fa-solid fa-trash"></i></div></div><div class="active-card" id="card-' + item.id + '" ontouchstart="handleTS(event, \'' + item.id + '\')" ontouchmove="handleTM(event, \'' + item.id + '\')" ontouchend="handleTE(event, \'' + item.id + '\')" style="border-left-color:' + color + ';"><div style="display:flex; justify-content:space-between; align-items:center;"><div style="font-weight:800; font-size:15px; color:var(--text-main);"><i class="fa-solid ' + item.icon + '" style="color:var(--kd-gold); margin-right:6px;"></i> ' + item.name + '</div><div style="font-size:10px; color:var(--text-muted); font-weight:700;"><i class="fa-solid fa-user"></i> ' + item.startedBy.split(' ')[0] + '</div></div><div class="timer-display" style="color:' + color + ';">' + timeStr + '</div><div class="progress-track"><div class="progress-fill" style="width:' + percent + '%; background:' + color + ';"></div></div></div></div>';
+                container.innerHTML += '<div class="swipe-container" id="swipe-' + item.id + '"><div class="swipe-bg"><div class="bg-left"><i class="fa-solid fa-check"></i></div><div class="bg-right"><i class="fa-solid fa-trash"></i></div></div><div class="active-card" id="card-' + item.id + '" ontouchstart="handleTS(event, '' + item.id + '')" ontouchmove="handleTM(event, '' + item.id + '')" ontouchend="handleTE(event, '' + item.id + '')" style="border-left-color:' + color + ';"><div style="display:flex; justify-content:space-between; align-items:center;"><div style="font-weight:800; font-size:15px; color:var(--text-main);"><i class="fa-solid ' + item.icon + '" style="color:var(--kd-gold); margin-right:6px;"></i> ' + item.name + '</div><div style="font-size:10px; color:var(--text-muted); font-weight:700;"><i class="fa-solid fa-user"></i> ' + item.startedBy.split(' ')[0] + '</div></div><div class="timer-display" style="color:' + color + ';">' + timeStr + '</div><div class="progress-track"><div class="progress-fill" style="width:' + percent + '%; background:' + color + ';"></div></div></div></div>';
             });
         }
 
@@ -635,7 +637,7 @@
             const container = document.getElementById('orderTemplateList'); container.innerHTML = '';
             orderDB[cat].forEach(i => {
                 const c = orderCounts[i.n] ? orderCounts[i.n].c : 0;
-                container.innerHTML += '<div class="order-row ' + (c>0?'active-row':'') + '"><div style="flex:1;"><div style="font-weight:700;">' + i.n + '</div><small style="color:var(--text-muted);">' + i.b + '</small></div><div class="counter"><button class="btn-count" onclick="uc(\'' + i.n + '\', -1, \'' + i.b + '\')"><i class="fa-solid fa-minus"></i></button><span style="font-weight:800; min-width:20px; text-align:center;">' + c + '</span><button class="btn-count add" onclick="uc(\'' + i.n + '\', 1, \'' + i.b + '\')"><i class="fa-solid fa-plus"></i></button></div></div>';
+                container.innerHTML += '<div class="order-row ' + (c>0?'active-row':'') + '"><div style="flex:1;"><div style="font-weight:700;">' + i.n + '</div><small style="color:var(--text-muted);">' + i.b + '</small></div><div class="counter"><button class="btn-count" onclick="uc('' + i.n + '', -1, '' + i.b + '')"><i class="fa-solid fa-minus"></i></button><span style="font-weight:800; min-width:20px; text-align:center;">' + c + '</span><button class="btn-count add" onclick="uc('' + i.n + '', 1, '' + i.b + '')"><i class="fa-solid fa-plus"></i></button></div></div>';
             });
         }
         function uc(n, ch, b) { if(!orderCounts[n]) orderCounts[n] = {c:0, b:b}; orderCounts[n].c += ch; if(orderCounts[n].c < 0) orderCounts[n].c = 0; loadOrderTemplate(currentOrderCat, null); }
@@ -647,8 +649,6 @@
             if(items.length === 0) return alert("Boş sipariş gönderilemez.");
             
             logAction("Sipariş Verildi", currentOrderCat + " listesi oluşturuldu.");
-            
-            // İşlemi yapana sadece sessiz bildirim çıkar, gruba (diğer kullanıcılara) Push atılır.
             showToast("Sipariş WhatsApp'a aktarıldı.");
             
             var waText = "*KORDON SİPARİŞ (" + currentOrderCat + ")*%0A" + "Siparişi Veren: " + currentUser.name + "%0A%0A" + items.join("%0A");
@@ -660,21 +660,18 @@
         // GÖREVLER (TO-DO)
         function addTodo() {
             const txt = document.getElementById('todoInput').value.trim(); if(!txt) return;
-            // Timestamp eklenerek eski görevlerin push atması engellendi
             const newTodo = { id: Date.now().toString(), text: txt, done: false, addedBy: currentUser.name, timestamp: Date.now() };
             db.ref(dbRoot + '/todos/' + newTodo.id).set(newTodo);
             
             document.getElementById('todoInput').value = "";
             logAction("Görev Eklendi", "Yeni görev: " + txt);
-            
-            // İşlemi yapana yeşil bildirim göster
             showToast("Görev Eklendi!");
         }
         function renderTodos() {
             const container = document.getElementById('todoContainer'); container.innerHTML = '';
             if(todos.length === 0) { container.innerHTML = '<div style="font-size:12px; color:var(--text-muted); text-align:center;">Görev yok.</div>'; return; }
             todos.forEach(t => {
-                container.innerHTML += '<div class="check-item ' + (t.done ? 'done' : '') + '"><div class="check-left" onclick="toggleTodo(\'' + t.id + '\', ' + t.done + ')"><div class="check-box"><i class="fa-solid fa-check"></i></div><div><div class="check-text">' + t.text + '</div><div style="font-size:9px; color:var(--text-muted); margin-top:2px;">Ekleyen: ' + t.addedBy + '</div></div></div><button class="btn-count" style="background:none; box-shadow:none; color:var(--danger);" onclick="deleteTodo(\'' + t.id + '\')"><i class="fa-solid fa-trash"></i></button></div>';
+                container.innerHTML += '<div class="check-item ' + (t.done ? 'done' : '') + '"><div class="check-left" onclick="toggleTodo('' + t.id + '', ' + t.done + ')"><div class="check-box"><i class="fa-solid fa-check"></i></div><div><div class="check-text">' + t.text + '</div><div style="font-size:9px; color:var(--text-muted); margin-top:2px;">Ekleyen: ' + t.addedBy + '</div></div></div><button class="btn-count" style="background:none; box-shadow:none; color:var(--danger);" onclick="deleteTodo('' + t.id + '')"><i class="fa-solid fa-trash"></i></button></div>';
             });
         }
         function toggleTodo(id, currentStatus) {
@@ -698,8 +695,10 @@
 
         function sendAuditReport() {
             if(allLogs.length === 0) return alert("Arşivde hiç işlem yok.");
-            let csv = "data:text/csv;charset=utf-8,\uFEFFTarih;Personel;Islem Tipi;Detay\r\n";
-            [...allLogs].reverse().forEach(l => { csv += '"' + l.date + '";"' + l.user + '";"' + l.action + '";"' + l.detail + '"\r\n'; });
+            let csv = "data:text/csv;charset=utf-8,﻿Tarih;Personel;Islem Tipi;Detay
+";
+            [...allLogs].reverse().forEach(l => { csv += '"' + l.date + '";"' + l.user + '";"' + l.action + '";"' + l.detail + '"
+'; });
             const link = document.createElement("a"); link.setAttribute("href", encodeURI(csv)); link.setAttribute("download", "Denetim_Raporu.csv"); document.body.appendChild(link); link.click(); document.body.removeChild(link);
         }
 
@@ -713,7 +712,7 @@
             for(const [pin, u] of Object.entries(usersDB)) {
                 const roleClass = u.role === 'admin' ? 'role-admin' : 'role-staff';
                 const roleText = u.role === 'admin' ? 'Yönetici' : 'Personel';
-                container.innerHTML += '<div class="user-row"><div><div style="font-weight:700; font-size:14px; color:var(--text-main);">' + u.name + '</div><div style="font-size:11px; color:var(--text-muted); font-family:monospace; margin-top:2px;">PIN: ' + pin + '</div></div><div style="display:flex; align-items:center; gap:10px;"><span class="role-badge ' + roleClass + '">' + roleText + '</span>' + (pin !== '1923' ? '<button onclick="deleteUser(\'' + pin + '\')" style="background:none; border:none; color:var(--danger); cursor:pointer;"><i class="fa-solid fa-trash"></i></button>' : '') + '</div></div>';
+                container.innerHTML += '<div class="user-row"><div><div style="font-weight:700; font-size:14px; color:var(--text-main);">' + u.name + '</div><div style="font-size:11px; color:var(--text-muted); font-family:monospace; margin-top:2px;">PIN: ' + pin + '</div></div><div style="display:flex; align-items:center; gap:10px;"><span class="role-badge ' + roleClass + '">' + roleText + '</span>' + (pin !== '1923' ? '<button onclick="deleteUser('' + pin + '')" style="background:none; border:none; color:var(--danger); cursor:pointer;"><i class="fa-solid fa-trash"></i></button>' : '') + '</div></div>';
             }
         }
 
