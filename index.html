@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KD Kordon Pro - Excel Fixed Edition</title>
+    <title>KD Kordon Pro - TXT Report Edition</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -289,7 +289,7 @@
         </div>
     </div>
 
-    <!-- RAPOR VE ARŞİV MODALI -->
+    <!-- RAPOR VE ARŞİV MODALI (TXT FORMATI) -->
     <div class="modal-overlay" id="reportModal" onclick="closeOnOutsideClick(event, 'reportModal')">
         <div class="modal-content">
             <div class="drag-handle"></div>
@@ -297,8 +297,8 @@
                 <h3 style="font-size:18px;">Arşiv & Denetim (Log)</h3>
                 <button onclick="openModal('adminModal'); closeModal('reportModal');" style="background:none; border:none; font-size:20px; color:var(--text-muted);"><i class="fa-solid fa-arrow-left"></i></button>
             </div>
-            <button class="btn btn-whatsapp" onclick="sendAuditReport()"><i class="fa-solid fa-file-excel"></i> Denetim Raporunu İndir (.XLS)</button>
-            <div style="margin-top:20px; font-size:12px; color:var(--text-muted); text-align:center;">Sistemdeki tüm sipariş, imha ve görev tamamlama işlemleri dijital imza (kişi ismi) ile birlikte Excel formatında indirilir.</div>
+            <button class="btn btn-primary" onclick="sendAuditReport()"><i class="fa-solid fa-file-lines"></i> Denetim Raporunu İndir (.TXT)</button>
+            <div style="margin-top:20px; font-size:12px; color:var(--text-muted); text-align:center;">Sistemdeki tüm işlemler düz metin (Not Defteri) formatında indirilir. Türkçe karakter sorunu yaşanmaz.</div>
         </div>
     </div>
 
@@ -348,7 +348,7 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         
-        // Temiz veritabanı alanı
+        // Veritabanı alanı
         const dbRoot = 'kd_kordon_pro_final_v3'; 
 
         let isDark = localStorage.getItem('kd_theme') === 'dark';
@@ -501,7 +501,6 @@
 
         const catIcons = { "Şarküteri, Süt ve Soslar": "fa-cheese", "Paketli & Kuru Gıdalar": "fa-box", "Meyve ve Sebze": "fa-apple-whole", "Çözündürülen / Dökme / Teşhir": "fa-ice-cream", "Kahveler, İçecekler ve Ön Hazırlık": "fa-mug-hot", "Paketli Şarküteri": "fa-bacon" };
 
-        // --- PDF TABANLI EKSİKSİZ VE AYRIŞTIRILMIŞ ÜRÜN KÜTÜPHANESİ ---
         const defaultLibrary = [
             {id:"L1", kategori:"Şarküteri, Süt ve Soslar", urun:"Süzme Beyaz Peynir", raf_omru:3, birim:"Gün"},
             {id:"L2", kategori:"Şarküteri, Süt ve Soslar", urun:"Krem Peynir", raf_omru:3, birim:"Gün"},
@@ -891,7 +890,7 @@
         }
         function deleteTodo(id) { db.ref(`${dbRoot}/todos/${id}`).remove(); }
 
-        // --- YÖNETİCİ VE AUDIT TRAIL SİSTEMİ (EXCEL RAPORU DÜZELTİLDİ) ---
+        // --- YÖNETİCİ VE AUDIT TRAIL SİSTEMİ ---
         function logAction(actionType, detail) {
             const logItem = { 
                 id: Date.now().toString(), 
@@ -904,35 +903,26 @@
             db.ref(`${dbRoot}/logs/${logItem.id}`).set(logItem);
         }
 
+        // --- TXT FORMATINDA RAPOR İNDİRME ---
         function sendAuditReport() {
             if(allLogs.length === 0) return alert("Arşivde hiç işlem yok.");
             
-            // Excel (.XLS) HTML Tablo Çıktısı - Sütunların ve Türkçe Karakterlerin Bozulmasını Önler
-            let table = '<html xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="utf-8"></head><body>';
-            table += '<table border="1" style="font-family: sans-serif; text-align: left;"><tr>';
-            table += '<th style="background-color:#C29A5B; color:white; padding:10px;">Tarih</th>';
-            table += '<th style="background-color:#C29A5B; color:white; padding:10px;">Personel</th>';
-            table += '<th style="background-color:#C29A5B; color:white; padding:10px;">İşlem Tipi</th>';
-            table += '<th style="background-color:#C29A5B; color:white; padding:10px;">Detay</th>';
-            table += '</tr>';
-
-            [...allLogs].reverse().forEach(l => { 
-                table += `<tr>
-                    <td style="padding:5px;">${l.date}</td>
-                    <td style="padding:5px;"><b>${l.user}</b></td>
-                    <td style="padding:5px;">${l.action}</td>
-                    <td style="padding:5px;">${l.detail}</td>
-                </tr>`; 
-            });
+            let textContent = "=== KORDON DENETİM RAPORU ===\r\n\r\n";
             
-            table += '</table></body></html>';
+            [...allLogs].reverse().forEach(l => { 
+                textContent += `Tarih : ${l.date}\r\n`;
+                textContent += `Kişi  : ${l.user}\r\n`;
+                textContent += `İşlem : ${l.action}\r\n`;
+                textContent += `Detay : ${l.detail}\r\n`;
+                textContent += `---------------------------------------\r\n`;
+            });
 
-            const blob = new Blob([table], { type: 'application/vnd.ms-excel' });
+            const blob = new Blob([textContent], { type: 'text/plain;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             
             const link = document.createElement("a"); 
             link.href = url; 
-            link.download = "Kordon_Denetim_Raporu.xls"; 
+            link.download = "Kordon_Denetim_Raporu.txt"; 
             document.body.appendChild(link); 
             link.click(); 
             document.body.removeChild(link);
