@@ -71,14 +71,12 @@
         .h-items { font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 8px;}
         .h-date { font-size: 11px; color: var(--success); font-weight: 700; display:flex; align-items:center; gap:5px; }
 
-        /* Sipariş Satırları */
         .order-row { background: var(--surface); border-radius: var(--radius-lg); padding: 14px 18px; box-shadow: var(--shadow-sm); display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); }
         .order-row.active-row { border-color: var(--success); background: var(--success-light); }
         .counter { display: flex; align-items: center; gap: 12px; background: var(--bg-color); padding: 5px; border-radius: 40px; border: 1px solid var(--border); }
         .btn-count { background: var(--surface); border: none; width: 32px; height: 32px; border-radius: 50%; font-size: 16px; font-weight: 600; color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); }
         .btn-count.add { background: var(--kd-dark); color: var(--kd-gold); }
 
-        /* To-Do Liste Öğeleri */
         .check-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
         .check-item:last-child { border-bottom: none; }
         .check-left { display: flex; align-items: center; gap: 12px; flex: 1; cursor: pointer; }
@@ -95,6 +93,8 @@
     <header class="app-header">
         <div class="brand"><i class="fa-solid fa-leaf" style="color:var(--kd-gold)"></i> KD Kordon Kokpit</div>
         <div class="header-actions">
+            <!-- BİLDİRİM İZNİ BUTONU -->
+            <button class="cloud-status-btn" id="bellBtn" onclick="requestNotificationPermission()" title="Bildirimleri Aç"><i class="fa-solid fa-bell"></i></button>
             <button class="cloud-status-btn" id="cloudBtn" onclick="syncWithCloud()" title="Buluta Senkronize Et"><i class="fa-solid fa-cloud" id="cloudIcon"></i></button>
             <button class="theme-toggle" onclick="toggleTheme()"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
         </div>
@@ -145,12 +145,11 @@
         <div class="nav-item" onclick="switchTab('tab-archive', this)"><i class="fa-solid fa-box-archive"></i><span>Arşiv</span></div>
     </nav>
 
-    <!-- Firebase SDK (Compat Modu ile Entegre Edildi) -->
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <script>
-        // Firebase Konfigürasyonu
         const firebaseConfig = {
           apiKey: "AIzaSyDxxGeAcvJfEtMUmDl_wMPBSGYqbaYUbRY",
           authDomain: "raf-omru-takip-uygulamasi.firebaseapp.com",
@@ -160,8 +159,6 @@
           messagingSenderId: "329380752344",
           appId: "1:329380752344:web:dde75e5731ed1f3aeda0ad"
         };
-
-        // Firebase Başlatma
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
@@ -169,24 +166,53 @@
         if(isDark) document.body.classList.add('dark-mode'); 
         
         document.addEventListener("DOMContentLoaded", () => {
-            // !!! BİLDİRİM İZNİ İSTEĞİ EKLENDİ !!!
-            if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
-                Notification.requestPermission();
-            }
-
             updateThemeIcon();
             loadOrderTemplate('Manav', document.querySelector('.chip'));
             renderHistory();
             renderTodos();
             fetchFromCloudSilent();
+            checkNotificationStatus();
         });
 
-        // Yeni Bildirim Gönderme Fonksiyonu
+        // --- BİLDİRİM SİSTEMİ (GÜNCELLENDİ) ---
+        function checkNotificationStatus() {
+            if ("Notification" in window && Notification.permission === "granted") {
+                document.getElementById('bellBtn').style.display = 'none';
+            }
+        }
+
+        function requestNotificationPermission() {
+            if (!("Notification" in window)) {
+                alert("Tarayıcınız bildirimleri desteklemiyor.");
+                return;
+            }
+            Notification.requestPermission().then(permission => {
+                if (permission === "granted") {
+                    alert("Harika! Artık güncellemeleri bildirim olarak alacaksınız.");
+                    document.getElementById('bellBtn').style.display = 'none';
+                    showNotification("Sistem Aktif", "Bildirim sistemi başarıyla kuruldu.");
+                } else {
+                    alert("Bildirim izni reddedildi. Tarayıcı ayarlarından açabilirsiniz.");
+                }
+            });
+        }
+
+        // PWA ve Mobil Cihazlar İçin Service Worker Üzerinden Bildirim
         function showNotification(title, body) {
             if ("Notification" in window && Notification.permission === "granted") {
-                new Notification(title, { 
-                    body: body, 
-                    icon: "https://cdn-icons-png.flaticon.com/512/3003/3003984.png" 
+                // Eğer Service Worker varsa (Mobil uygulama modunda çalışıyorsa) onun üzerinden at
+                navigator.serviceWorker.ready.then(function(registration) {
+                    registration.showNotification(title, { 
+                        body: body, 
+                        icon: "https://cdn-icons-png.flaticon.com/512/3003/3003984.png",
+                        vibrate: [200, 100, 200]
+                    });
+                }).catch(function() {
+                    // Fallback (Masaüstü vs için)
+                    new Notification(title, { 
+                        body: body, 
+                        icon: "https://cdn-icons-png.flaticon.com/512/3003/3003984.png" 
+                    });
                 });
             }
         }
@@ -283,17 +309,11 @@
             localStorage.setItem('kd_history', JSON.stringify(localHistory)); 
             renderHistory();
             
-            // Firebase'e de otomatik kaydet
             db.ref('kordon_kokpit/history/' + newHistoryItem.id).set(newHistoryItem);
 
-            // BİLDİRİM TETİKLEME
             showNotification("✅ Sipariş Kaydedildi", `${currentCategory} siparişiniz buluta ve arşive eklendi.`);
 
-            window.open(`https://wa.me/?text=` + encodeURIComponent(`*KAHVE DÜNYASI KORDON*
-Tarih: ${new Date().toLocaleDateString('tr-TR')}
-
-${orderItems.join("
-")}`), '_blank');
+            window.open(`https://wa.me/?text=` + encodeURIComponent(`*KAHVE DÜNYASI KORDON*\nTarih: ${new Date().toLocaleDateString('tr-TR')}\n\n${orderItems.join("\n")}`), '_blank');
             
             orderCounts = {}; 
             loadOrderTemplate(currentCategory, null);
@@ -307,7 +327,6 @@ ${orderItems.join("
             });
         }
 
-        // TO-DO GÖREVLER
         let localTodos = JSON.parse(localStorage.getItem('kd_todos')) || [];
 
         function addTodo() {
@@ -316,9 +335,7 @@ ${orderItems.join("
             localTodos.push(newTodo); 
             saveAndSyncTodos();
             
-            // BİLDİRİM TETİKLEME
             showNotification("📌 Yeni Görev", `Eklenen görev: ${txt}`);
-
             document.getElementById('todoInput').value = ""; 
         }
 
@@ -354,16 +371,11 @@ ${orderItems.join("
             db.ref('kordon_kokpit/todos').set(localTodos);
         }
 
-        // FIREBASE SENKRONİZASYON FONKSİYONLARI
         function syncWithCloud() {
             const btn = document.getElementById('cloudBtn');
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
             
-            // Tüm lokal verileri buluta gönder
-            const syncData = {
-                todos: localTodos,
-                history: localHistory
-            };
+            const syncData = { todos: localTodos, history: localHistory };
 
             db.ref('kordon_kokpit').set(syncData).then(() => {
                 btn.className = "cloud-status-btn synced";
@@ -396,9 +408,7 @@ ${orderItems.join("
                         renderHistory();
                     }
                 }
-            }).catch(() => {
-                // Çevrimdışı modda sessizce devam et
-            });
+            }).catch(() => {});
         }
 
         // PWA Servis İşçisi
