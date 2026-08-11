@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KD Kordon Pro - Final Edition</title>
+    <title>KD Kordon Pro - Excel Fixed Edition</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -297,7 +297,7 @@
                 <h3 style="font-size:18px;">Arşiv & Denetim (Log)</h3>
                 <button onclick="openModal('adminModal'); closeModal('reportModal');" style="background:none; border:none; font-size:20px; color:var(--text-muted);"><i class="fa-solid fa-arrow-left"></i></button>
             </div>
-            <button class="btn btn-whatsapp" onclick="sendAuditReport()"><i class="fa-solid fa-file-excel"></i> Denetim Raporunu İndir (.CSV)</button>
+            <button class="btn btn-whatsapp" onclick="sendAuditReport()"><i class="fa-solid fa-file-excel"></i> Denetim Raporunu İndir (.XLS)</button>
             <div style="margin-top:20px; font-size:12px; color:var(--text-muted); text-align:center;">Sistemdeki tüm sipariş, imha ve görev tamamlama işlemleri dijital imza (kişi ismi) ile birlikte Excel formatında indirilir.</div>
         </div>
     </div>
@@ -348,8 +348,8 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         
-        // Tamamen sıfırlanmış yeni bir veritabanı alanı
-        const dbRoot = 'kd_kordon_pro_final_v2'; 
+        // Temiz veritabanı alanı
+        const dbRoot = 'kd_kordon_pro_final_v3'; 
 
         let isDark = localStorage.getItem('kd_theme') === 'dark';
         if(isDark) document.body.classList.add('dark-mode'); 
@@ -371,7 +371,7 @@
             let dbTimeout = setTimeout(() => {
                 const spinner = document.getElementById('fullScreenSpinner');
                 if(spinner.style.display !== 'none') {
-                    spinner.innerHTML = '<i class="fa-solid fa-triangle-exclamation fa-3x" style="color:var(--danger); margin-bottom:15px;"></i><span style="color:var(--text-main);">İnternet Bağlantısı Hatası.<br>Lütfen sayfayı yenileyin.</span>';
+                    spinner.innerHTML = `<i class="fa-solid fa-triangle-exclamation fa-3x" style="color:var(--danger); margin-bottom:15px;"></i><span style="color:var(--text-main);">İnternet Bağlantısı Hatası.<br>Lütfen sayfayı yenileyin.</span>`;
                 }
             }, 8000);
 
@@ -501,6 +501,7 @@
 
         const catIcons = { "Şarküteri, Süt ve Soslar": "fa-cheese", "Paketli & Kuru Gıdalar": "fa-box", "Meyve ve Sebze": "fa-apple-whole", "Çözündürülen / Dökme / Teşhir": "fa-ice-cream", "Kahveler, İçecekler ve Ön Hazırlık": "fa-mug-hot", "Paketli Şarküteri": "fa-bacon" };
 
+        // --- PDF TABANLI EKSİKSİZ VE AYRIŞTIRILMIŞ ÜRÜN KÜTÜPHANESİ ---
         const defaultLibrary = [
             {id:"L1", kategori:"Şarküteri, Süt ve Soslar", urun:"Süzme Beyaz Peynir", raf_omru:3, birim:"Gün"},
             {id:"L2", kategori:"Şarküteri, Süt ve Soslar", urun:"Krem Peynir", raf_omru:3, birim:"Gün"},
@@ -553,7 +554,7 @@
             {id:"L49", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Amerikan Salatası", raf_omru:2, birim:"Gün"},
             {id:"L50", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Hindistan Cevizi Püresi", raf_omru:2, birim:"Gün"},
             {id:"L51", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Kırmızı Meyve Püresi", raf_omru:3, birim:"Gün"},
-            {id:"L52", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Dondurmalar", raf_omru:15, birim:"Gün"},
+            {id:"L52", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Dondurmalar (Teşhir)", raf_omru:15, birim:"Gün"},
             {id:"L53", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Spesiyal Çikolatalar", raf_omru:0, birim:"ORJ SKT"},
             {id:"L54", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Trüf Çikolatalar", raf_omru:0, birim:"ORJ SKT"},
             {id:"L55", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Lavi Çikolatalar", raf_omru:0, birim:"ORJ SKT"},
@@ -890,7 +891,7 @@
         }
         function deleteTodo(id) { db.ref(`${dbRoot}/todos/${id}`).remove(); }
 
-        // --- YÖNETİCİ VE AUDIT TRAIL SİSTEMİ ---
+        // --- YÖNETİCİ VE AUDIT TRAIL SİSTEMİ (EXCEL RAPORU DÜZELTİLDİ) ---
         function logAction(actionType, detail) {
             const logItem = { 
                 id: Date.now().toString(), 
@@ -903,11 +904,10 @@
             db.ref(`${dbRoot}/logs/${logItem.id}`).set(logItem);
         }
 
-
         function sendAuditReport() {
             if(allLogs.length === 0) return alert("Arşivde hiç işlem yok.");
             
-            // Excel için HTML tablosu oluşturuyoruz (Sütunların asla karışmaması için)
+            // Excel (.XLS) HTML Tablo Çıktısı - Sütunların ve Türkçe Karakterlerin Bozulmasını Önler
             let table = '<html xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="utf-8"></head><body>';
             table += '<table border="1" style="font-family: sans-serif; text-align: left;"><tr>';
             table += '<th style="background-color:#C29A5B; color:white; padding:10px;">Tarih</th>';
@@ -927,7 +927,6 @@
             
             table += '</table></body></html>';
 
-            // Blob teknolojisi ile UTF-8 (Türkçe Karakter) sorununu %100 çözüyoruz
             const blob = new Blob([table], { type: 'application/vnd.ms-excel' });
             const url = URL.createObjectURL(blob);
             
