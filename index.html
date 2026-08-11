@@ -169,12 +169,27 @@
         if(isDark) document.body.classList.add('dark-mode'); 
         
         document.addEventListener("DOMContentLoaded", () => {
+            // !!! BİLDİRİM İZNİ İSTEĞİ EKLENDİ !!!
+            if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
+                Notification.requestPermission();
+            }
+
             updateThemeIcon();
             loadOrderTemplate('Manav', document.querySelector('.chip'));
             renderHistory();
             renderTodos();
             fetchFromCloudSilent();
         });
+
+        // Yeni Bildirim Gönderme Fonksiyonu
+        function showNotification(title, body) {
+            if ("Notification" in window && Notification.permission === "granted") {
+                new Notification(title, { 
+                    body: body, 
+                    icon: "https://cdn-icons-png.flaticon.com/512/3003/3003984.png" 
+                });
+            }
+        }
 
         function toggleTheme() { 
             isDark = !isDark; 
@@ -271,8 +286,14 @@
             // Firebase'e de otomatik kaydet
             db.ref('kordon_kokpit/history/' + newHistoryItem.id).set(newHistoryItem);
 
-            // Buradaki satır aralıkları JavaScript kurallarına uygun olarak \n ile değiştirildi.
-            window.open(`https://wa.me/?text=` + encodeURIComponent(`*KAHVE DÜNYASI KORDON*\nTarih: ${new Date().toLocaleDateString('tr-TR')}\n\n${orderItems.join("\n")}`), '_blank');
+            // BİLDİRİM TETİKLEME
+            showNotification("✅ Sipariş Kaydedildi", `${currentCategory} siparişiniz buluta ve arşive eklendi.`);
+
+            window.open(`https://wa.me/?text=` + encodeURIComponent(`*KAHVE DÜNYASI KORDON*
+Tarih: ${new Date().toLocaleDateString('tr-TR')}
+
+${orderItems.join("
+")}`), '_blank');
             
             orderCounts = {}; 
             loadOrderTemplate(currentCategory, null);
@@ -294,6 +315,10 @@
             const newTodo = { id: Date.now().toString(), text: txt, done: false };
             localTodos.push(newTodo); 
             saveAndSyncTodos();
+            
+            // BİLDİRİM TETİKLEME
+            showNotification("📌 Yeni Görev", `Eklenen görev: ${txt}`);
+
             document.getElementById('todoInput').value = ""; 
         }
 
@@ -343,6 +368,9 @@
             db.ref('kordon_kokpit').set(syncData).then(() => {
                 btn.className = "cloud-status-btn synced";
                 btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i>';
+                
+                showNotification("☁️ Bulut Senkronizasyonu", "Veriler başarıyla buluta aktarıldı.");
+
                 setTimeout(() => {
                     btn.className = "cloud-status-btn";
                     btn.innerHTML = '<i class="fa-solid fa-cloud"></i>';
