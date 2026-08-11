@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KD Kordon Pro - Minimalist iOS Edition</title>
+    <title>KD Kordon Pro - Minimalist iOS (Phase 2)</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -17,22 +17,22 @@
     <style>
         :root {
             /* APPLE iOS / GLASSMORPHISM PALETİ */
-            --bg-color: #F2F4F7; /* Çok açık, göz yormayan gri */
-            --surface-solid: #FFFFFF; /* Tam beyaz kartlar */
-            --surface-glass: rgba(255, 255, 255, 0.75); /* Buzlu cam efekti */
-            --text-main: #1E293B; /* Koyu antrasit yazı */
-            --text-muted: #94A3B8; /* Yumuşak gri yazı */
+            --bg-color: #F2F4F7; 
+            --surface-solid: #FFFFFF; 
+            --surface-glass: rgba(255, 255, 255, 0.85); 
+            --text-main: #1E293B; 
+            --text-muted: #94A3B8; 
             
-            --accent: #007AFF; /* Apple Mavi */
+            --accent: #007AFF; 
             --accent-light: rgba(0, 122, 255, 0.1);
-            --danger: #FF3B30; /* Apple Kırmızı */
+            --danger: #FF3B30; 
             --danger-light: rgba(255, 59, 48, 0.1);
-            --success: #34C759; /* Apple Yeşil */
+            --success: #34C759; 
             --success-light: rgba(52, 199, 89, 0.1);
-            --warning: #FF9500; /* Apple Turuncu */
+            --warning: #FF9500; 
             --warning-light: rgba(255, 149, 0, 0.1);
             
-            --border: rgba(0, 0, 0, 0.06); /* Çok hafif sınır çizgisi */
+            --border: rgba(0, 0, 0, 0.06); 
             
             /* YUMUŞAK HATLAR */
             --radius-lg: 24px; 
@@ -44,17 +44,18 @@
         }
 
         body.dark-mode {
-            /* İsteğe bağlı Dark Mode - Çok yumuşak antrasit */
             --bg-color: #0F172A;
             --surface-solid: #1E293B;
-            --surface-glass: rgba(30, 41, 59, 0.75);
+            --surface-glass: rgba(30, 41, 59, 0.85);
             --text-main: #F8FAFC;
             --text-muted: #64748B;
             --border: rgba(255, 255, 255, 0.05);
         }
 
+        /* ARKA PLAN KAYMASINI ENGELLEYEN KİLİT KODU (OVERFLOW HIDDEN EKLENTİSİ) */
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-color); color: var(--text-main); transition: background-color 0.3s; overflow-x: hidden; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-color); color: var(--text-main); transition: background-color 0.3s; overflow-x: hidden; overscroll-behavior-y: none; }
+        body.no-scroll { overflow: hidden; height: 100vh; touch-action: none; }
 
         /* GİRİŞ EKRANI */
         #authScreen { position: fixed; inset: 0; background: var(--bg-color); z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
@@ -144,9 +145,10 @@
         @keyframes slideUp { from{transform:translateY(100%);} to{transform:translateY(0);} }
 
         /* Modals - Clean iOS Style */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 1000; display: flex; align-items: flex-end; justify-content: center; opacity: 0; visibility: hidden; transition: var(--transition); }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 1000; display: flex; align-items: flex-end; justify-content: center; opacity: 0; visibility: hidden; transition: var(--transition); overscroll-behavior: none; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal-content { background: var(--surface-solid); width: 100%; max-width: 600px; border-radius: 30px 30px 0 0; padding: 30px 25px 50px; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); max-height: 90vh; overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.1); }
+        /* Modalın içi scroll edilebilir, arka plan donuk */
+        .modal-content { background: var(--surface-solid); width: 100%; max-width: 600px; border-radius: 30px 30px 0 0; padding: 30px 25px 50px; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); max-height: 90vh; overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.1); overscroll-behavior-y: contain; }
         .modal-overlay.active .modal-content { transform: translateY(0); }
         .drag-handle { width: 40px; height: 5px; background: var(--border); border-radius: 10px; margin: 0 auto 25px; }
         
@@ -169,6 +171,24 @@
 
         /* Offline Banner */
         #offlineBanner { display: none; background: var(--warning); color: white; text-align: center; padding: 8px; font-size: 12px; font-weight: 700; position: sticky; top: 0; z-index: 51; }
+
+        /* DASHBOARD - FAZ 2 */
+        .dashboard-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .stat-card { background: var(--bg-color); padding: 15px; border-radius: var(--radius-md); text-align: center; border: 1px solid var(--border); }
+        .stat-card .value { font-size: 24px; font-weight: 800; color: var(--text-main); margin-bottom: 5px; }
+        .stat-card .label { font-size: 11px; font-weight: 600; color: var(--text-muted); }
+        .stat-card.danger { background: var(--danger-light); border-color: var(--danger-light); }
+        .stat-card.danger .value { color: var(--danger); }
+        .stat-card.success { background: var(--success-light); border-color: var(--success-light); }
+        .stat-card.success .value { color: var(--success); }
+
+        /* WEATHER WIDGET - FAZ 2 */
+        .weather-widget { background: linear-gradient(135deg, var(--accent-light), rgba(0, 122, 255, 0.05)); border: 1px solid var(--accent-light); padding: 15px; border-radius: var(--radius-md); margin-bottom: 20px; display: flex; align-items: center; gap: 15px; }
+        .weather-icon { width: 45px; height: 45px; background: var(--surface-solid); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; color: var(--warning); box-shadow: var(--shadow-sm); flex-shrink: 0; }
+        .weather-text { flex: 1; }
+        .weather-title { font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
+        .weather-desc { font-size: 12px; font-weight: 500; color: var(--text-muted); line-height: 1.4; }
+
     </style>
 </head>
 <body>
@@ -239,6 +259,15 @@
             <!-- 2. ÜRETİM (DRUMPAD) -->
             <div id="tab-library" class="tab-pane active">
                 
+                <!-- HAVA DURUMU ASİSTANI (FAZ 2) -->
+                <div class="weather-widget">
+                    <div class="weather-icon"><i class="fa-solid fa-sun"></i></div>
+                    <div class="weather-text">
+                        <div class="weather-title">Tahmini Hava: 34°C (Sıcak)</div>
+                        <div class="weather-desc">Sistemsel Öneri: Gün içinde Cold Brew ve Limonata kotalarını normalin üzerinde tutmanız tavsiye edilir.</div>
+                    </div>
+                </div>
+
                 <!-- ŞİMŞEK ARAMA ÇUBUĞU -->
                 <div style="position: relative; margin-bottom: 20px;">
                     <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 18px; top: 18px; color: var(--text-muted);"></i>
@@ -294,6 +323,20 @@
             <div id="tab-todos" class="tab-pane">
                 <h3 style="font-size: 22px; font-weight: 700; color: var(--text-main); margin-bottom: 20px;">Görev Panosu</h3>
                 
+                <!-- EKİPMAN BAKIM RADARI (FAZ 2) -->
+                <h4 style="font-size:14px; font-weight:700; color:var(--text-main); margin-bottom:10px;">Demirbaş Bakım Radarı</h4>
+                <div class="chips-container" style="margin-bottom: 25px;">
+                    <div class="chip" style="border-color:var(--danger); color:var(--danger); background:var(--danger-light); pointer-events:none;">
+                        <i class="fa-solid fa-triangle-exclamation"></i> Buz Makinesi Yıkama (Süresi Doldu)
+                    </div>
+                    <div class="chip" style="border-color:var(--warning); color:var(--warning); background:var(--warning-light); pointer-events:none;">
+                        <i class="fa-solid fa-mug-hot"></i> Espresso Ters Yıkama (Son 2 Gün)
+                    </div>
+                    <div class="chip" style="pointer-events:none;">
+                        <i class="fa-solid fa-droplet"></i> Su Arıtma Filtresi (14 Gün)
+                    </div>
+                </div>
+
                 <!-- VARDİYA TESLİM NOTU -->
                 <div style="background:var(--warning-light); padding:16px; border-radius:var(--radius-md); margin-bottom:20px;">
                     <h4 style="font-size:13px; font-weight:700; color:var(--warning); margin-bottom:10px; display:flex; align-items:center; gap:8px;">
@@ -360,15 +403,24 @@
         </div>
     </div>
 
-    <!-- YÖNETİCİ MENÜSÜ MODALI -->
+    <!-- YÖNETİCİ MENÜSÜ MODALI (FAZ 2 DASHBOARD EKLENDİ) -->
     <div class="modal-overlay" id="adminModal" onclick="closeOnOutsideClick(event, 'adminModal')">
         <div class="modal-content">
             <div class="drag-handle"></div>
-            <h3 style="font-size:22px; font-weight:700; margin-bottom:25px; color:var(--text-main);">Yönetici Paneli</h3>
-            <div class="admin-grid">
-                <div class="admin-card" onclick="openModal('usersModal'); closeModal('adminModal');" style="background:var(--bg-color); border:none;">
-                    <i class="fa-solid fa-users" style="color:var(--accent);"></i>
-                    <div style="font-weight:600;">Personel Yönetimi</div>
+            <h3 style="font-size:22px; font-weight:700; margin-bottom:20px; color:var(--text-main);">Yönetici Paneli</h3>
+            
+            <!-- FAZ 2 CANLI FİRE VE PERFORMANS DASHBOARD'U -->
+            <div id="adminDashboardSection">
+                <h4 style="font-size:14px; font-weight:700; color:var(--text-main); margin-bottom:10px;">Haftalık Operasyon Özeti</h4>
+                <div class="dashboard-stats" id="dashboardStatsContainer">
+                    <!-- JS ile Doldurulacak -->
+                </div>
+            </div>
+
+            <div class="admin-grid" style="margin-top:15px;">
+                <div class="admin-card" onclick="openModal('usersModal');" style="background:var(--bg-color); border:none; padding:15px; border-radius:var(--radius-md); text-align:center; cursor:pointer;">
+                    <i class="fa-solid fa-users" style="color:var(--accent); font-size:24px; margin-bottom:8px;"></i>
+                    <div style="font-weight:600; font-size:13px; color:var(--text-main);">Personel Yönetimi</div>
                 </div>
             </div>
             <button class="btn" style="margin-top:25px; background:var(--danger-light); color:var(--danger);" onclick="confirmLogout()">Sistemden Çıkış Yap</button>
@@ -381,7 +433,7 @@
             <div class="drag-handle"></div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                 <h3 style="font-size:22px; font-weight:700; color:var(--text-main);">Kullanıcılar</h3>
-                <button onclick="openModal('adminModal'); closeModal('usersModal');" style="background:none; border:none; font-size:16px; font-weight:600; color:var(--accent); cursor:pointer;">Geri</button>
+                <button onclick="closeModal('usersModal');" style="background:none; border:none; font-size:16px; font-weight:600; color:var(--accent); cursor:pointer;">Geri</button>
             </div>
             <div id="usersList" style="margin-bottom:25px;"></div>
             
@@ -445,7 +497,7 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-        const dbRoot = 'kd_kordon_pro_v11'; // Veritabanı yenilendi
+        const dbRoot = 'kd_kordon_pro_v11'; // V11 veritabanı üzerinden devam (Kullanıcılar silinmesin)
 
         let currentUser = null; 
         let currentPin = "";
@@ -465,7 +517,6 @@
         let isDark = localStorage.getItem('kd_theme') === 'dark';
         if(isDark) document.body.classList.add('dark-mode');
 
-        // iOS Soft Renkler
         const catColors = {
             "Şarküteri, Süt ve Soslar": "#007AFF", 
             "Paketli Şarküteri": "#FF3B30", 
@@ -861,7 +912,13 @@
 
             undoTimeout = setTimeout(() => {
                 t.classList.remove('show');
-                if(lastActionData && lastActionData.type === 'bulk') { lastActionData = null; }
+                if(lastActionData && lastActionData.type === 'bulk') {
+                    lastActionData.items.forEach(item => {
+                        logAction(`SKT ${lastActionData.result}`, `${item.name} toplu işlemle sistemden düşüldü.`);
+                    });
+                    lastActionData = null;
+                    if(document.getElementById('adminModal').classList.contains('active')) renderAdminDashboard();
+                }
             }, 5000);
             
             toggleBulkMode();
@@ -1091,7 +1148,11 @@
 
             undoTimeout = setTimeout(() => {
                 t.classList.remove('show');
-                if(lastActionData && lastActionData.type === 'single') { lastActionData = null; }
+                if(lastActionData && lastActionData.type === 'single') {
+                    logAction(`SKT ${lastActionData.result}`, `${lastActionData.item.name} sistemden düşüldü.`);
+                    lastActionData = null;
+                    if(document.getElementById('adminModal').classList.contains('active')) renderAdminDashboard();
+                }
             }, 5000);
         }
 
@@ -1172,9 +1233,51 @@
         function toggleTodo(id, currentStatus) { db.ref(`${dbRoot}/todos/${id}`).update({ done: !currentStatus }); }
         function deleteTodo(id) { db.ref(`${dbRoot}/todos/${id}`).remove(); }
 
-        function openModal(id) { document.getElementById(id).classList.add('active'); if(id==='usersModal') renderUsersList(); }
-        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+        // MANTIKSAL ARKA PLAN KAYMASI ENGELLEMESİ (BODY KİLİDİ)
+        function openModal(id) { 
+            document.getElementById(id).classList.add('active'); 
+            document.body.classList.add('no-scroll'); 
+            if(id==='usersModal') renderUsersList(); 
+            if(id==='adminModal') renderAdminDashboard();
+        }
+        function closeModal(id) { 
+            document.getElementById(id).classList.remove('active'); 
+            document.body.classList.remove('no-scroll'); 
+        }
         function closeOnOutsideClick(e, id) { if(e.target.id === id) closeModal(id); }
+
+        // FAZ 2 CANLI FİRE VE PERFORMANS DASHBOARD'U
+        function renderAdminDashboard() {
+            // Son 7 Günün Verisini Analiz Et
+            const now = Date.now();
+            const sevenDaysAgo = now - (7 * 24 * 60 * 60 * 1000);
+            
+            const recentLogs = allLogs.filter(l => l.timestamp >= sevenDaysAgo);
+            const consumedCount = recentLogs.filter(l => l.action.includes('Tüketildi')).length;
+            const destroyedCount = recentLogs.filter(l => l.action.includes('İmha')).length;
+            const totalProcesses = consumedCount + destroyedCount;
+            
+            let successRate = 100;
+            if (totalProcesses > 0) {
+                successRate = Math.round((consumedCount / totalProcesses) * 100);
+            }
+
+            const container = document.getElementById('dashboardStatsContainer');
+            container.innerHTML = `
+                <div class="stat-card success">
+                    <div class="value">%${successRate}</div>
+                    <div class="label">BAŞARILI TÜKETİM</div>
+                </div>
+                <div class="stat-card danger">
+                    <div class="value">${destroyedCount}</div>
+                    <div class="label">İMHA EDİLEN (FİRE)</div>
+                </div>
+                <div class="stat-card" style="grid-column: 1 / -1;">
+                    <div class="value">${totalProcesses}</div>
+                    <div class="label">TOPLAM İŞLEM (SON 7 GÜN)</div>
+                </div>
+            `;
+        }
 
         function renderUsersList() {
             const container = document.getElementById('usersList'); container.innerHTML = '';
