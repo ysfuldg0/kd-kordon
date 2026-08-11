@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KD Kordon Pro - Broadcast Edition</title>
+    <title>KD Kordon Pro - Audit Edition</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -73,7 +73,8 @@
         .order-row { background: var(--surface); border-radius: var(--radius-md); padding: 12px 16px; box-shadow: var(--shadow-sm); display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); margin-bottom:10px; }
         .order-row.active-row { border-color: var(--success); background: var(--success-light); }
         .counter { display: flex; align-items: center; gap: 12px; background: var(--bg-color); padding: 4px; border-radius: 40px; border: 1px solid var(--border); }
-        .btn-count { background: var(--surface); border: none; width: 30px; height: 30px; border-radius: 50%; font-size: 16px; font-weight: 600; color: var(--text-main); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); }
+        .btn-count { background: var(--surface); border: none; width: 30px; height: 30px; border-radius: 50%; font-size: 16px; font-weight: 600; color: var(--text-main); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); cursor: pointer; transition: var(--transition); }
+        .btn-count:active { transform: scale(0.9); }
 
         /* SKT Drumpad */
         .drumpad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
@@ -208,11 +209,20 @@
                 <div id="activeList" class="list-grid"></div>
             </div>
 
-            <!-- 4. GÖREVLER -->
+            <!-- 4. GÖREVLER & DİJİTAL PANO -->
             <div id="tab-todos" class="tab-pane">
-                <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 15px;">Vardiya Görevleri</h3>
+                <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 15px;">Vardiya Panosu</h3>
+                
+                <!-- VARDİYA TESLİM NOTU -->
+                <div style="background:var(--bg-color); padding:12px; border-radius:var(--radius-md); border:1px solid var(--border); margin-bottom:15px; position:relative;">
+                    <h4 style="font-size:12px; font-weight:800; color:var(--text-main); margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+                        <i class="fa-solid fa-note-sticky" style="color:var(--warning);"></i> Vardiya Teslim Notu
+                    </h4>
+                    <textarea id="shiftNoteArea" onchange="updateShiftNote()" placeholder="Sonraki vardiyaya önemli bir not bırakın..." style="width:100%; border:none; background:transparent; outline:none; font-family:inherit; font-size:13px; font-weight:600; color:var(--text-muted); resize:none; min-height:60px;"></textarea>
+                </div>
+
                 <div style="display:flex; gap:8px; margin-bottom:15px;">
-                    <input type="text" id="todoInput" class="form-input" style="margin-bottom:0;" placeholder="Görev yazın...">
+                    <input type="text" id="todoInput" class="form-input" style="margin-bottom:0;" placeholder="Yeni görev yazın...">
                     <button class="btn btn-primary" style="width:50px; padding:0;" onclick="addTodo()"><i class="fa-solid fa-plus"></i></button>
                 </div>
                 <div class="modern-card" id="todoContainer" style="padding:10px 15px;"></div>
@@ -325,7 +335,7 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-        const dbRoot = 'kd_kordon_pro_v4'; 
+        const dbRoot = 'kd_kordon_pro_v8'; 
 
         let isDark = localStorage.getItem('kd_theme') === 'dark';
         if(isDark) document.body.classList.add('dark-mode'); 
@@ -334,6 +344,7 @@
         let currentPin = "";
         let usersDB = {};
         
+        // Broadcast Bildirimleri için yüklenme zamanı
         let appLoadTime = 0;
 
         document.addEventListener("DOMContentLoaded", () => {
@@ -346,16 +357,16 @@
             let dbTimeout = setTimeout(() => {
                 const spinner = document.getElementById('fullScreenSpinner');
                 if(spinner.style.display !== 'none') {
-                    spinner.innerHTML = '<i class="fa-solid fa-triangle-exclamation fa-3x" style="color:var(--danger); margin-bottom:15px;"></i><span style="color:var(--text-main);">İnternet Bağlantısı Hatası.<br>Lütfen sayfayı yenileyin.</span>';
+                    spinner.innerHTML = `<i class="fa-solid fa-triangle-exclamation fa-3x" style="color:var(--danger); margin-bottom:15px;"></i><span style="color:var(--text-main);">İnternet Bağlantısı Hatası.<br>Lütfen sayfayı yenileyin.</span>`;
                 }
             }, 8000);
 
-            db.ref(dbRoot + '/users').on('value', snap => {
+            db.ref(`${dbRoot}/users`).on('value', snap => {
                 clearTimeout(dbTimeout);
                 const data = snap.val();
                 if(!data) {
                     const masterUser = { name: "Yusuf (Yönetici)", role: "admin", pin: "1923" };
-                    db.ref(dbRoot + '/users/1923').set(masterUser);
+                    db.ref(`${dbRoot}/users/1923`).set(masterUser);
                     usersDB = { "1923": masterUser };
                 } else {
                     usersDB = data;
@@ -380,7 +391,7 @@
         function clearPin() { currentPin = ""; updatePinDisplay(); }
         function updatePinDisplay() {
             for(let i=1; i<=4; i++) {
-                document.getElementById('dot' + i).className = "pin-dot " + (i <= currentPin.length ? 'filled' : '');
+                document.getElementById(`dot${i}`).className = `pin-dot ${i <= currentPin.length ? 'filled' : ''}`;
             }
         }
         function submitPin() {
@@ -418,45 +429,50 @@
                 switchTab('tab-library', document.getElementById('navLibrary')); // Personel için default Üretim açılır
             }
             
-            showToast("Hoşgeldin, " + currentUser.name);
+            showToast(`Hoşgeldin, ${currentUser.name}`);
             loadOrderTemplate('Manav', document.querySelector('.chip'));
 
-            db.ref(dbRoot + '/library').on('value', snap => {
+            db.ref(`${dbRoot}/library`).on('value', snap => {
                 const data = snap.val();
                 if(!data) {
                     libraryDB = [...defaultLibrary];
-                    db.ref(dbRoot + '/library').set(libraryDB);
+                    db.ref(`${dbRoot}/library`).set(libraryDB);
                 } else {
                     libraryDB = Object.values(data);
                 }
                 renderLibraryDrumpad();
             });
 
-            db.ref(dbRoot + '/active').on('value', snap => {
+            db.ref(`${dbRoot}/active`).on('value', snap => {
                 activeItems = snap.val() ? Object.values(snap.val()) : [];
                 renderActiveList();
             });
-            db.ref(dbRoot + '/todos').on('value', snap => {
+            db.ref(`${dbRoot}/todos`).on('value', snap => {
                 todos = snap.val() ? Object.values(snap.val()) : [];
                 renderTodos();
             });
-            db.ref(dbRoot + '/logs').on('value', snap => {
+            db.ref(`${dbRoot}/logs`).on('value', snap => {
                 allLogs = snap.val() ? Object.values(snap.val()) : [];
+            });
+            
+            // Vardiya Notu Dinleyicisi
+            db.ref(`${dbRoot}/shiftNote`).on('value', snap => {
+                document.getElementById('shiftNoteArea').value = snap.val() || "";
             });
 
             // YAYIN (BROADCAST) DİNLEYİCİLERİ
-            db.ref(dbRoot + '/todos').on('child_added', snap => {
+            db.ref(`${dbRoot}/todos`).on('child_added', snap => {
                 const t = snap.val();
                 if(t.timestamp && t.timestamp > appLoadTime && t.addedBy !== currentUser.name) {
-                    sendPushNotification("📌 Yeni Görev", t.addedBy + " yeni bir görev ekledi: " + t.text);
+                    sendPushNotification("📌 Yeni Görev", `${t.addedBy} yeni bir görev ekledi: ${t.text}`);
                 }
             });
 
-            db.ref(dbRoot + '/logs').on('child_added', snap => {
+            db.ref(`${dbRoot}/logs`).on('child_added', snap => {
                 const l = snap.val();
                 if(l.timestamp && l.timestamp > appLoadTime && l.user !== currentUser.name) {
                     if(l.action === "Sipariş Verildi") {
-                        sendPushNotification("📋 Yeni Sipariş", l.user + " WhatsApp'a " + l.detail);
+                        sendPushNotification("📋 Yeni Sipariş", `${l.user} WhatsApp'a ${l.detail}`);
                     }
                 }
             });
@@ -531,9 +547,15 @@
         function renderLibraryDrumpad() {
             const container = document.getElementById('drumpadContainer'); container.innerHTML = '';
             libraryDB.filter(p => currentLibFilter === 'Tümü' || p.kategori === currentLibFilter).forEach(p => {
-                let omurStr = (p.birim === "Günlük" || p.birim === "Hemen Kullandır" || p.birim === "ORJ SKT") ? p.birim : p.raf_omru + " " + p.birim;
+                let omurStr = (p.birim === "Günlük" || p.birim === "Hemen Kullandır" || p.birim === "ORJ SKT") ? p.birim : `${p.raf_omru} ${p.birim}`;
                 let icon = catIcons[p.kategori] || "fa-box";
-                container.innerHTML += '<div class="pad" onclick="startTracking('' + p.id + '')"><div class="pad-time">' + omurStr + '</div><i class="fa-solid ' + icon + '"></i><div class="pad-name">' + p.urun + '</div></div>';
+                container.innerHTML += `
+                    <div class="pad" onclick="startTracking('${p.id}')">
+                        <div class="pad-time">${omurStr}</div>
+                        <i class="fa-solid ${icon}"></i>
+                        <div class="pad-name">${p.urun}</div>
+                    </div>
+                `;
             });
         }
 
@@ -543,12 +565,12 @@
             const newItem = {
                 id: Date.now().toString(),
                 kategori: document.getElementById('newProdCat').value,
-                urun: urun + " (Özel)",
+                urun: `${urun} (Özel)`,
                 raf_omru: parseInt(document.getElementById('newProdTime').value || 0),
                 birim: document.getElementById('newProdUnit').value
             };
             libraryDB.unshift(newItem);
-            db.ref(dbRoot + '/library').set(libraryDB);
+            db.ref(`${dbRoot}/library`).set(libraryDB);
             closeModal('addProdModal');
             showToast("Ürün kütüphaneye eklendi!");
             document.getElementById('newProdName').value = "";
@@ -574,17 +596,17 @@
                 startedBy: currentUser.name
             };
             
-            db.ref(dbRoot + '/active/' + newItem.id).set(newItem);
-            logAction("SKT Başlatıldı", prod.urun + " takibe alındı.");
+            db.ref(`${dbRoot}/active/${newItem.id}`).set(newItem);
+            logAction("SKT Başlatıldı", `${prod.urun} takibe alındı.`);
             
-            showToast(prod.urun + " takibe alındı!");
+            showToast(`${prod.urun} takibe alındı!`);
             if(navigator.vibrate) navigator.vibrate(50);
         }
 
         // AKTİF TAKİP VE KAYDIRMA
         function renderActiveList() {
             const container = document.getElementById('activeList'); container.innerHTML = '';
-            if(activeItems.length === 0) { container.innerHTML = '<div style="text-align:center; padding:30px; color:var(--text-muted); font-size:13px;">Aktif takipte ürün yok.</div>'; return; }
+            if(activeItems.length === 0) { container.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted); font-size:13px;">Aktif takipte ürün yok.</div>`; return; }
             
             const now = new Date().getTime();
             activeItems.sort((a,b) => new Date(a.expiresAt) - new Date(b.expiresAt)).forEach(item => {
@@ -598,27 +620,46 @@
                 if(diff <= 0) { timeStr = "SÜRESİ DOLDU!"; color = "var(--danger)"; percent = 0; }
                 else {
                     const h = Math.floor(diff / 3600000); const m = Math.floor((diff % 3600000) / 60000);
-                    timeStr = h + "s " + m + "d kaldı";
+                    timeStr = `${h}s ${m}d kaldı`;
                     if(percent < 20) color = "var(--danger)"; else if(percent < 40) color = "var(--warning)";
                 }
 
-                container.innerHTML += '<div class="swipe-container" id="swipe-' + item.id + '"><div class="swipe-bg"><div class="bg-left"><i class="fa-solid fa-check"></i></div><div class="bg-right"><i class="fa-solid fa-trash"></i></div></div><div class="active-card" id="card-' + item.id + '" ontouchstart="handleTS(event, '' + item.id + '')" ontouchmove="handleTM(event, '' + item.id + '')" ontouchend="handleTE(event, '' + item.id + '')" style="border-left-color:' + color + ';"><div style="display:flex; justify-content:space-between; align-items:center;"><div style="font-weight:800; font-size:15px; color:var(--text-main);"><i class="fa-solid ' + item.icon + '" style="color:var(--kd-gold); margin-right:6px;"></i> ' + item.name + '</div><div style="font-size:10px; color:var(--text-muted); font-weight:700;"><i class="fa-solid fa-user"></i> ' + item.startedBy.split(' ')[0] + '</div></div><div class="timer-display" style="color:' + color + ';">' + timeStr + '</div><div class="progress-track"><div class="progress-fill" style="width:' + percent + '%; background:' + color + ';"></div></div></div></div>';
+                container.innerHTML += `
+                    <div class="swipe-container" id="swipe-${item.id}">
+                        <div class="swipe-bg">
+                            <div class="bg-left"><i class="fa-solid fa-check"></i></div>
+                            <div class="bg-right"><i class="fa-solid fa-trash"></i></div>
+                        </div>
+                        <div class="active-card" id="card-${item.id}" ontouchstart="handleTS(event, '${item.id}')" ontouchmove="handleTM(event, '${item.id}')" ontouchend="handleTE(event, '${item.id}')" style="border-left-color:${color};">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <div style="font-weight:800; font-size:15px; color:var(--text-main);">
+                                    <i class="fa-solid ${item.icon}" style="color:var(--kd-gold); margin-right:6px;"></i> ${item.name}
+                                </div>
+                                <div style="font-size:10px; color:var(--text-muted); font-weight:700;">
+                                    <i class="fa-solid fa-user"></i> ${item.startedBy.split(' ')[0]}
+                                </div>
+                            </div>
+                            <div class="timer-display" style="color:${color};">${timeStr}</div>
+                            <div class="progress-track"><div class="progress-fill" style="width:${percent}%; background:${color};"></div></div>
+                        </div>
+                    </div>
+                `;
             });
         }
 
         let tsx = 0, tcx = 0;
         function handleTS(e, id) { tsx = e.touches[0].clientX; tcx = tsx; }
-        function handleTM(e, id) { tcx = e.touches[0].clientX; const diff = tcx - tsx; if(Math.abs(diff)>20) document.getElementById('card-'+id).style.transform = 'translateX(' + diff + 'px)'; }
+        function handleTM(e, id) { tcx = e.touches[0].clientX; const diff = tcx - tsx; if(Math.abs(diff)>20) document.getElementById(`card-${id}`).style.transform = `translateX(${diff}px)`; }
         function handleTE(e, id) {
-            const diff = tcx - tsx; const card = document.getElementById('card-'+id);
+            const diff = tcx - tsx; const card = document.getElementById(`card-${id}`);
             if(diff > 120) processItem(id, "Tüketildi");
             else if(diff < -120) processItem(id, "İmha Edildi");
-            else card.style.transform = 'translateX(0)';
+            else card.style.transform = `translateX(0)`;
         }
         function processItem(id, result) {
             const item = activeItems.find(i => i.id === id);
-            logAction("SKT " + result, item.name + " sistemden düşüldü.");
-            db.ref(dbRoot + '/active/' + id).remove();
+            logAction(`SKT ${result}`, `${item.name} sistemden düşüldü.`);
+            db.ref(`${dbRoot}/active/${id}`).remove();
             if(navigator.vibrate) navigator.vibrate([50, 50]);
         }
 
@@ -633,11 +674,23 @@
         
         function loadOrderTemplate(cat, el) {
             if(el) { document.querySelectorAll('#tab-order .chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); }
-            currentOrderCat = cat; document.getElementById('currentTemplateTitle').innerText = cat + " Listesi";
+            currentOrderCat = cat; document.getElementById('currentTemplateTitle').innerText = `${cat} Listesi`;
             const container = document.getElementById('orderTemplateList'); container.innerHTML = '';
             orderDB[cat].forEach(i => {
                 const c = orderCounts[i.n] ? orderCounts[i.n].c : 0;
-                container.innerHTML += '<div class="order-row ' + (c>0?'active-row':'') + '"><div style="flex:1;"><div style="font-weight:700;">' + i.n + '</div><small style="color:var(--text-muted);">' + i.b + '</small></div><div class="counter"><button class="btn-count" onclick="uc('' + i.n + '', -1, '' + i.b + '')"><i class="fa-solid fa-minus"></i></button><span style="font-weight:800; min-width:20px; text-align:center;">' + c + '</span><button class="btn-count add" onclick="uc('' + i.n + '', 1, '' + i.b + '')"><i class="fa-solid fa-plus"></i></button></div></div>';
+                container.innerHTML += `
+                    <div class="order-row ${c > 0 ? 'active-row' : ''}">
+                        <div style="flex:1;">
+                            <div style="font-weight:700;">${i.n}</div>
+                            <small style="color:var(--text-muted);">${i.b}</small>
+                        </div>
+                        <div class="counter">
+                            <button class="btn-count" onclick="uc('${i.n}', -1, '${i.b}')"><i class="fa-solid fa-minus"></i></button>
+                            <span style="font-weight:800; min-width:20px; text-align:center;">${c}</span>
+                            <button class="btn-count add" onclick="uc('${i.n}', 1, '${i.b}')"><i class="fa-solid fa-plus"></i></button>
+                        </div>
+                    </div>
+                `;
             });
         }
         function uc(n, ch, b) { if(!orderCounts[n]) orderCounts[n] = {c:0, b:b}; orderCounts[n].c += ch; if(orderCounts[n].c < 0) orderCounts[n].c = 0; loadOrderTemplate(currentOrderCat, null); }
@@ -645,40 +698,57 @@
         
         function sendOrderViaWhatsApp() {
             let items = [];
-            for(const [n, d] of Object.entries(orderCounts)) { if(d.c > 0) items.push("- " + d.c + " " + d.b + " " + n); }
+            for(const [n, d] of Object.entries(orderCounts)) { if(d.c > 0) items.push(`- ${d.c} ${d.b} ${n}`); }
             if(items.length === 0) return alert("Boş sipariş gönderilemez.");
             
-            logAction("Sipariş Verildi", currentOrderCat + " listesi oluşturuldu.");
+            logAction("Sipariş Verildi", `${currentOrderCat} listesi oluşturuldu.`);
             showToast("Sipariş WhatsApp'a aktarıldı.");
             
-            var waText = "*KORDON SİPARİŞ (" + currentOrderCat + ")*%0A" + "Siparişi Veren: " + currentUser.name + "%0A%0A" + items.join("%0A");
-            window.open("https://wa.me/?text=" + waText, "_blank");
+            const waText = `*KORDON SİPARİŞ (${currentOrderCat})*\nSiparişi Veren: ${currentUser.name}\n\n${items.join('\n')}`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(waText)}`, "_blank");
             
             orderCounts = {}; loadOrderTemplate(currentOrderCat, null);
         }
 
-        // GÖREVLER (TO-DO)
+        // GÖREVLER VE DİJİTAL PANO
+        function updateShiftNote() {
+            db.ref(`${dbRoot}/shiftNote`).set(document.getElementById('shiftNoteArea').value);
+        }
+
         function addTodo() {
             const txt = document.getElementById('todoInput').value.trim(); if(!txt) return;
             const newTodo = { id: Date.now().toString(), text: txt, done: false, addedBy: currentUser.name, timestamp: Date.now() };
-            db.ref(dbRoot + '/todos/' + newTodo.id).set(newTodo);
+            db.ref(`${dbRoot}/todos/${newTodo.id}`).set(newTodo);
             
             document.getElementById('todoInput').value = "";
-            logAction("Görev Eklendi", "Yeni görev: " + txt);
+            logAction("Görev Eklendi", `Yeni görev: ${txt}`);
             showToast("Görev Eklendi!");
         }
         function renderTodos() {
             const container = document.getElementById('todoContainer'); container.innerHTML = '';
-            if(todos.length === 0) { container.innerHTML = '<div style="font-size:12px; color:var(--text-muted); text-align:center;">Görev yok.</div>'; return; }
+            if(todos.length === 0) { container.innerHTML = `<div style="font-size:12px; color:var(--text-muted); text-align:center;">Görev yok.</div>`; return; }
             todos.forEach(t => {
-                container.innerHTML += '<div class="check-item ' + (t.done ? 'done' : '') + '"><div class="check-left" onclick="toggleTodo('' + t.id + '', ' + t.done + ')"><div class="check-box"><i class="fa-solid fa-check"></i></div><div><div class="check-text">' + t.text + '</div><div style="font-size:9px; color:var(--text-muted); margin-top:2px;">Ekleyen: ' + t.addedBy + '</div></div></div><button class="btn-count" style="background:none; box-shadow:none; color:var(--danger);" onclick="deleteTodo('' + t.id + '')"><i class="fa-solid fa-trash"></i></button></div>';
+                container.innerHTML += `
+                    <div class="check-item ${t.done ? 'done' : ''}">
+                        <div class="check-left" onclick="toggleTodo('${t.id}', ${t.done})">
+                            <div class="check-box"><i class="fa-solid fa-check"></i></div>
+                            <div>
+                                <div class="check-text">${t.text}</div>
+                                <div style="font-size:9px; color:var(--text-muted); margin-top:2px;">Ekleyen: ${t.addedBy}</div>
+                            </div>
+                        </div>
+                        <button class="btn-count" style="background:none; box-shadow:none; color:var(--danger);" onclick="deleteTodo('${t.id}')">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                `;
             });
         }
         function toggleTodo(id, currentStatus) {
-            db.ref(dbRoot + '/todos/' + id).update({ done: !currentStatus });
+            db.ref(`${dbRoot}/todos/${id}`).update({ done: !currentStatus });
             if(!currentStatus) logAction("Görev Tamamlandı", "Bir görev işaretlendi.");
         }
-        function deleteTodo(id) { db.ref(dbRoot + '/todos/' + id).remove(); }
+        function deleteTodo(id) { db.ref(`${dbRoot}/todos/${id}`).remove(); }
 
         // --- YÖNETİCİ VE AUDIT TRAIL SİSTEMİ ---
         function logAction(actionType, detail) {
@@ -690,16 +760,21 @@
                 detail: detail,
                 timestamp: Date.now()
             };
-            db.ref(dbRoot + '/logs/' + logItem.id).set(logItem);
+            db.ref(`${dbRoot}/logs/${logItem.id}`).set(logItem);
         }
 
         function sendAuditReport() {
             if(allLogs.length === 0) return alert("Arşivde hiç işlem yok.");
-            let csv = "data:text/csv;charset=utf-8,﻿Tarih;Personel;Islem Tipi;Detay
-";
-            [...allLogs].reverse().forEach(l => { csv += '"' + l.date + '";"' + l.user + '";"' + l.action + '";"' + l.detail + '"
-'; });
-            const link = document.createElement("a"); link.setAttribute("href", encodeURI(csv)); link.setAttribute("download", "Denetim_Raporu.csv"); document.body.appendChild(link); link.click(); document.body.removeChild(link);
+            let csv = "data:text/csv;charset=utf-8,\uFEFFTarih;Personel;Islem Tipi;Detay\n";
+            [...allLogs].reverse().forEach(l => { 
+                csv += `"${l.date}";"${l.user}";"${l.action}";"${l.detail}"\n`; 
+            });
+            const link = document.createElement("a"); 
+            link.setAttribute("href", encodeURI(csv)); 
+            link.setAttribute("download", "Denetim_Raporu.csv"); 
+            document.body.appendChild(link); 
+            link.click(); 
+            document.body.removeChild(link);
         }
 
         // PERSONEL YÖNETİMİ
@@ -712,7 +787,18 @@
             for(const [pin, u] of Object.entries(usersDB)) {
                 const roleClass = u.role === 'admin' ? 'role-admin' : 'role-staff';
                 const roleText = u.role === 'admin' ? 'Yönetici' : 'Personel';
-                container.innerHTML += '<div class="user-row"><div><div style="font-weight:700; font-size:14px; color:var(--text-main);">' + u.name + '</div><div style="font-size:11px; color:var(--text-muted); font-family:monospace; margin-top:2px;">PIN: ' + pin + '</div></div><div style="display:flex; align-items:center; gap:10px;"><span class="role-badge ' + roleClass + '">' + roleText + '</span>' + (pin !== '1923' ? '<button onclick="deleteUser('' + pin + '')" style="background:none; border:none; color:var(--danger); cursor:pointer;"><i class="fa-solid fa-trash"></i></button>' : '') + '</div></div>';
+                container.innerHTML += `
+                    <div class="user-row">
+                        <div>
+                            <div style="font-weight:700; font-size:14px; color:var(--text-main);">${u.name}</div>
+                            <div style="font-size:11px; color:var(--text-muted); font-family:monospace; margin-top:2px;">PIN: ${pin}</div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <span class="role-badge ${roleClass}">${roleText}</span>
+                            ${pin !== '1923' ? `<button onclick="deleteUser('${pin}')" style="background:none; border:none; color:var(--danger); cursor:pointer;"><i class="fa-solid fa-trash"></i></button>` : ''}
+                        </div>
+                    </div>
+                `;
             }
         }
 
@@ -724,14 +810,14 @@
             if(!name || pin.length !== 4) return alert("Lütfen geçerli isim ve 4 haneli PIN girin.");
             if(usersDB[pin]) return alert("Bu PIN kodu zaten kullanımda!");
 
-            db.ref(dbRoot + '/users/' + pin).set({ name: name, role: role, pin: pin });
+            db.ref(`${dbRoot}/users/${pin}`).set({ name: name, role: role, pin: pin });
             document.getElementById('newUserName').value = ""; document.getElementById('newUserPin').value = "";
             showToast("Personel eklendi!");
             renderUsersList();
         }
 
         function deleteUser(pin) {
-            if(confirm("Personeli silmek istediğinize emin misiniz?")) db.ref(dbRoot + '/users/' + pin).remove();
+            if(confirm("Personeli silmek istediğinize emin misiniz?")) db.ref(`${dbRoot}/users/${pin}`).remove();
             renderUsersList();
         }
 
@@ -743,8 +829,13 @@
         }
         function sendPushNotification(title, body) {
             if ("Notification" in window && Notification.permission === "granted") {
-                if(navigator.serviceWorker) { navigator.serviceWorker.ready.then(reg => { reg.showNotification(title, { body: body, icon: "https://cdn-icons-png.flaticon.com/512/3003/3003984.png", vibrate: [200, 100, 200] }); }); } 
-                else { new Notification(title, { body: body }); }
+                if(navigator.serviceWorker) { 
+                    navigator.serviceWorker.ready.then(reg => { 
+                        reg.showNotification(title, { body: body, icon: "https://cdn-icons-png.flaticon.com/512/3003/3003984.png", vibrate: [200, 100, 200] }); 
+                    }); 
+                } else { 
+                    new Notification(title, { body: body }); 
+                }
             }
         }
         function toggleTheme() { isDark = !isDark; document.body.classList.toggle('dark-mode', isDark); localStorage.setItem('kd_theme', isDark ? 'dark' : 'light'); updateThemeIcon(); }
