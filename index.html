@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KD Kordon Pro - Full Control Edition</title>
+    <title>KD Kordon Pro - Edit Mode Edition</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -80,12 +80,16 @@
         .drumpad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
         .pad { background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius-md); min-height: 95px; padding: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-sm); position: relative;}
         .pad:active { transform: scale(0.95); background: var(--kd-gold-light); border-color: var(--kd-gold); }
-        .pad i { font-size: 22px; margin-bottom: 6px; color: var(--kd-gold); }
-        .pad-name { font-size: 10px; font-weight: 800; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .pad-time { position:absolute; top:4px; right:4px; font-size:8px; background:var(--bg-color); padding:2px 4px; border-radius:4px; font-weight:bold; color:var(--text-muted); border:1px solid var(--border);}
+        .pad i { font-size: 22px; margin-bottom: 6px; color: var(--kd-gold); transition: var(--transition); }
+        .pad-name { font-size: 10px; font-weight: 800; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; transition: var(--transition); }
+        .pad-time { position:absolute; top:4px; right:4px; font-size:8px; background:var(--bg-color); padding:2px 4px; border-radius:4px; font-weight:bold; color:var(--text-muted); border:1px solid var(--border); transition: var(--transition);}
         
-        /* Ürün silme çarpı butonu */
-        .pad-delete { position:absolute; bottom:4px; right:4px; font-size:10px; background:var(--danger-light); color:var(--danger); width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:none; z-index:3; cursor:pointer; }
+        /* Düzenleme Modu Tasarımı (SİLME BUTONLARI) */
+        .pad-delete { position: absolute; top: -8px; right: -8px; width: 26px; height: 26px; background: var(--danger); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; border: 2px solid var(--surface); cursor: pointer; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4); opacity: 0; visibility: hidden; transform: scale(0.5); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 10; }
+        .drumpad-grid.edit-mode .pad-delete { opacity: 1; visibility: visible; transform: scale(1); }
+        .drumpad-grid.edit-mode .pad { border-style: dashed; border-color: var(--danger-light); background: var(--bg-color); }
+        .drumpad-grid.edit-mode .pad i { color: var(--text-muted); opacity: 0.5; }
+        .drumpad-grid.edit-mode .pad:active { transform: scale(1); background: var(--bg-color); border-color: var(--danger-light); }
 
         /* Aktif SKT Swipe */
         .swipe-container { position: relative; overflow: hidden; border-radius: var(--radius-md); background: var(--border); margin-bottom:10px; }
@@ -188,7 +192,10 @@
                         <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 2px;">Üretim & SKT</h3>
                         <p style="font-size:11px; color:var(--text-muted);">Takibini başlatacağınız ürüne dokunun.</p>
                     </div>
-                    <button id="addProdBtn" onclick="openModal('addProdModal')" style="display:none; background:var(--kd-gold-light); color:var(--kd-dark); border:1px solid var(--kd-gold); padding:6px 12px; border-radius:12px; font-size:11px; font-weight:800;"><i class="fa-solid fa-plus"></i> Ekle</button>
+                    <div style="display:flex; gap:8px;">
+                        <button id="editModeBtn" onclick="toggleEditMode()" style="display:none; background:transparent; color:var(--text-muted); border:1px solid var(--border); padding:6px 14px; border-radius:12px; font-size:11px; font-weight:800; transition:var(--transition);"><i class="fa-solid fa-pen"></i> Düzenle</button>
+                        <button id="addProdBtn" onclick="openModal('addProdModal')" style="display:none; background:var(--kd-gold-light); color:var(--kd-dark); border:1px solid var(--kd-gold); padding:6px 14px; border-radius:12px; font-size:11px; font-weight:800; transition:var(--transition);"><i class="fa-solid fa-plus"></i> Ekle</button>
+                    </div>
                 </div>
                 
                 <div class="chips-container" id="libChips">
@@ -212,7 +219,7 @@
                 <div id="activeList" class="list-grid"></div>
             </div>
 
-            <!-- 4. GÖREVLER -->
+            <!-- 4. GÖREVLER & DİJİTAL PANO -->
             <div id="tab-todos" class="tab-pane">
                 <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 15px;">Vardiya Panosu</h3>
                 
@@ -338,7 +345,7 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-        const dbRoot = 'kd_kordon_pro_v9'; 
+        const dbRoot = 'kd_kordon_pro_final'; // Temiz veritabanı başlangıcı
 
         let isDark = localStorage.getItem('kd_theme') === 'dark';
         if(isDark) document.body.classList.add('dark-mode'); 
@@ -348,6 +355,7 @@
         let usersDB = {};
         
         let appLoadTime = 0;
+        let isEditMode = false; // Düzenleme Modu Durumu
 
         document.addEventListener("DOMContentLoaded", () => {
             updateThemeIcon();
@@ -419,9 +427,10 @@
             document.getElementById('appContent').style.display = 'block';
             document.getElementById('headerUserName').innerText = currentUser.name;
             
+            // --- ROL KONTROLÜ VE EKRAN DÜZENLEMESİ ---
             if(currentUser.role === 'admin') {
                 document.getElementById('adminBtn').style.display = 'flex';
-                document.getElementById('addProdBtn').style.display = 'block';
+                document.getElementById('editModeBtn').style.display = 'block'; // Yalnızca admin düzenleme modunu açabilir
                 document.getElementById('navOrder').style.display = 'flex';
                 switchTab('tab-order', document.getElementById('navOrder'));
             } else {
@@ -455,10 +464,12 @@
                 allLogs = snap.val() ? Object.values(snap.val()) : [];
             });
             
+            // Vardiya Notu Dinleyicisi
             db.ref(`${dbRoot}/shiftNote`).on('value', snap => {
                 document.getElementById('shiftNoteArea').value = snap.val() || "";
             });
 
+            // YAYIN (BROADCAST) DİNLEYİCİLERİ
             db.ref(`${dbRoot}/todos`).on('child_added', snap => {
                 const t = snap.val();
                 if(t.timestamp && t.timestamp > appLoadTime && t.addedBy !== currentUser.name) {
@@ -475,7 +486,7 @@
                 }
             });
 
-            setInterval(renderActiveList, 1000); // Sayaç her saniye güncellensin
+            setInterval(renderActiveList, 60000);
         }
 
         const catIcons = { "Şarküteri, Süt ve Soslar": "fa-cheese", "Paketli & Kuru Gıdalar": "fa-box", "Meyve ve Sebze": "fa-apple-whole", "Çözündürülen / Dökme / Teşhir": "fa-ice-cream", "Kahveler, İçecekler ve Ön Hazırlık": "fa-mug-hot", "Paketli Şarküteri": "fa-bacon" };
@@ -535,7 +546,27 @@
             {id:"L51", kategori:"Paketli Şarküteri", urun:"Tereyağı", raf_omru:5, birim:"Gün"}
         ];
         
-        let currentLibFilter = 'Tümü';
+        // --- DÜZENLEME MODU MANTIĞI ---
+        function toggleEditMode() {
+            isEditMode = !isEditMode;
+            const btn = document.getElementById('editModeBtn');
+            const addBtn = document.getElementById('addProdBtn');
+            const container = document.getElementById('drumpadContainer');
+
+            if(isEditMode) {
+                btn.style.background = 'var(--kd-dark)';
+                btn.style.color = 'var(--kd-gold)';
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Bitti';
+                addBtn.style.display = 'block'; // Sadece düzenleme modunda ekle butonu çıkar
+                container.classList.add('edit-mode');
+            } else {
+                btn.style.background = 'transparent';
+                btn.style.color = 'var(--text-muted)';
+                btn.innerHTML = '<i class="fa-solid fa-pen"></i> Düzenle';
+                addBtn.style.display = 'none';
+                container.classList.remove('edit-mode');
+            }
+        }
 
         function filterLib(cat, el) {
             document.querySelectorAll('#libChips .chip').forEach(c => c.classList.remove('active'));
@@ -545,12 +576,17 @@
         function renderLibraryDrumpad() {
             const container = document.getElementById('drumpadContainer'); container.innerHTML = '';
             libraryDB.filter(p => currentLibFilter === 'Tümü' || p.kategori === currentLibFilter).forEach(p => {
-                let omurStr = (p.birim === "Günlük" || p.birim === "Hemen Kullandır" || p.birim === "ORJ SKT") ? p.birim : `${p.raf_omru} ${p.birim}`;
+                let omurStr = "";
+                if (p.birim === "Günlük") omurStr = "Gün Sonu";
+                else if (p.birim === "Hemen Kullandır") omurStr = "Hemen";
+                else if (p.birim === "ORJ SKT") omurStr = "ORJ SKT";
+                else omurStr = `${p.raf_omru} ${p.birim}`;
+                
                 let icon = catIcons[p.kategori] || "fa-box";
                 
-                // Sadece yönetici (admin) ise ürün kartının üzerinde silme (X) butonu görünür
+                // Silme butonu sadece adminse render edilir, CSS ile gösterilip gizlenir
                 let deleteBtnHtml = (currentUser && currentUser.role === 'admin') ? 
-                    `<button class="pad-delete" onclick="event.stopPropagation(); deleteProduct('${p.id}')" title="Ürünü Sil"><i class="fa-solid fa-xmark"></i></button>` : '';
+                    `<div class="pad-delete" onclick="event.stopPropagation(); deleteProduct('${p.id}')"><i class="fa-solid fa-minus"></i></div>` : '';
 
                 container.innerHTML += `
                     <div class="pad" onclick="startTracking('${p.id}')">
@@ -563,9 +599,8 @@
             });
         }
 
-        // Yönetici için ürün silme fonksiyonu
         function deleteProduct(id) {
-            if(currentUser.role !== 'admin') return alert("Bu işlem için yönetici yetkisi gerekiyor.");
+            if(!isEditMode) return;
             if(confirm("Bu ürünü kütüphaneden silmek istediğinize emin misiniz?")) {
                 libraryDB = libraryDB.filter(p => p.id !== id);
                 db.ref(`${dbRoot}/library`).set(libraryDB);
@@ -591,6 +626,8 @@
         }
 
         function startTracking(id) {
+            if(isEditMode) return; // Düzenleme modundayken süre başlatmayı engeller
+            
             const prod = libraryDB.find(p => p.id === id);
             const now = new Date();
             let target = new Date(now.getTime());
@@ -617,7 +654,7 @@
             if(navigator.vibrate) navigator.vibrate(50);
         }
 
-        // AKTİF TAKİP VE GÜN / SAAT / DAKİKA HESAPLAMA
+        // AKTİF TAKİP (GÜN / SAAT / DAKİKA HESAPLAMASI)
         function renderActiveList() {
             const container = document.getElementById('activeList'); container.innerHTML = '';
             if(activeItems.length === 0) { container.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted); font-size:13px;">Aktif takipte ürün yok.</div>`; return; }
@@ -632,9 +669,7 @@
                 let percent = Math.max(0, Math.min(100, (diff / total) * 100));
 
                 if(diff <= 0) { 
-                    timeStr = "SÜRESİ DOLDU!"; 
-                    color = "var(--danger)"; 
-                    percent = 0; 
+                    timeStr = "SÜRESİ DOLDU!"; color = "var(--danger)"; percent = 0; 
                 } else {
                     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
                     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -642,8 +677,10 @@
                     
                     if (days > 0) {
                         timeStr = `${days} Gün ${hours}s ${mins}d kaldı`;
-                    } else {
+                    } else if (hours > 0) {
                         timeStr = `${hours} Saat ${mins} Dakika kaldı`;
+                    } else {
+                        timeStr = `${mins} Dakika kaldı`;
                     }
 
                     if(percent < 20) color = "var(--danger)"; 
@@ -736,7 +773,7 @@
             orderCounts = {}; loadOrderTemplate(currentOrderCat, null);
         }
 
-        // GÖREVLER
+        // GÖREVLER VE DİJİTAL PANO
         function updateShiftNote() {
             db.ref(`${dbRoot}/shiftNote`).set(document.getElementById('shiftNoteArea').value);
         }
