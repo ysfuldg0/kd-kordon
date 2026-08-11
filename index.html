@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KD Kordon Kokpit - Cloud Edition</title>
+    
+    <!-- PWA MANIFEST VE META ETİKETLERİ -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Kordon Kokpit">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3003/3003984.png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --kd-dark: #2A1A14; --kd-brown: #5C3D2E; --kd-gold: #C29A5B; --kd-gold-light: #FDF9F1;
+            --bg-color: #F8F9FA; --surface: #FFFFFF; --text-main: #0F172A; --text-muted: #64748B;
+            --danger: #EF4444; --danger-light: #FEF2F2; --success: #10B981; --success-light: #ECFDF5; 
+            --border: #E2E8F0; --radius-lg: 18px; --radius-md: 12px; --radius-sm: 8px; 
+            --shadow-sm: 0 2px 12px rgba(0,0,0,0.03); --shadow-md: 0 10px 25px rgba(15, 23, 42, 0.05);
+            --transition: all 0.25s ease;
+        }
+
+        body.dark-mode {
+            --bg-color: #0B0F17; --surface: #151C28; --text-main: #F8FAFC; --text-muted: #94A3B8;
+            --border: #2A374A; --kd-dark: #FDF9F1; --kd-brown: #C29A5B; --kd-gold-light: rgba(194, 154, 91, 0.12);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-color); color: var(--text-main); padding-bottom: 90px; transition: background-color 0.3s ease; }
+
+        .app-header { background: var(--surface); padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
+        .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 17px; color: var(--kd-dark); letter-spacing: -0.3px; }
+        .header-actions { display: flex; align-items: center; gap: 8px; }
+        .theme-toggle, .cloud-status-btn { background: var(--bg-color); border: 1px solid var(--border); width: 40px; height: 40px; border-radius: 50%; color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: var(--transition); }
+        .cloud-status-btn.synced { color: var(--success); border-color: var(--success); background: var(--success-light); }
+
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--surface); display: flex; justify-content: space-around; padding: 10px 10px 22px 10px; box-shadow: 0 -4px 20px rgba(0,0,0,0.04); z-index: 100; border-top: 1px solid var(--border); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-muted); font-size: 11px; font-weight: 700; cursor: pointer; flex: 1; transition: var(--transition); }
+        .nav-item i { font-size: 20px; padding: 8px 20px; border-radius: 24px; transition: var(--transition); }
+        .nav-item.active { color: var(--kd-dark); }
+        .nav-item.active i { background: var(--kd-gold-light); color: var(--kd-gold); }
+
+        .app-container { padding: 16px; max-width: 800px; margin: 0 auto; }
+        .tab-pane { display: none; animation: fadeIn 0.3s ease forwards; opacity: 0; }
+        .tab-pane.active { display: block; }
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        .btn { border: none; border-radius: var(--radius-md); font-family: inherit; font-weight: 700; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: var(--transition); padding: 15px 20px; width: 100%; }
+        .btn:active { transform: scale(0.97); }
+        .btn-primary { background: var(--kd-dark); color: var(--kd-gold); box-shadow: var(--shadow-sm); }
+        .btn-whatsapp { background: #25D366; color: white; margin-top: 16px; box-shadow: 0 6px 20px rgba(37, 211, 102, 0.2); }
+
+        .list-grid { display: flex; flex-direction: column; gap: 10px; }
+        .modern-card { background: var(--surface); padding: 18px; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); margin-bottom: 16px; border: 1px solid var(--border); }
+        
+        .form-input { width: 100%; padding: 14px; background: var(--bg-color); border: 1px solid var(--border); border-radius: var(--radius-md); font-family: inherit; font-size: 14px; outline: none; font-weight: 500; color: var(--text-main); margin-bottom: 12px; transition: var(--transition); }
+        .form-input:focus { border-color: var(--kd-gold); background: var(--surface); box-shadow: 0 0 0 3px var(--kd-gold-light); }
+
+        .chips-container { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 12px; scrollbar-width: none; }
+        .chips-container::-webkit-scrollbar { display: none; }
+        .chip { background: var(--surface); border: 1px solid var(--border); padding: 10px 18px; border-radius: 30px; font-size: 13px; font-weight: 600; color: var(--text-muted); white-space: nowrap; cursor: pointer; transition: var(--transition); display:flex; align-items:center; gap:6px; box-shadow: var(--shadow-sm); }
+        .chip.active { background: var(--kd-dark); color: var(--kd-gold); border-color: var(--kd-dark); }
+
+        .history-card { background: var(--surface); padding: 16px; border-radius: var(--radius-lg); border-left: 4px solid var(--kd-gold); margin-bottom: 10px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); border-left-width: 4px; }
+        .h-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; color: var(--text-main); display: flex; justify-content: space-between; align-items: center;}
+        .h-items { font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 8px;}
+        .h-date { font-size: 11px; color: var(--success); font-weight: 700; display:flex; align-items:center; gap:5px; }
+
+        /* Sipariş Satırları */
+        .order-row { background: var(--surface); border-radius: var(--radius-lg); padding: 14px 18px; box-shadow: var(--shadow-sm); display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); }
+        .order-row.active-row { border-color: var(--success); background: var(--success-light); }
+        .counter { display: flex; align-items: center; gap: 12px; background: var(--bg-color); padding: 5px; border-radius: 40px; border: 1px solid var(--border); }
+        .btn-count { background: var(--surface); border: none; width: 32px; height: 32px; border-radius: 50%; font-size: 16px; font-weight: 600; color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); }
+        .btn-count.add { background: var(--kd-dark); color: var(--kd-gold); }
+
+        /* To-Do Liste Öğeleri */
+        .check-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
+        .check-item:last-child { border-bottom: none; }
+        .check-left { display: flex; align-items: center; gap: 12px; flex: 1; cursor: pointer; }
+        .check-box { width: 22px; height: 22px; border-radius: 6px; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; color: transparent; transition: var(--transition); }
+        .check-item.done .check-box { background: var(--success); border-color: var(--success); color: white; }
+        .check-item.done .check-text { text-decoration: line-through; opacity: 0.6; }
+        .check-text { font-size: 14px; font-weight: 600; }
+        .delete-todo-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 6px; font-size: 16px; transition: var(--transition); }
+        .delete-todo-btn:hover { color: var(--danger); }
+    </style>
+</head>
+<body>
+
+    <header class="app-header">
+        <div class="brand"><i class="fa-solid fa-leaf" style="color:var(--kd-gold)"></i> KD Kordon Kokpit</div>
+        <div class="header-actions">
+            <button class="cloud-status-btn" id="cloudBtn" onclick="syncWithCloud()" title="Buluta Senkronize Et"><i class="fa-solid fa-cloud" id="cloudIcon"></i></button>
+            <button class="theme-toggle" onclick="toggleTheme()"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
+        </div>
+    </header>
+
+    <div class="app-container">
+
+        <!-- 1. SİPARİŞ TAB -->
+        <div id="tab-order" class="tab-pane active">
+            <div class="chips-container" id="categoryChips">
+                <div class="chip active" onclick="loadOrderTemplate('Manav', this)">🥦 Manav</div>
+                <div class="chip" onclick="loadOrderTemplate('Süt', this)">🥛 Süt</div>
+                <div class="chip" onclick="loadOrderTemplate('Su', this)">💧 Su</div>
+                <div class="chip" onclick="loadOrderTemplate('Soda', this)">🥤 Soda</div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 0 4px;">
+                <h3 id="currentTemplateTitle" style="font-size: 16px; font-weight: 800;">Manav Listesi</h3>
+                <button onclick="resetCounters()" style="background:none; border:none; color:var(--text-muted); font-size:12px; font-weight:600; cursor:pointer;"><i class="fa-solid fa-rotate-left"></i> Sıfırla</button>
+            </div>
+            <div class="list-grid" id="orderTemplateList" style="margin-bottom: 20px;"></div>
+            <button class="btn btn-whatsapp" onclick="sendOrderViaWhatsApp()"><i class="fa-brands fa-whatsapp" style="font-size:18px;"></i> Listeyi WhatsApp'a İlet</button>
+        </div>
+
+        <!-- 2. GÖREVLER (TO-DO) TAB -->
+        <div id="tab-routine" class="tab-pane">
+            <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 15px;">Vardiya Görevleri (To-Do)</h3>
+            <div class="modern-card">
+                <div style="display: flex; gap: 8px; margin-bottom: 15px;">
+                    <input type="text" id="todoInput" class="form-input" style="margin-bottom:0;" placeholder="Yeni görev yazın...">
+                    <button class="btn btn-primary" style="width: 50px; padding: 0;" onclick="addTodo()"><i class="fa-solid fa-plus"></i></button>
+                </div>
+                <div id="todoListContainer"></div>
+            </div>
+        </div>
+
+        <!-- 3. ARŞİV TAB -->
+        <div id="tab-archive" class="tab-pane">
+            <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 15px;">Geçmiş Sipariş Arşivi</h3>
+            <div id="orderHistoryList"></div>
+        </div>
+
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="switchTab('tab-order', this)"><i class="fa-solid fa-clipboard-list"></i><span>Sipariş</span></div>
+        <div class="nav-item" onclick="switchTab('tab-routine', this)"><i class="fa-solid fa-list-check"></i><span>Görevler</span></div>
+        <div class="nav-item" onclick="switchTab('tab-archive', this)"><i class="fa-solid fa-box-archive"></i><span>Arşiv</span></div>
+    </nav>
+
+    <!-- Firebase SDK (Compat Modu ile Entegre Edildi) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <script>
+        // Firebase Konfigürasyonu
+        const firebaseConfig = {
+          apiKey: "AIzaSyDxxGeAcvJfEtMUmDl_wMPBSGYqbaYUbRY",
+          authDomain: "raf-omru-takip-uygulamasi.firebaseapp.com",
+          databaseURL: "https://raf-omru-takip-uygulamasi-default-rtdb.firebaseio.com",
+          projectId: "raf-omru-takip-uygulamasi",
+          storageBucket: "raf-omru-takip-uygulamasi.firebasestorage.app",
+          messagingSenderId: "329380752344",
+          appId: "1:329380752344:web:dde75e5731ed1f3aeda0ad"
+        };
+
+        // Firebase Başlatma
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        let isDark = localStorage.getItem('kd_theme') === 'dark';
+        if(isDark) document.body.classList.add('dark-mode'); 
+        
+        document.addEventListener("DOMContentLoaded", () => {
+            updateThemeIcon();
+            loadOrderTemplate('Manav', document.querySelector('.chip'));
+            renderHistory();
+            renderTodos();
+            fetchFromCloudSilent();
+        });
+
+        function toggleTheme() { 
+            isDark = !isDark; 
+            document.body.classList.toggle('dark-mode', isDark); 
+            localStorage.setItem('kd_theme', isDark ? 'dark' : 'light'); 
+            updateThemeIcon(); 
+        }
+        function updateThemeIcon() { 
+            const icon = document.getElementById('themeIcon');
+            if(icon) icon.className = isDark ? "fa-solid fa-sun" : "fa-solid fa-moon"; 
+        }
+
+        function switchTab(tabId, navElement) {
+            document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active'); 
+            navElement.classList.add('active');
+        }
+
+        // ÜRÜN LİSTELERİ
+        const templates = {
+            "Manav": [
+                { id: "m1", name: "Brokoli", birim: "Kilo" }, { id: "m2", name: "Çilek", birim: "Kilo" },
+                { id: "m3", name: "Domates", birim: "Kilo" }, { id: "m4", name: "Elma", birim: "Kilo" },
+                { id: "m5", name: "Greyfurt", birim: "Kilo" }, { id: "m6", name: "Havuç", birim: "Kilo" },
+                { id: "m7", name: "Karpuz", birim: "Adet" }, { id: "m8", name: "Kereviz Sapı", birim: "Adet" },
+                { id: "m9", name: "Limon", birim: "Kilo" }, { id: "m10", name: "Maydanoz", birim: "Bağ" },
+                { id: "m11", name: "Muz", birim: "Kilo" }, { id: "m12", name: "Nane", birim: "Bağ" },
+                { id: "m13", name: "Pancar", birim: "Kilo" }, { id: "m14", name: "Portakal", birim: "Kilo" },
+                { id: "m15", name: "Rezene", birim: "Adet" }, { id: "m16", name: "Salatalık", birim: "Kilo" },
+                { id: "m17", name: "Zencefil", birim: "Kilo" }
+            ],
+            "Süt": [
+                { id: "s1", name: "Burger Peyniri", birim: "Paket" }, { id: "s2", name: "Cheddar Peyniri", birim: "Paket" },
+                { id: "s3", name: "Dana Jambon", birim: "Paket" }, { id: "s4", name: "Hindi Füme", birim: "Paket" },
+                { id: "s5", name: "Krema", birim: "Koli" }, { id: "s6", name: "Laktozsuz Süt", birim: "Koli" },
+                { id: "s7", name: "Laktozsuz Yoğurt", birim: "Adet" }, { id: "s8", name: "Tam Yağlı Süt", birim: "Koli" },
+                { id: "s9", name: "Tost Peyniri", birim: "Paket" }, { id: "s10", name: "Yağsız Süt", birim: "Koli" }
+            ],
+            "Su": [
+                { id: "su1", name: "1.5 Litre Su", birim: "Koli" }, 
+                { id: "su2", name: "Cam Şişe", birim: "Koli" }, 
+                { id: "su3", name: "Pet Şişe", birim: "Koli" }
+            ],
+            "Soda": [
+                { id: "so1", name: "Soda", birim: "Koli" }
+            ]
+        };
+
+        let currentCategory = "Manav", orderCounts = {}, localHistory = JSON.parse(localStorage.getItem('kd_history')) || [];
+        
+        function loadOrderTemplate(catName, chipElement) {
+            if(chipElement) { document.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); chipElement.classList.add('active'); }
+            currentCategory = catName; document.getElementById('currentTemplateTitle').innerText = catName + " Listesi";
+            const container = document.getElementById('orderTemplateList'); container.innerHTML = '';
+            templates[catName].forEach(item => {
+                const count = orderCounts[item.name] ? orderCounts[item.name].count : 0;
+                container.innerHTML += `<div class="order-row ${count > 0 ? 'active-row' : ''}"><div style="flex:1;"><div style="font-weight:700;">${item.name}</div><small style="color:var(--text-muted);">${item.birim}</small></div><div class="counter"><button class="btn-count" onclick="updateCount('${item.name}', -1, '${item.birim}')"><i class="fa-solid fa-minus"></i></button><span style="font-weight:800; min-width:20px; text-align:center;">${count}</span><button class="btn-count add" onclick="updateCount('${item.name}', 1, '${item.birim}')"><i class="fa-solid fa-plus"></i></button></div></div>`;
+            });
+        }
+        function updateCount(itemName, change, unit) { if(!orderCounts[itemName]) orderCounts[itemName] = { count: 0, unit: unit }; orderCounts[itemName].count += change; if(orderCounts[itemName].count < 0) orderCounts[itemName].count = 0; loadOrderTemplate(currentCategory, null); }
+        function resetCounters() { orderCounts = {}; loadOrderTemplate(currentCategory, null); }
+        function sendOrderViaWhatsApp() {
+            let orderItems = [], pure = [];
+            for (const [name, data] of Object.entries(orderCounts)) { if(data.count > 0) { orderItems.push(`- ${data.count} ${data.unit} ${name}`); pure.push(`${data.count} ${data.unit} ${name}`); } }
+            if(orderItems.length === 0) return alert("Lütfen en az bir ürün seçin.");
+            
+            const newHistoryItem = { id: Date.now().toString(), category: currentCategory, items: pure.join(", "), date: new Date().toLocaleString('tr-TR').slice(0, 16) };
+            localHistory.push(newHistoryItem);
+            localStorage.setItem('kd_history', JSON.stringify(localHistory)); 
+            renderHistory();
+            
+            // Firebase'e de otomatik kaydet
+            db.ref('kordon_kokpit/history/' + newHistoryItem.id).set(newHistoryItem);
+
+            window.open(`https://wa.me/?text=` + encodeURIComponent(`*KAHVE DÜNYASI KORDON*
+Tarih: ${new Date().toLocaleDateString('tr-TR')}
+
+${orderItems.join("
+")}`), '_blank');
+            orderCounts = {}; loadOrderTemplate(currentCategory, null);
+        }
+        function renderHistory() {
+            const container = document.getElementById('orderHistoryList'); container.innerHTML = '';
+            if(localHistory.length === 0) { container.innerHTML = '<div style="text-align:center; padding: 40px; color:var(--text-muted);">Henüz arşivde sipariş yok.</div>'; return; }
+            [...localHistory].sort((a,b) => b.id - a.id).forEach(h => {
+                container.innerHTML += `<div class="history-card"><div class="h-title"><span>${h.category}</span></div><div class="h-items">• ${h.items.replace(/, /g, '<br>• ')}</div><div class="h-date">${h.date}</div></div>`;
+            });
+        }
+
+        // TO-DO GÖREVLER
+        let localTodos = JSON.parse(localStorage.getItem('kd_todos')) || [];
+
+        function addTodo() {
+            const txt = document.getElementById('todoInput').value.trim(); if(!txt) return;
+            const newTodo = { id: Date.now().toString(), text: txt, done: false };
+            localTodos.push(newTodo); 
+            saveAndSyncTodos();
+            document.getElementById('todoInput').value = ""; 
+        }
+        function renderTodos() {
+            const container = document.getElementById('todoListContainer'); container.innerHTML = '';
+            if(localTodos.length === 0) { container.innerHTML = '<div style="font-size:13px; color:var(--text-muted); text-align:center; padding:15px;">Henüz görev eklenmedi.</div>'; return; }
+            localTodos.forEach(t => {
+                container.innerHTML += `
+                    <div class="check-item ${t.done ? 'done' : ''}">
+                        <div class="check-left" onclick="toggleTodo('${t.id}')">
+                            <div class="check-box"><i class="fa-solid fa-check"></i></div>
+                            <div class="check-text">${t.text}</div>
+                        </div>
+                        <button class="delete-todo-btn" onclick="deleteTodo('${t.id}')"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+                `;
+            });
+        }
+        function toggleTodo(id) { 
+            localTodos = localTodos.map(t => t.id === id ? {...t, done: !t.done} : t); 
+            saveAndSyncTodos();
+        }
+        function deleteTodo(id) {
+            localTodos = localTodos.filter(t => t.id !== id);
+            saveAndSyncTodos();
+        }
+        function saveAndSyncTodos() {
+            localStorage.setItem('kd_todos', JSON.stringify(localTodos));
+            renderTodos();
+            db.ref('kordon_kokpit/todos').set(localTodos);
+        }
+
+        // FIREBASE SENKRONİZASYON FONKSİYONLARI
+        function syncWithCloud() {
+            const btn = document.getElementById('cloudBtn');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            
+            // Tüm lokal verileri buluta gönder
+            const syncData = {
+                todos: localTodos,
+                history: localHistory
+            };
+
+            db.ref('kordon_kokpit').set(syncData).then(() => {
+                btn.className = "cloud-status-btn synced";
+                btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i>';
+                setTimeout(() => {
+                    btn.className = "cloud-status-btn";
+                    btn.innerHTML = '<i class="fa-solid fa-cloud"></i>';
+                }, 2000);
+            }).catch((error) => {
+                alert("Senkronizasyon hatası: İnternet bağlantınızı kontrol edin.");
+                btn.innerHTML = '<i class="fa-solid fa-cloud"></i>';
+            });
+        }
+
+        function fetchFromCloudSilent() {
+            db.ref('kordon_kokpit').once('value').then((snapshot) => {
+                const data = snapshot.val();
+                if(data) {
+                    if(data.todos && data.todos.length > 0) {
+                        localTodos = data.todos;
+                        localStorage.setItem('kd_todos', JSON.stringify(localTodos));
+                        renderTodos();
+                    }
+                    if(data.history && data.history.length > 0) {
+                        localHistory = data.history;
+                        localStorage.setItem('kd_history', JSON.stringify(localHistory));
+                        renderHistory();
+                    }
+                }
+            }).catch(() => {
+                // Çevrimdışı modda sessizce devam et
+            });
+        }
+
+        // PWA Servis İşçisi
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(() => {});
+            });
+        }
+    </script>
+</body>
+</html>

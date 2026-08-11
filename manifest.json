@@ -1,0 +1,21 @@
+{
+  "name": "KD Kordon Kokpit",
+  "short_name": "Kordon",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#F8F9FA",
+  "theme_color": "#2A1A14",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3003/3003984.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3003/3003984.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
