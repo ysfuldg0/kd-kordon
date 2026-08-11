@@ -43,7 +43,7 @@
         #appContent { display: none; padding-bottom: 90px; }
 
         .app-header { background: var(--surface); padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
-        .user-badge { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 14px; color: var(--kd-dark); background: var(--kd-gold-light); padding: 6px 12px; border-radius: 20px; border: 1px solid var(--kd-gold); cursor: pointer; transition: var(--transition); }
+        .user-badge { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 14px; color: var(--danger); background: var(--danger-light); padding: 6px 12px; border-radius: 20px; border: 1px solid var(--danger); cursor: pointer; transition: var(--transition); }
         .user-badge:active { transform: scale(0.95); }
         .header-actions { display: flex; align-items: center; gap: 8px; }
         .icon-btn { background: var(--bg-color); border: 1px solid var(--border); width: 40px; height: 40px; border-radius: 50%; color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: var(--transition); }
@@ -161,11 +161,11 @@
     <div id="appContent">
         <header class="app-header">
             <!-- ÇIKIŞ YAPILABİLİR KULLANICI ROZETİ -->
-            <div class="user-badge" onclick="confirmLogout()"><i class="fa-solid fa-user-check"></i> <span id="headerUserName">Personel</span></div>
+            <div class="user-badge" onclick="confirmLogout()"><i class="fa-solid fa-user-check"></i> <span id="headerUserName">Personel</span> <i class="fa-solid fa-right-from-bracket" style="margin-left: 4px; font-size: 11px;"></i></div>
             <div class="header-actions">
                 <button class="icon-btn" onclick="requestNotificationPermission()" id="bellBtn"><i class="fa-solid fa-bell"></i></button>
                 <button class="icon-btn" onclick="toggleTheme()" id="themeBtn"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
-                <button class="icon-btn" onclick="openModal('adminModal')" id="adminBtn" style="display:none; color:var(--danger); border-color:var(--danger-light); background:var(--danger-light);"><i class="fa-solid fa-gear"></i></button>
+                <button class="icon-btn" onclick="openModal('adminModal')" id="adminBtn" style="display:none; color:var(--warning); border-color:var(--warning); background:var(--bg-color);"><i class="fa-solid fa-gear"></i></button>
             </div>
         </header>
 
@@ -349,7 +349,7 @@
         const db = firebase.database();
         
         // Tamamen sıfırlanmış yeni bir veritabanı alanı
-        const dbRoot = 'kd_kordon_pro_final'; 
+        const dbRoot = 'kd_kordon_pro_final_v2'; 
 
         let isDark = localStorage.getItem('kd_theme') === 'dark';
         if(isDark) document.body.classList.add('dark-mode'); 
@@ -359,7 +359,7 @@
         let usersDB = {};
         
         let appLoadTime = 0;
-        let isEditMode = false; // Düzenleme Modu Durumu
+        let isEditMode = false;
 
         document.addEventListener("DOMContentLoaded", () => {
             updateThemeIcon();
@@ -371,7 +371,7 @@
             let dbTimeout = setTimeout(() => {
                 const spinner = document.getElementById('fullScreenSpinner');
                 if(spinner.style.display !== 'none') {
-                    spinner.innerHTML = `<i class="fa-solid fa-triangle-exclamation fa-3x" style="color:var(--danger); margin-bottom:15px;"></i><span style="color:var(--text-main);">İnternet Bağlantısı Hatası.<br>Lütfen sayfayı yenileyin.</span>`;
+                    spinner.innerHTML = '<i class="fa-solid fa-triangle-exclamation fa-3x" style="color:var(--danger); margin-bottom:15px;"></i><span style="color:var(--text-main);">İnternet Bağlantısı Hatası.<br>Lütfen sayfayı yenileyin.</span>';
                 }
             }, 8000);
 
@@ -422,7 +422,6 @@
             }
         }
         
-        // GÜNCELLENMİŞ ÇIKIŞ FONKSİYONU
         function confirmLogout() {
             if(confirm("Sistemden çıkış yapmak istediğinize emin misiniz?")) {
                 localStorage.removeItem('kd_saved_pin');
@@ -439,10 +438,9 @@
             document.getElementById('appContent').style.display = 'block';
             document.getElementById('headerUserName').innerText = currentUser.name;
             
-            // --- ROL KONTROLÜ VE EKRAN DÜZENLEMESİ ---
             if(currentUser.role === 'admin') {
                 document.getElementById('adminBtn').style.display = 'flex';
-                document.getElementById('editModeBtn').style.display = 'block'; // Yalnızca admin düzenleme modunu açabilir
+                document.getElementById('editModeBtn').style.display = 'block'; 
                 document.getElementById('navOrder').style.display = 'flex';
                 switchTab('tab-order', document.getElementById('navOrder'));
             } else {
@@ -453,7 +451,6 @@
             showToast(`Hoşgeldin, ${currentUser.name}`);
             loadOrderTemplate('Manav', document.querySelector('.chip'));
             
-            // Boş ekranı engellemek için anında render yap
             libraryDB = [...defaultLibrary];
             renderLibraryDrumpad();
 
@@ -479,12 +476,10 @@
                 allLogs = snap.val() ? Object.values(snap.val()) : [];
             });
             
-            // Vardiya Notu Dinleyicisi
             db.ref(`${dbRoot}/shiftNote`).on('value', snap => {
                 document.getElementById('shiftNoteArea').value = snap.val() || "";
             });
 
-            // YAYIN (BROADCAST) DİNLEYİCİLERİ
             db.ref(`${dbRoot}/todos`).on('child_added', snap => {
                 const t = snap.val();
                 if(t.timestamp && t.timestamp > appLoadTime && t.addedBy !== currentUser.name) {
@@ -506,7 +501,6 @@
 
         const catIcons = { "Şarküteri, Süt ve Soslar": "fa-cheese", "Paketli & Kuru Gıdalar": "fa-box", "Meyve ve Sebze": "fa-apple-whole", "Çözündürülen / Dökme / Teşhir": "fa-ice-cream", "Kahveler, İçecekler ve Ön Hazırlık": "fa-mug-hot", "Paketli Şarküteri": "fa-bacon" };
 
-        // --- PDF TABANLI EKSİKSİZ VE AYRIŞTIRILMIŞ ÜRÜN KÜTÜPHANESİ ---
         const defaultLibrary = [
             {id:"L1", kategori:"Şarküteri, Süt ve Soslar", urun:"Süzme Beyaz Peynir", raf_omru:3, birim:"Gün"},
             {id:"L2", kategori:"Şarküteri, Süt ve Soslar", urun:"Krem Peynir", raf_omru:3, birim:"Gün"},
@@ -559,7 +553,7 @@
             {id:"L49", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Amerikan Salatası", raf_omru:2, birim:"Gün"},
             {id:"L50", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Hindistan Cevizi Püresi", raf_omru:2, birim:"Gün"},
             {id:"L51", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Kırmızı Meyve Püresi", raf_omru:3, birim:"Gün"},
-            {id:"L52", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Dondurmalar (Teşhir)", raf_omru:15, birim:"Gün"},
+            {id:"L52", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Dondurmalar", raf_omru:15, birim:"Gün"},
             {id:"L53", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Spesiyal Çikolatalar", raf_omru:0, birim:"ORJ SKT"},
             {id:"L54", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Trüf Çikolatalar", raf_omru:0, birim:"ORJ SKT"},
             {id:"L55", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Lavi Çikolatalar", raf_omru:0, birim:"ORJ SKT"},
@@ -618,12 +612,12 @@
             {id:"L108", kategori:"Paketli & Kuru Gıdalar", urun:"Bitter Kuvertür", raf_omru:0, birim:"ORJ SKT"},
             {id:"L109", kategori:"Paketli & Kuru Gıdalar", urun:"Toz Bisküvi", raf_omru:21, birim:"Gün"},
             {id:"L110", kategori:"Paketli & Kuru Gıdalar", urun:"Fıstık Toz", raf_omru:21, birim:"Gün"},
-            {id:"L111", kategori:"Paketli & Kuru Gıdalar", urun:"Fıstık Tane", raf_omru:1, birim:"Ay"}
+            {id:"L111", kategori:"Paketli & Kuru Gıdalar", urun:"Fıstık Tane", raf_omru:1, birim:"Ay"},
+            {id:"L112", kategori:"Paketli & Kuru Gıdalar", urun:"Kavanoz Vişne Sos", raf_omru:3, birim:"Gün"}
         ];
         
         let currentLibFilter = 'Tümü';
 
-        // --- DÜZENLEME MODU MANTIĞI ---
         function toggleEditMode() {
             isEditMode = !isEditMode;
             const btn = document.getElementById('editModeBtn');
@@ -634,7 +628,7 @@
                 btn.style.background = 'var(--kd-dark)';
                 btn.style.color = 'var(--kd-gold)';
                 btn.innerHTML = '<i class="fa-solid fa-check"></i> Bitti';
-                addBtn.style.display = 'block'; // Sadece düzenleme modunda ekle butonu çıkar
+                addBtn.style.display = 'block'; 
                 container.classList.add('edit-mode');
             } else {
                 btn.style.background = 'transparent';
@@ -668,7 +662,6 @@
                 
                 let icon = catIcons[p.kategori] || "fa-box";
                 
-                // Silme butonu sadece adminse render edilir, CSS ile gösterilip gizlenir
                 let deleteBtnHtml = (currentUser && currentUser.role === 'admin') ? 
                     `<div class="pad-delete" onclick="event.stopPropagation(); deleteProduct('${p.id}')" title="Ürünü Sil"><i class="fa-solid fa-xmark"></i></div>` : '';
 
@@ -710,7 +703,7 @@
         }
 
         function startTracking(id) {
-            if(isEditMode) return; // Düzenleme modundayken süre başlatmayı engeller
+            if(isEditMode) return; 
             
             const prod = libraryDB.find(p => p.id === id);
             const now = new Date();
