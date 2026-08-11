@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KD Kordon Pro - TXT Report Edition</title>
+    <title>KD Kordon Pro - Final Edition</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -109,7 +109,7 @@
         .modal-overlay.active .modal-content { transform: translateY(0); }
         .drag-handle { width: 40px; height: 5px; background: var(--border); border-radius: 10px; margin: 0 auto 20px; }
         
-        .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .admin-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
         .admin-card { background: var(--bg-color); border: 1px solid var(--border); padding: 20px 15px; border-radius: var(--radius-md); text-align: center; cursor: pointer; transition: var(--transition); }
         .admin-card i { font-size: 28px; color: var(--kd-gold); margin-bottom: 10px; }
         .admin-card div { font-size: 13px; font-weight: 800; color: var(--text-main); }
@@ -256,10 +256,12 @@
         <div class="modal-content">
             <div class="drag-handle"></div>
             <h3 style="font-size:18px; margin-bottom:20px; text-align:center;"><i class="fa-solid fa-shield-halved" style="color:var(--danger)"></i> Yönetici Paneli</h3>
+            
+            <!-- Rapor Kısmı Tamamen Kaldırıldı, Sadece Personel Yönetimi Var -->
             <div class="admin-grid">
                 <div class="admin-card" onclick="openModal('usersModal'); closeModal('adminModal');"><i class="fa-solid fa-users-gear"></i><div>Personel Yönetimi</div></div>
-                <div class="admin-card" onclick="openModal('reportModal'); closeModal('adminModal');"><i class="fa-solid fa-file-invoice"></i><div>Arşiv & Raporlar</div></div>
             </div>
+            
             <button class="btn" style="margin-top:20px; background:var(--danger-light); color:var(--danger);" onclick="confirmLogout()"><i class="fa-solid fa-right-from-bracket"></i> Sistemden Çıkış Yap</button>
         </div>
     </div>
@@ -286,19 +288,6 @@
                 </div>
                 <button class="btn btn-primary" onclick="addUser()"><i class="fa-solid fa-user-plus"></i> Sisteme Kaydet</button>
             </div>
-        </div>
-    </div>
-
-    <!-- RAPOR VE ARŞİV MODALI (TXT FORMATI) -->
-    <div class="modal-overlay" id="reportModal" onclick="closeOnOutsideClick(event, 'reportModal')">
-        <div class="modal-content">
-            <div class="drag-handle"></div>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                <h3 style="font-size:18px;">Arşiv & Denetim (Log)</h3>
-                <button onclick="openModal('adminModal'); closeModal('reportModal');" style="background:none; border:none; font-size:20px; color:var(--text-muted);"><i class="fa-solid fa-arrow-left"></i></button>
-            </div>
-            <button class="btn btn-primary" onclick="sendAuditReport()"><i class="fa-solid fa-file-lines"></i> Denetim Raporunu İndir (.TXT)</button>
-            <div style="margin-top:20px; font-size:12px; color:var(--text-muted); text-align:center;">Sistemdeki tüm işlemler düz metin (Not Defteri) formatında indirilir. Türkçe karakter sorunu yaşanmaz.</div>
         </div>
     </div>
 
@@ -348,7 +337,7 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         
-        // Veritabanı alanı
+        // Temiz veritabanı alanı
         const dbRoot = 'kd_kordon_pro_final_v3'; 
 
         let isDark = localStorage.getItem('kd_theme') === 'dark';
@@ -430,7 +419,7 @@
         }
         function logout() { confirmLogout(); }
 
-        let activeItems = [], todos = [], allLogs = [];
+        let activeItems = [], todos = [];
 
         function launchApp() {
             appLoadTime = Date.now();
@@ -471,9 +460,6 @@
             db.ref(`${dbRoot}/todos`).on('value', snap => {
                 todos = snap.val() ? Object.values(snap.val()) : [];
                 renderTodos();
-            });
-            db.ref(`${dbRoot}/logs`).on('value', snap => {
-                allLogs = snap.val() ? Object.values(snap.val()) : [];
             });
             
             db.ref(`${dbRoot}/shiftNote`).on('value', snap => {
@@ -890,7 +876,6 @@
         }
         function deleteTodo(id) { db.ref(`${dbRoot}/todos/${id}`).remove(); }
 
-        // --- YÖNETİCİ VE AUDIT TRAIL SİSTEMİ ---
         function logAction(actionType, detail) {
             const logItem = { 
                 id: Date.now().toString(), 
@@ -901,32 +886,6 @@
                 timestamp: Date.now()
             };
             db.ref(`${dbRoot}/logs/${logItem.id}`).set(logItem);
-        }
-
-        // --- TXT FORMATINDA RAPOR İNDİRME ---
-        function sendAuditReport() {
-            if(allLogs.length === 0) return alert("Arşivde hiç işlem yok.");
-            
-            let textContent = "=== KORDON DENETİM RAPORU ===\r\n\r\n";
-            
-            [...allLogs].reverse().forEach(l => { 
-                textContent += `Tarih : ${l.date}\r\n`;
-                textContent += `Kişi  : ${l.user}\r\n`;
-                textContent += `İşlem : ${l.action}\r\n`;
-                textContent += `Detay : ${l.detail}\r\n`;
-                textContent += `---------------------------------------\r\n`;
-            });
-
-            const blob = new Blob([textContent], { type: 'text/plain;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            
-            const link = document.createElement("a"); 
-            link.href = url; 
-            link.download = "Kordon_Denetim_Raporu.txt"; 
-            document.body.appendChild(link); 
-            link.click(); 
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
         }
 
         // PERSONEL YÖNETİMİ
