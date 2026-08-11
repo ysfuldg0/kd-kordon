@@ -121,7 +121,7 @@
 
     <!-- YÜKLENİYOR EKRANI -->
     <div id="fullScreenSpinner">
-        <i class="fa-solid fa-spinner fa-spin fa-2x mb-3"></i>
+        <i class="fa-solid fa-spinner fa-spin fa-2x" style="margin-bottom: 15px;"></i>
         <span>Sistem Başlatılıyor...</span>
     </div>
 
@@ -172,7 +172,7 @@
                     <h3 id="currentTemplateTitle" style="font-size: 16px; font-weight: 800;">Manav Listesi</h3>
                     <button onclick="resetCounters()" style="background:none; border:none; color:var(--text-muted); font-size:12px; font-weight:700;"><i class="fa-solid fa-rotate-left"></i> Sıfırla</button>
                 </div>
-                <div id="orderTemplateList" class="list-grid mb-4"></div>
+                <div id="orderTemplateList" class="list-grid" style="margin-bottom: 20px;"></div>
                 <button class="btn" style="background:#25D366; color:white; margin-top:15px;" onclick="sendOrderViaWhatsApp()"><i class="fa-brands fa-whatsapp"></i> Siparişi Gönder</button>
             </div>
 
@@ -286,12 +286,11 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-        const dbRoot = 'kd_kordon_pro_v1'; // Yepyeni tertemiz veritabanı dalı
+        const dbRoot = 'kd_kordon_pro_v1';
 
         let isDark = localStorage.getItem('kd_theme') === 'dark';
         if(isDark) document.body.classList.add('dark-mode'); 
 
-        // GÜVENLİK VE KİMLİK DOĞRULAMA (AUDIT TRAIL)
         let currentUser = null; 
         let currentPin = "";
         let usersDB = {};
@@ -303,21 +302,18 @@
         });
 
         function initDatabase() {
-            db.ref(`${dbRoot}/users`).on('value', snap => {
+            db.ref(dbRoot + '/users').on('value', snap => {
                 const data = snap.val();
                 if(!data) {
-                    // Veritabanı boşsa Kurucu/Yönetici hesabı otomatik oluştur (Yusuf)
                     const masterUser = { name: "Yusuf (Yönetici)", role: "admin", pin: "1923" };
-                    db.ref(`${dbRoot}/users/1923`).set(masterUser);
+                    db.ref(dbRoot + '/users/1923').set(masterUser);
                     usersDB = { "1923": masterUser };
                 } else {
                     usersDB = data;
                 }
                 
-                // Yükleme ekranını kapat, login ekranını aç
                 document.getElementById('fullScreenSpinner').style.display = 'none';
                 
-                // Oturum kontrolü
                 const savedPin = localStorage.getItem('kd_saved_pin');
                 if(savedPin && usersDB[savedPin]) {
                     currentUser = usersDB[savedPin];
@@ -339,7 +335,7 @@
         function clearPin() { currentPin = ""; updatePinDisplay(); }
         function updatePinDisplay() {
             for(let i=1; i<=4; i++) {
-                document.getElementById(`dot${i}`).className = `pin-dot ${i <= currentPin.length ? 'filled' : ''}`;
+                document.getElementById('dot' + i).className = "pin-dot " + (i <= currentPin.length ? 'filled' : '');
             }
         }
         function submitPin() {
@@ -370,21 +366,20 @@
             document.getElementById('headerUserName').innerText = currentUser.name;
             if(currentUser.role === 'admin') document.getElementById('adminBtn').style.display = 'flex';
             
-            showToast(`Hoşgeldin, ${currentUser.name}`);
+            showToast("Hoşgeldin, " + currentUser.name);
             
             loadOrderTemplate('Manav', document.querySelector('.chip'));
             renderLibraryDrumpad();
 
-            // Firebase Dinleyicileri
-            db.ref(`${dbRoot}/active`).on('value', snap => {
+            db.ref(dbRoot + '/active').on('value', snap => {
                 activeItems = snap.val() ? Object.values(snap.val()) : [];
                 renderActiveList();
             });
-            db.ref(`${dbRoot}/todos`).on('value', snap => {
+            db.ref(dbRoot + '/todos').on('value', snap => {
                 todos = snap.val() ? Object.values(snap.val()) : [];
                 renderTodos();
             });
-            db.ref(`${dbRoot}/logs`).on('value', snap => {
+            db.ref(dbRoot + '/logs').on('value', snap => {
                 allLogs = snap.val() ? Object.values(snap.val()) : [];
             });
 
@@ -412,13 +407,7 @@
         function renderLibraryDrumpad() {
             const container = document.getElementById('drumpadContainer'); container.innerHTML = '';
             libraryDB.filter(p => currentLibFilter === 'Tümü' || p.cat === currentLibFilter).forEach(p => {
-                container.innerHTML += `
-                    <div class="pad" onclick="startTracking('${p.id}')">
-                        <div class="pad-time">${p.hours}s</div>
-                        <i class="fa-solid ${p.icon}"></i>
-                        <div class="pad-name">${p.name}</div>
-                    </div>
-                `;
+                container.innerHTML += '<div class="pad" onclick="startTracking(\'' + p.id + '\')"><div class="pad-time">' + p.hours + 's</div><i class="fa-solid ' + p.icon + '"></i><div class="pad-name">' + p.name + '</div></div>';
             });
         }
 
@@ -433,14 +422,14 @@
                 hours: prod.hours,
                 startedAt: now.toISOString(),
                 expiresAt: expiresAt.toISOString(),
-                startedBy: currentUser.name // KİMLİK İMZASI
+                startedBy: currentUser.name
             };
             
-            db.ref(`${dbRoot}/active/${newItem.id}`).set(newItem);
-            logAction("SKT Başlatıldı", `${prod.name} takibe alındı.`);
+            db.ref(dbRoot + '/active/' + newItem.id).set(newItem);
+            logAction("SKT Başlatıldı", prod.name + " takibe alındı.");
             
-            showToast(`${prod.name} takibe alındı!`);
-            sendPushNotification("⏳ Üretim Başladı", `${prod.name} yapıldı. Başlatan: ${currentUser.name}`);
+            showToast(prod.name + " takibe alındı!");
+            sendPushNotification("⏳ Üretim Başladı", prod.name + " yapıldı. Başlatan: " + currentUser.name);
             
             if(navigator.vibrate) navigator.vibrate(50);
         }
@@ -462,39 +451,27 @@
                 if(diff <= 0) { timeStr = "SÜRESİ DOLDU!"; color = "var(--danger)"; percent = 0; }
                 else {
                     const h = Math.floor(diff / 3600000); const m = Math.floor((diff % 3600000) / 60000);
-                    timeStr = `${h}s ${m}d kaldı`;
+                    timeStr = h + "s " + m + "d kaldı";
                     if(percent < 20) color = "var(--danger)"; else if(percent < 40) color = "var(--warning)";
                 }
 
-                container.innerHTML += `
-                    <div class="swipe-container" id="swipe-${item.id}">
-                        <div class="swipe-bg"><div class="bg-left"><i class="fa-solid fa-check"></i></div><div class="bg-right"><i class="fa-solid fa-trash"></i></div></div>
-                        <div class="active-card" id="card-${item.id}" ontouchstart="handleTS(event, '${item.id}')" ontouchmove="handleTM(event, '${item.id}')" ontouchend="handleTE(event, '${item.id}')" style="border-left-color:${color};">
-                            <div style="display:flex; justify-content:space-between; align-items:center;">
-                                <div style="font-weight:800; font-size:15px; color:var(--text-main);"><i class="fa-solid ${item.icon}" style="color:var(--kd-gold); margin-right:6px;"></i> ${item.name}</div>
-                                <div style="font-size:10px; color:var(--text-muted); font-weight:700;"><i class="fa-solid fa-user"></i> ${item.startedBy.split(' ')[0]}</div>
-                            </div>
-                            <div class="timer-display" style="color:${color};">${timeStr}</div>
-                            <div class="progress-track"><div class="progress-fill" style="width:${percent}%; background:${color};"></div></div>
-                        </div>
-                    </div>
-                `;
+                container.innerHTML += '<div class="swipe-container" id="swipe-' + item.id + '"><div class="swipe-bg"><div class="bg-left"><i class="fa-solid fa-check"></i></div><div class="bg-right"><i class="fa-solid fa-trash"></i></div></div><div class="active-card" id="card-' + item.id + '" ontouchstart="handleTS(event, \'' + item.id + '\')" ontouchmove="handleTM(event, \'' + item.id + '\')" ontouchend="handleTE(event, \'' + item.id + '\')" style="border-left-color:' + color + ';"><div style="display:flex; justify-content:space-between; align-items:center;"><div style="font-weight:800; font-size:15px; color:var(--text-main);"><i class="fa-solid ' + item.icon + '" style="color:var(--kd-gold); margin-right:6px;"></i> ' + item.name + '</div><div style="font-size:10px; color:var(--text-muted); font-weight:700;"><i class="fa-solid fa-user"></i> ' + item.startedBy.split(' ')[0] + '</div></div><div class="timer-display" style="color:' + color + ';">' + timeStr + '</div><div class="progress-track"><div class="progress-fill" style="width:' + percent + '%; background:' + color + ';"></div></div></div></div>';
             });
         }
 
         let tsx = 0, tcx = 0;
         function handleTS(e, id) { tsx = e.touches[0].clientX; tcx = tsx; }
-        function handleTM(e, id) { tcx = e.touches[0].clientX; const diff = tcx - tsx; if(Math.abs(diff)>20) document.getElementById(`card-${id}`).style.transform = `translateX(${diff}px)`; }
+        function handleTM(e, id) { tcx = e.touches[0].clientX; const diff = tcx - tsx; if(Math.abs(diff)>20) document.getElementById('card-'+id).style.transform = 'translateX(' + diff + 'px)'; }
         function handleTE(e, id) {
-            const diff = tcx - tsx; const card = document.getElementById(`card-${id}`);
+            const diff = tcx - tsx; const card = document.getElementById('card-'+id);
             if(diff > 120) processItem(id, "Tüketildi");
             else if(diff < -120) processItem(id, "İmha Edildi");
-            else card.style.transform = `translateX(0)`;
+            else card.style.transform = 'translateX(0)';
         }
         function processItem(id, result) {
             const item = activeItems.find(i => i.id === id);
-            logAction(`SKT ${result}`, `${item.name} sistemden düşüldü.`);
-            db.ref(`${dbRoot}/active/${id}`).remove();
+            logAction("SKT " + result, item.name + " sistemden düşüldü.");
+            db.ref(dbRoot + '/active/' + id).remove();
             if(navigator.vibrate) navigator.vibrate([50, 50]);
         }
 
@@ -512,23 +489,22 @@
             const container = document.getElementById('orderTemplateList'); container.innerHTML = '';
             orderDB[cat].forEach(i => {
                 const c = orderCounts[i.n] ? orderCounts[i.n].c : 0;
-                container.innerHTML += `<div class="order-row ${c>0?'active-row':''}"><div style="flex:1;"><div style="font-weight:700;">${i.n}</div><small style="color:var(--text-muted);">${i.b}</small></div><div class="counter"><button class="btn-count" onclick="uc('${i.n}', -1, '${i.b}')"><i class="fa-solid fa-minus"></i></button><span style="font-weight:800; min-width:20px; text-align:center;">${c}</span><button class="btn-count add" onclick="uc('${i.n}', 1, '${i.b}')"><i class="fa-solid fa-plus"></i></button></div></div>`;
+                container.innerHTML += '<div class="order-row ' + (c>0?'active-row':'') + '"><div style="flex:1;"><div style="font-weight:700;">' + i.n + '</div><small style="color:var(--text-muted);">' + i.b + '</small></div><div class="counter"><button class="btn-count" onclick="uc(\'' + i.n + '\', -1, \'' + i.b + '\')"><i class="fa-solid fa-minus"></i></button><span style="font-weight:800; min-width:20px; text-align:center;">' + c + '</span><button class="btn-count add" onclick="uc(\'' + i.n + '\', 1, \'' + i.b + '\')"><i class="fa-solid fa-plus"></i></button></div></div>';
             });
         }
         function uc(n, ch, b) { if(!orderCounts[n]) orderCounts[n] = {c:0, b:b}; orderCounts[n].c += ch; if(orderCounts[n].c < 0) orderCounts[n].c = 0; loadOrderTemplate(currentOrderCat, null); }
         function resetCounters() { orderCounts = {}; loadOrderTemplate(currentOrderCat, null); }
         function sendOrderViaWhatsApp() {
             let items = [];
-            for(const [n, d] of Object.entries(orderCounts)) { if(d.c > 0) items.push(`- ${d.c} ${d.b} ${n}`); }
+            for(const [n, d] of Object.entries(orderCounts)) { if(d.c > 0) items.push("- " + d.c + " " + d.b + " " + n); }
             if(items.length === 0) return alert("Boş sipariş gönderilemez.");
             
-            logAction("Sipariş Verildi", `${currentOrderCat} listesi oluşturuldu.`);
-            sendPushNotification("📋 Sipariş Verildi", `${currentOrderCat} siparişi verildi. Veren: ${currentUser.name}`);
-            window.open(`https://wa.me/?text=` + encodeURIComponent(`*KORDON SİPARİŞ (${currentOrderCat})*
-Siparişi Veren: ${currentUser.name}
-
-${items.join("
-")}`));
+            logAction("Sipariş Verildi", currentOrderCat + " listesi oluşturuldu.");
+            sendPushNotification("📋 Sipariş Verildi", currentOrderCat + " siparişi verildi. Veren: " + currentUser.name);
+            
+            var waText = "*KORDON SİPARİŞ (" + currentOrderCat + ")*\nSiparişi Veren: " + currentUser.name + "\n\n" + items.join("\n");
+            window.open("https://wa.me/?text=" + encodeURIComponent(waText), "_blank");
+            
             orderCounts = {}; loadOrderTemplate(currentOrderCat, null);
         }
 
@@ -536,30 +512,22 @@ ${items.join("
         function addTodo() {
             const txt = document.getElementById('todoInput').value.trim(); if(!txt) return;
             const newTodo = { id: Date.now().toString(), text: txt, done: false, addedBy: currentUser.name };
-            db.ref(`${dbRoot}/todos/${newTodo.id}`).set(newTodo);
+            db.ref(dbRoot + '/todos/' + newTodo.id).set(newTodo);
             document.getElementById('todoInput').value = "";
-            logAction("Görev Eklendi", `Yeni görev: ${txt}`);
+            logAction("Görev Eklendi", "Yeni görev: " + txt);
         }
         function renderTodos() {
             const container = document.getElementById('todoContainer'); container.innerHTML = '';
             if(todos.length === 0) { container.innerHTML = '<div style="font-size:12px; color:var(--text-muted); text-align:center;">Görev yok.</div>'; return; }
             todos.forEach(t => {
-                container.innerHTML += `
-                    <div class="check-item ${t.done ? 'done' : ''}">
-                        <div class="check-left" onclick="toggleTodo('${t.id}', ${t.done})">
-                            <div class="check-box"><i class="fa-solid fa-check"></i></div>
-                            <div><div class="check-text">${t.text}</div><div style="font-size:9px; color:var(--text-muted); margin-top:2px;">Ekleyen: ${t.addedBy}</div></div>
-                        </div>
-                        <button class="btn-count" style="background:none; box-shadow:none; color:var(--danger);" onclick="deleteTodo('${t.id}')"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                `;
+                container.innerHTML += '<div class="check-item ' + (t.done ? 'done' : '') + '"><div class="check-left" onclick="toggleTodo(\'' + t.id + '\', ' + t.done + ')"><div class="check-box"><i class="fa-solid fa-check"></i></div><div><div class="check-text">' + t.text + '</div><div style="font-size:9px; color:var(--text-muted); margin-top:2px;">Ekleyen: ' + t.addedBy + '</div></div></div><button class="btn-count" style="background:none; box-shadow:none; color:var(--danger);" onclick="deleteTodo(\'' + t.id + '\')"><i class="fa-solid fa-trash"></i></button></div>';
             });
         }
         function toggleTodo(id, currentStatus) {
-            db.ref(`${dbRoot}/todos/${id}`).update({ done: !currentStatus });
+            db.ref(dbRoot + '/todos/' + id).update({ done: !currentStatus });
             if(!currentStatus) logAction("Görev Tamamlandı", "Bir görev işaretlendi.");
         }
-        function deleteTodo(id) { db.ref(`${dbRoot}/todos/${id}`).remove(); }
+        function deleteTodo(id) { db.ref(dbRoot + '/todos/' + id).remove(); }
 
         // --- YÖNETİCİ VE AUDIT TRAIL SİSTEMİ ---
         function logAction(actionType, detail) {
@@ -570,15 +538,15 @@ ${items.join("
                 action: actionType,
                 detail: detail
             };
-            db.ref(`${dbRoot}/logs/${logItem.id}`).set(logItem);
+            db.ref(dbRoot + '/logs/' + logItem.id).set(logItem);
         }
 
         function sendAuditReport() {
             if(allLogs.length === 0) return alert("Arşivde hiç işlem yok.");
-            let csv = "data:text/csv;charset=utf-8,﻿Tarih;Personel;Islem Tipi;Detay
-";
-            [...allLogs].reverse().forEach(l => { csv += `"${l.date}";"${l.user}";"${l.action}";"${l.detail}"
-`; });
+            let csv = "data:text/csv;charset=utf-8,\uFEFFTarih;Personel;Islem Tipi;Detay\n";
+            [...allLogs].reverse().forEach(l => { 
+                csv += '"' + l.date + '";"' + l.user + '";"' + l.action + '";"' + l.detail + '"\n'; 
+            });
             const link = document.createElement("a"); link.setAttribute("href", encodeURI(csv)); link.setAttribute("download", "Denetim_Raporu.csv"); document.body.appendChild(link); link.click(); document.body.removeChild(link);
         }
 
@@ -592,15 +560,7 @@ ${items.join("
             for(const [pin, u] of Object.entries(usersDB)) {
                 const roleClass = u.role === 'admin' ? 'role-admin' : 'role-staff';
                 const roleText = u.role === 'admin' ? 'Yönetici' : 'Personel';
-                container.innerHTML += `
-                    <div class="user-row">
-                        <div><div style="font-weight:700; font-size:14px; color:var(--text-main);">${u.name}</div><div style="font-size:11px; color:var(--text-muted); font-family:monospace; margin-top:2px;">PIN: ${pin}</div></div>
-                        <div style="display:flex; align-items:center; gap:10px;">
-                            <span class="role-badge ${roleClass}">${roleText}</span>
-                            ${pin !== '1923' ? `<button onclick="deleteUser('${pin}')" style="background:none; border:none; color:var(--danger); cursor:pointer;"><i class="fa-solid fa-trash"></i></button>` : ''}
-                        </div>
-                    </div>
-                `;
+                container.innerHTML += '<div class="user-row"><div><div style="font-weight:700; font-size:14px; color:var(--text-main);">' + u.name + '</div><div style="font-size:11px; color:var(--text-muted); font-family:monospace; margin-top:2px;">PIN: ' + pin + '</div></div><div style="display:flex; align-items:center; gap:10px;"><span class="role-badge ' + roleClass + '">' + roleText + '</span>' + (pin !== '1923' ? '<button onclick="deleteUser(\'' + pin + '\')" style="background:none; border:none; color:var(--danger); cursor:pointer;"><i class="fa-solid fa-trash"></i></button>' : '') + '</div></div>';
             }
         }
 
@@ -612,14 +572,14 @@ ${items.join("
             if(!name || pin.length !== 4) return alert("Lütfen geçerli isim ve 4 haneli PIN girin.");
             if(usersDB[pin]) return alert("Bu PIN kodu zaten kullanımda!");
 
-            db.ref(`${dbRoot}/users/${pin}`).set({ name: name, role: role, pin: pin });
+            db.ref(dbRoot + '/users/' + pin).set({ name: name, role: role, pin: pin });
             document.getElementById('newUserName').value = ""; document.getElementById('newUserPin').value = "";
             showToast("Personel eklendi!");
             renderUsersList();
         }
 
         function deleteUser(pin) {
-            if(confirm("Personeli silmek istediğinize emin misiniz?")) db.ref(`${dbRoot}/users/${pin}`).remove();
+            if(confirm("Personeli silmek istediğinize emin misiniz?")) db.ref(dbRoot + '/users/' + pin).remove();
             renderUsersList();
         }
 
