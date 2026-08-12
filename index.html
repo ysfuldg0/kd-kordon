@@ -191,7 +191,7 @@
 
     <div id="fullScreenSpinner">
         <i class="fa-solid fa-spinner fa-spin fa-2x" style="margin-bottom: 15px; color: var(--accent);"></i>
-        <span id="spinnerText">Sistem Bulutla Eşleşiyor...</span>
+        <span id="spinnerText">Sistem Yükleniyor...</span>
     </div>
 
     <div id="authScreen" style="display:none;">
@@ -220,7 +220,6 @@
     <div id="appContent">
         <div id="offlineBanner"><i class="fa-solid fa-wifi" style="text-decoration: line-through;"></i> Çevrimdışı mod aktif. Yerel veriler kullanılıyor.</div>
         <header class="app-header">
-            <!-- FAZ 6: ZAMAN VE TARİH ENTEGRASYONU -->
             <div class="datetime-container" onclick="triggerLogoutFlow()" style="cursor: pointer;">
                 <div class="clock-text" id="clockDisplay">--:--</div>
                 <div class="date-text" id="dateDisplay">-- --- ----</div>
@@ -237,7 +236,7 @@
 
         <div class="app-container">
             
-            <!-- 1. SİPARİŞ (SADECE YÖNETİCİ GÖREBİLİR) -->
+            <!-- 1. SİPARİŞ -->
             <div id="tab-order" class="tab-pane">
                 <div class="chips-container" id="categoryChips">
                     <div class="chip active" onclick="loadOrderTemplate('Manav', this)">🥦 Manav</div>
@@ -256,7 +255,7 @@
             <!-- 2. ÜRETİM (DRUMPAD) -->
             <div id="tab-library" class="tab-pane active">
                 
-                <!-- FAZ 6: AI ZAMAN ASİSTANI -->
+                <!-- AI ZAMAN ASİSTANI -->
                 <div class="ai-widget">
                     <div class="ai-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
                     <div class="ai-text">
@@ -265,7 +264,7 @@
                     </div>
                 </div>
 
-                <!-- ŞİMŞEK ARAMA, BARKOD VE SESLİ ASİSTAN + NÖBETÇİ USTA -->
+                <!-- ŞİMŞEK ARAMA, BARKOD VE SESLİ ASİSTAN -->
                 <div style="display:flex; gap:10px; margin-bottom: 20px; align-items:center;">
                     <div style="position: relative; flex: 1;">
                         <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 18px; top: 16px; color: var(--text-muted);"></i>
@@ -328,7 +327,7 @@
                         <h4 style="font-size:14px; font-weight:700; color:var(--text-main); display:flex; align-items:center; gap:8px;">
                             <i class="fa-solid fa-clipboard" style="color:var(--accent);"></i> VARDİYA TESLİM NOTU
                         </h4>
-                        <!-- FAZ 6: AI SEKRETER BUTONU -->
+                        <!-- AI SEKRETER BUTONU -->
                         <button onclick="summarizeShiftNoteWithAI()" style="background:var(--accent-light); color:var(--accent); border:none; padding:6px 12px; border-radius:20px; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; transition:var(--transition);"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Özetle</button>
                     </div>
                     <textarea id="shiftNoteArea" onchange="updateShiftNote()" placeholder="Bir sonraki vardiyaya not bırakın... (Dağınık yazabilirsiniz, AI toparlar)" style="width:100%; border:none; background:var(--bg-color); outline:none; font-family:inherit; font-size:14px; font-weight:500; color:var(--text-main); resize:none; min-height:80px; padding:12px; border-radius:var(--radius-sm); box-shadow:inset 0 2px 4px rgba(0,0,0,0.02);"></textarea>
@@ -508,20 +507,20 @@
           projectId: "raf-omru-takip-uygulamasi",
           storageBucket: "raf-omru-takip-uygulamasi.firebasestorage.app"
         };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-        const dbRoot = 'kd_kordon_pro_v11';
-
+        
+        let db = null;
         let currentUser = null; 
         let currentPin = "";
-        let usersDB = {};
-        let isAppLaunched = false;
+        let usersDB = {
+            "1923": { name: "Yusuf (Yönetici)", role: "admin", pin: "1923" }
+        };
         
+        const dbRoot = 'kd_kordon_pro_v16';
+        let isAppLaunched = false;
         let appLoadTime = 0;
         let isEditMode = false;
         let isBulkMode = false;
         let selectedBulkItems = [];
-        
         let lastActionData = null;
         let undoTimeout = null;
 
@@ -615,29 +614,11 @@
         }
 
         function initDatabase() {
+            // ZIRHLI FALLBACK: 2 saniye içinde Firebase yanıt vermezse Sistemi Yerel Olarak Aç
             let dbTimeout = setTimeout(() => {
                 const spinner = document.getElementById('fullScreenSpinner');
                 if(spinner && spinner.style.display !== 'none') {
-                    spinner.innerHTML = `<i class="fa-solid fa-triangle-exclamation fa-3x" style="color:var(--danger); margin-bottom:15px;"></i><span style="color:var(--text-main);">Bağlantı zayıf veya koptu.</span>`;
-                    setTimeout(() => { spinner.style.display = 'none'; }, 3000);
-                }
-            }, 6000);
-
-            try {
-                db.ref(`${dbRoot}/users`).on('value', snap => {
-                    clearTimeout(dbTimeout);
-                    const data = snap.val();
-                    if(!data) {
-                        const masterUser = { name: "Yusuf (Yönetici)", role: "admin", pin: "1923" };
-                        db.ref(`${dbRoot}/users/1923`).set(masterUser);
-                        usersDB = { "1923": masterUser };
-                    } else {
-                        usersDB = data;
-                    }
-                    
-                    const spinner = document.getElementById('fullScreenSpinner');
-                    if(spinner) spinner.style.display = 'none';
-                    
+                    spinner.style.display = 'none';
                     if (!isAppLaunched) {
                         const savedPin = safeGetLocal('kd_saved_pin');
                         if(savedPin && usersDB[savedPin]) {
@@ -646,15 +627,45 @@
                         } else {
                             document.getElementById('authScreen').style.display = 'flex';
                         }
-                    } else {
-                        if(document.getElementById('usersModal').classList.contains('active')) {
-                            renderUsersList();
-                        }
                     }
-                });
+                    showToast("Bağlantı sağlanamadı. Çevrimdışı Mod.", true);
+                    document.getElementById('offlineBanner').style.display = 'block';
+                }
+            }, 2000);
+
+            try {
+                if(typeof firebase !== 'undefined') {
+                    firebase.initializeApp(firebaseConfig);
+                    db = firebase.database();
+                    
+                    db.ref(`${dbRoot}/users`).on('value', snap => {
+                        clearTimeout(dbTimeout);
+                        const data = snap.val();
+                        if(!data) {
+                            db.ref(`${dbRoot}/users/1923`).set(usersDB["1923"]);
+                        } else {
+                            usersDB = data;
+                        }
+                        
+                        const spinner = document.getElementById('fullScreenSpinner');
+                        if(spinner) spinner.style.display = 'none';
+                        
+                        if(!isAppLaunched) {
+                            const savedPin = safeGetLocal('kd_saved_pin');
+                            if(savedPin && usersDB[savedPin]) {
+                                currentUser = usersDB[savedPin];
+                                launchApp();
+                            } else {
+                                document.getElementById('authScreen').style.display = 'flex';
+                            }
+                        } else {
+                            if(document.getElementById('usersModal').classList.contains('active')) renderUsersList();
+                        }
+                    });
+                }
             } catch(e) {
-                clearTimeout(dbTimeout);
-                document.getElementById('fullScreenSpinner').innerHTML = `<i class="fa-solid fa-bug fa-3x" style="color:var(--danger); margin-bottom:15px;"></i><span style="color:var(--text-main);">Sistem Hatası: ${e.message}</span>`;
+                console.error("Firebase Hatası:", e);
+                // Catch block already falls back to setTimeout mechanism
             }
         }
 
@@ -724,68 +735,7 @@
         }
 
         let activeItems = [], todos = [], allLogs = [];
-
-        function launchApp() {
-            isAppLaunched = true;
-            appLoadTime = Date.now();
-            document.getElementById('appContent').style.display = 'block';
-            document.getElementById('headerUserName').innerText = currentUser.name;
-            
-            if(currentUser.role === 'admin') {
-                document.getElementById('adminBtn').style.display = 'flex';
-                document.getElementById('editModeBtn').style.display = 'block'; 
-                document.getElementById('navOrder').style.display = 'flex';
-                switchTab('tab-order', document.getElementById('navOrder'));
-            } else {
-                document.getElementById('navOrder').style.display = 'none';
-                switchTab('tab-library', document.getElementById('navLibrary'));
-            }
-            
-            showToast(`Hoşgeldin, ${currentUser.name}`);
-            loadOrderTemplate('Manav', document.querySelector('.chip'));
-            
-            libraryDB = [...defaultLibrary];
-            renderLibraryDrumpad();
-
-            db.ref(`${dbRoot}/library`).on('value', snap => {
-                const data = snap.val();
-                if(!data) { db.ref(`${dbRoot}/library`).set(libraryDB); } else { libraryDB = Object.values(data); }
-                renderLibraryDrumpad();
-            });
-
-            db.ref(`${dbRoot}/active`).on('value', snap => {
-                activeItems = snap.val() ? Object.values(snap.val()) : [];
-                renderActiveList();
-            });
-            db.ref(`${dbRoot}/todos`).on('value', snap => {
-                todos = snap.val() ? Object.values(snap.val()) : [];
-                renderTodos();
-            });
-            db.ref(`${dbRoot}/logs`).on('value', snap => {
-                allLogs = snap.val() ? Object.values(snap.val()) : [];
-            });
-            
-            db.ref(`${dbRoot}/shiftNote`).on('value', snap => {
-                document.getElementById('shiftNoteArea').value = snap.val() || "";
-            });
-
-            db.ref(`${dbRoot}/todos`).on('child_added', snap => {
-                const t = snap.val();
-                if(t.timestamp && t.timestamp > appLoadTime && t.addedBy !== currentUser.name) {
-                    sendPushNotification("Yeni Görev Eklendi", `${t.addedBy}: ${t.text}`);
-                }
-            });
-
-            db.ref(`${dbRoot}/logs`).on('child_added', snap => {
-                const l = snap.val();
-                if(l.timestamp && l.timestamp > appLoadTime && l.user !== currentUser.name) {
-                    if(l.action === "Sipariş Verildi") { sendPushNotification("Sipariş İletildi", `${l.user} listeyi yolladı.`); }
-                }
-            });
-
-            setInterval(renderActiveList, 60000);
-        }
-
+        
         const defaultLibrary = [
             {id:"L1", kategori:"Şarküteri, Süt ve Soslar", urun:"Süzme Beyaz Peynir", raf_omru:3, birim:"Gün"},
             {id:"L2", kategori:"Şarküteri, Süt ve Soslar", urun:"Krem Peynir", raf_omru:3, birim:"Gün"},
@@ -900,7 +850,74 @@
             {id:"L111", kategori:"Paketli & Kuru Gıdalar", urun:"Fıstık Tane", raf_omru:1, birim:"Ay"},
             {id:"L112", kategori:"Paketli & Kuru Gıdalar", urun:"Kavanoz Vişne Sos", raf_omru:3, birim:"Gün"}
         ];
-        
+
+        let libraryDB = [...defaultLibrary]; // LOCAL FALLBACK BAŞLANGICI
+
+        function launchApp() {
+            isAppLaunched = true;
+            appLoadTime = Date.now();
+            document.getElementById('appContent').style.display = 'block';
+            document.getElementById('headerUserName').innerText = currentUser.name;
+            
+            if(currentUser.role === 'admin') {
+                document.getElementById('adminBtn').style.display = 'flex';
+                document.getElementById('editModeBtn').style.display = 'block'; 
+                document.getElementById('navOrder').style.display = 'flex';
+                switchTab('tab-order', document.getElementById('navOrder'));
+            } else {
+                document.getElementById('navOrder').style.display = 'none';
+                switchTab('tab-library', document.getElementById('navLibrary'));
+            }
+            
+            showToast(`Hoşgeldin, ${currentUser.name}`);
+            loadOrderTemplate('Manav', document.querySelector('.chip'));
+            
+            // LOCAL RENDERING İLK BAŞTA
+            renderLibraryDrumpad();
+            renderActiveList();
+            renderTodos();
+
+            if (db) {
+                db.ref(`${dbRoot}/library`).on('value', snap => {
+                    const data = snap.val();
+                    if(!data) { db.ref(`${dbRoot}/library`).set(libraryDB); } else { libraryDB = Object.values(data); }
+                    renderLibraryDrumpad();
+                });
+
+                db.ref(`${dbRoot}/active`).on('value', snap => {
+                    activeItems = snap.val() ? Object.values(snap.val()) : [];
+                    renderActiveList();
+                });
+                db.ref(`${dbRoot}/todos`).on('value', snap => {
+                    todos = snap.val() ? Object.values(snap.val()) : [];
+                    renderTodos();
+                });
+                db.ref(`${dbRoot}/logs`).on('value', snap => {
+                    allLogs = snap.val() ? Object.values(snap.val()) : [];
+                });
+                
+                db.ref(`${dbRoot}/shiftNote`).on('value', snap => {
+                    document.getElementById('shiftNoteArea').value = snap.val() || "";
+                });
+
+                db.ref(`${dbRoot}/todos`).on('child_added', snap => {
+                    const t = snap.val();
+                    if(t.timestamp && t.timestamp > appLoadTime && t.addedBy !== currentUser.name) {
+                        sendPushNotification("Yeni Görev", `${t.addedBy}: ${t.text}`);
+                    }
+                });
+
+                db.ref(`${dbRoot}/logs`).on('child_added', snap => {
+                    const l = snap.val();
+                    if(l.timestamp && l.timestamp > appLoadTime && l.user !== currentUser.name) {
+                        if(l.action === "Sipariş Verildi") { sendPushNotification("Sipariş", `${l.user} listeyi yolladı.`); }
+                    }
+                });
+            }
+
+            setInterval(renderActiveList, 60000);
+        }
+
         let currentLibFilter = 'Tümü';
 
         function toggleEditMode() {
@@ -959,7 +976,11 @@
             const itemsToProcess = selectedBulkItems.map(id => activeItems.find(i => i.id === id)).filter(Boolean);
             lastActionData = { type: 'bulk', items: itemsToProcess, result: resultType };
             
-            itemsToProcess.forEach(item => { db.ref(`${dbRoot}/active/${item.id}`).remove(); });
+            itemsToProcess.forEach(item => { 
+                activeItems = activeItems.filter(i => i.id !== item.id);
+                if(db) db.ref(`${dbRoot}/active/${item.id}`).remove(); 
+            });
+            renderActiveList();
             
             if(navigator.vibrate) navigator.vibrate([50, 50]);
             
@@ -972,7 +993,11 @@
                 t.classList.remove('show');
                 clearTimeout(undoTimeout);
                 if(lastActionData && lastActionData.type === 'bulk') {
-                    lastActionData.items.forEach(item => { db.ref(`${dbRoot}/active/${item.id}`).set(item); });
+                    lastActionData.items.forEach(item => { 
+                        activeItems.push(item);
+                        if(db) db.ref(`${dbRoot}/active/${item.id}`).set(item); 
+                    });
+                    renderActiveList();
                     lastActionData = null;
                 }
             };
@@ -981,7 +1006,7 @@
                 t.classList.remove('show');
                 if(lastActionData && lastActionData.type === 'bulk') {
                     lastActionData.items.forEach(item => {
-                        logAction(`SKT ${lastActionData.result}`, `${item.name} toplu işlemle sistemden düşüldü.`);
+                        logAction(`SKT ${lastActionData.result}`, `${item.name} toplu işlemle düştü.`);
                     });
                     lastActionData = null;
                     if(document.getElementById('adminModal').classList.contains('active')) renderAdminDashboard();
@@ -998,7 +1023,6 @@
             renderLibraryDrumpad();
         }
 
-        // FAZ 6: ARAMA MOTORU VE NÖBETÇİ USTA (SORU ÇÖZÜCÜ)
         function handleSearchInput() {
             const inputVal = document.getElementById('libSearchInput').value;
             const solverBtn = document.getElementById('aiSolverBtn');
@@ -1045,7 +1069,6 @@
             openModal('recipeModal');
         }
 
-        // FAZ 6: VARDİYA NOTU AI ÖZETLEYİCİ
         function summarizeShiftNoteWithAI() {
             const textArea = document.getElementById('shiftNoteArea');
             const rawText = textArea.value.trim();
@@ -1151,7 +1174,8 @@
             if(!isEditMode) return;
             if(confirm("Bu ürünü silmek istediğinize emin misiniz?")) {
                 libraryDB = libraryDB.filter(p => p.id !== id);
-                db.ref(`${dbRoot}/library`).set(libraryDB);
+                renderLibraryDrumpad();
+                if(db) db.ref(`${dbRoot}/library`).set(libraryDB);
                 showToast("Ürün silindi.");
             }
         }
@@ -1167,7 +1191,8 @@
                 birim: document.getElementById('newProdUnit').value
             };
             libraryDB.unshift(newItem);
-            db.ref(`${dbRoot}/library`).set(libraryDB);
+            renderLibraryDrumpad();
+            if(db) db.ref(`${dbRoot}/library`).set(libraryDB);
             closeModal('addProdModal');
             showToast("Yeni ürün eklendi.");
             document.getElementById('newProdName').value = "";
@@ -1195,7 +1220,9 @@
                 startedBy: currentUser.name
             };
             
-            db.ref(`${dbRoot}/active/${newItem.id}`).set(newItem);
+            activeItems.push(newItem);
+            renderActiveList();
+            if(db) db.ref(`${dbRoot}/active/${newItem.id}`).set(newItem);
             showToast(`${prod.urun} takibe alındı.`);
             if(navigator.vibrate) navigator.vibrate(50);
         }
@@ -1362,10 +1389,15 @@
 
         function processItem(id, result) {
             clearTimeout(undoTimeout);
-            const item = activeItems.find(i => i.id === id);
+            const itemIndex = activeItems.findIndex(i => i.id === id);
+            if(itemIndex === -1) return;
+            const item = activeItems[itemIndex];
             
             lastActionData = { type: 'single', item: item, result: result };
-            db.ref(`${dbRoot}/active/${id}`).remove();
+            
+            activeItems.splice(itemIndex, 1);
+            renderActiveList();
+            if(db) db.ref(`${dbRoot}/active/${id}`).remove();
             
             if(navigator.vibrate) navigator.vibrate([50, 50]);
             
@@ -1378,7 +1410,9 @@
                 t.classList.remove('show');
                 clearTimeout(undoTimeout);
                 if(lastActionData && lastActionData.type === 'single') {
-                    db.ref(`${dbRoot}/active/${lastActionData.item.id}`).set(lastActionData.item);
+                    activeItems.push(lastActionData.item);
+                    renderActiveList();
+                    if(db) db.ref(`${dbRoot}/active/${lastActionData.item.id}`).set(lastActionData.item);
                     lastActionData = null;
                 }
             };
@@ -1386,7 +1420,7 @@
             undoTimeout = setTimeout(() => {
                 t.classList.remove('show');
                 if(lastActionData && lastActionData.type === 'single') {
-                    logAction(`SKT ${lastActionData.result}`, `${lastActionData.item.name} sistemden düşüldü.`);
+                    logAction(`SKT ${lastActionData.result}`, `${lastActionData.item.name} sistemden düştü.`);
                     lastActionData = null;
                     if(document.getElementById('adminModal').classList.contains('active')) renderAdminDashboard();
                 }
@@ -1438,12 +1472,14 @@
             orderCounts = {}; loadOrderTemplate(currentOrderCat, null);
         }
 
-        function updateShiftNote() { db.ref(`${dbRoot}/shiftNote`).set(document.getElementById('shiftNoteArea').value); }
+        function updateShiftNote() { if(db) db.ref(`${dbRoot}/shiftNote`).set(document.getElementById('shiftNoteArea').value); }
 
         function addTodo() {
             const txt = document.getElementById('todoInput').value.trim(); if(!txt) return;
             const newTodo = { id: Date.now().toString(), text: txt, done: false, addedBy: currentUser.name, timestamp: Date.now() };
-            db.ref(`${dbRoot}/todos/${newTodo.id}`).set(newTodo);
+            todos.push(newTodo);
+            renderTodos();
+            if(db) db.ref(`${dbRoot}/todos/${newTodo.id}`).set(newTodo);
             document.getElementById('todoInput').value = "";
             showToast("Görev eklendi.");
         }
@@ -1467,8 +1503,27 @@
                 `;
             });
         }
-        function toggleTodo(id, currentStatus) { db.ref(`${dbRoot}/todos/${id}`).update({ done: !currentStatus }); }
-        function deleteTodo(id) { db.ref(`${dbRoot}/todos/${id}`).remove(); }
+        function toggleTodo(id, currentStatus) { 
+            const t = todos.find(x=>x.id === id); if(t) t.done = !currentStatus; renderTodos();
+            if(db) db.ref(`${dbRoot}/todos/${id}`).update({ done: !currentStatus }); 
+        }
+        function deleteTodo(id) { 
+            todos = todos.filter(x=>x.id !== id); renderTodos();
+            if(db) db.ref(`${dbRoot}/todos/${id}`).remove(); 
+        }
+
+        function logAction(actionType, detail) {
+            const logItem = { 
+                id: Date.now().toString(), 
+                date: new Date().toLocaleString('tr-TR'), 
+                user: currentUser.name, 
+                action: actionType, 
+                detail: detail,
+                timestamp: Date.now()
+            };
+            allLogs.push(logItem);
+            if(db) db.ref(`${dbRoot}/logs/${logItem.id}`).set(logItem);
+        }
 
         function openModal(id) { 
             document.getElementById(id).classList.add('active'); 
@@ -1542,15 +1597,19 @@
             if(!name || pin.length !== 4) return alert("Lütfen eksiksiz ve 4 haneli PIN girin.");
             if(usersDB[pin]) return alert("Bu PIN kullanımda.");
 
-            db.ref(`${dbRoot}/users/${pin}`).set({ name: name, role: role, pin: pin });
+            usersDB[pin] = { name: name, role: role, pin: pin };
+            if(db) db.ref(`${dbRoot}/users/${pin}`).set({ name: name, role: role, pin: pin });
             document.getElementById('newUserName').value = ""; document.getElementById('newUserPin').value = "";
             showToast("Personel başarıyla eklendi.");
             renderUsersList();
         }
 
         function deleteUser(pin) {
-            if(confirm("Personeli silmek istediğinize emin misiniz?")) db.ref(`${dbRoot}/users/${pin}`).remove();
-            renderUsersList();
+            if(confirm("Personeli silmek istediğinize emin misiniz?")) {
+                delete usersDB[pin];
+                if(db) db.ref(`${dbRoot}/users/${pin}`).remove();
+                renderUsersList();
+            }
         }
 
         function checkNotificationStatus() { if("Notification" in window && Notification.permission === "granted") document.getElementById('bellBtn').style.display = 'none'; }
