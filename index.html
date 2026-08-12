@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KD Kordon Pro - Phase 5 (Gamification & Performance)</title>
+    <title>KD Kordon Pro - Phase 5 (Stable & Gamified)</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -34,7 +34,6 @@
             
             --border: rgba(0, 0, 0, 0.06); 
             
-            /* YUMUŞAK HATLAR */
             --radius-lg: 24px; 
             --radius-md: 16px; 
             --radius-sm: 10px; 
@@ -120,7 +119,7 @@
         .drumpad-grid.edit-mode .pad { border: 2px dashed var(--danger-light); background: var(--bg-color); box-shadow: none; }
         .drumpad-grid.edit-mode .pad i, .drumpad-grid.edit-mode .pad-name { opacity: 0.5; }
 
-        /* Aktif SKT Swipe & Toplu Seçim */
+        /* Aktif SKT Swipe & Toplu Seçim - FAZ 4 UI DÜZELTMESİ YAPILDI */
         .swipe-container { position: relative; overflow: hidden; border-radius: var(--radius-md); background: var(--bg-color); margin-bottom:12px; border: 1px solid var(--border); }
         .swipe-bg { position: absolute; inset:0; display:flex; justify-content:space-between; align-items:center; color:white; font-size:22px; font-weight:800; border-radius: var(--radius-md); overflow:hidden; }
         .bg-left { background: var(--accent); width: 50%; height: 100%; display:flex; align-items:center; padding-left: 20px; }
@@ -162,15 +161,6 @@
         #fullScreenSpinner { position: fixed; inset:0; background:var(--bg-color); z-index:999999; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--text-muted); font-weight:500; font-size:15px; text-align: center; padding: 20px;}
         #offlineBanner { display: none; background: var(--warning); color: white; text-align: center; padding: 8px; font-size: 12px; font-weight: 700; position: sticky; top: 0; z-index: 51; }
 
-        .dashboard-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .stat-card { background: var(--bg-color); padding: 15px; border-radius: var(--radius-md); text-align: center; border: 1px solid var(--border); }
-        .stat-card .value { font-size: 24px; font-weight: 800; color: var(--text-main); margin-bottom: 5px; }
-        .stat-card .label { font-size: 11px; font-weight: 600; color: var(--text-muted); }
-        .stat-card.danger { background: var(--danger-light); border-color: var(--danger-light); }
-        .stat-card.danger .value { color: var(--danger); }
-        .stat-card.success { background: var(--success-light); border-color: var(--success-light); }
-        .stat-card.success .value { color: var(--success); }
-
         /* CAMERA / BARCODE MODAL */
         #cameraStream { width: 100%; border-radius: var(--radius-md); background: #000; min-height: 250px; object-fit: cover; }
         .scan-line { position: absolute; width: 100%; height: 2px; background: var(--success); top: 50%; box-shadow: 0 0 10px var(--success); animation: scan 2s infinite linear; }
@@ -182,7 +172,7 @@
 
     <div id="fullScreenSpinner">
         <i class="fa-solid fa-spinner fa-spin fa-2x" style="margin-bottom: 15px; color: var(--accent);"></i>
-        <span id="spinnerText">Sistem Bulutla Eşleşiyor...</span>
+        <span id="spinnerText">Sistem Başlatılıyor...</span>
     </div>
 
     <div id="authScreen" style="display:none;">
@@ -209,7 +199,7 @@
 
     <!-- ANA UYGULAMA -->
     <div id="appContent">
-        <div id="offlineBanner"><i class="fa-solid fa-wifi" style="text-decoration: line-through;"></i> Çevrimdışı mod aktif. Veriler cihaza kaydediliyor.</div>
+        <div id="offlineBanner"><i class="fa-solid fa-wifi" style="text-decoration: line-through;"></i> Çevrimdışı mod aktif. Yerel veriler kullanılıyor.</div>
         <header class="app-header">
             <div class="user-badge" onclick="triggerLogoutFlow()">
                 <i class="fa-solid fa-user-circle" style="font-size: 16px;"></i> 
@@ -224,7 +214,7 @@
 
         <div class="app-container">
             
-            <!-- 1. SİPARİŞ (SADECE YÖNETİCİ GÖREBİLİR) -->
+            <!-- 1. SİPARİŞ -->
             <div id="tab-order" class="tab-pane">
                 <div class="chips-container" id="categoryChips">
                     <div class="chip active" onclick="loadOrderTemplate('Manav', this)">🥦 Manav</div>
@@ -242,16 +232,16 @@
 
             <!-- 2. ÜRETİM (DRUMPAD) -->
             <div id="tab-library" class="tab-pane active">
-                
-                <!-- ŞİMŞEK ARAMA, BARKOD VE SESLİ ASİSTAN -->
+
+                <!-- ŞİMŞEK ARAMA, BARKOD VE SESLİ ASİSTAN (FAZ 4 - ARAMA OPTİMİZASYONU) -->
                 <div style="display:flex; gap:10px; margin-bottom: 20px; align-items:center;">
                     <div style="position: relative; flex: 1;">
                         <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 18px; top: 16px; color: var(--text-muted);"></i>
-                        <input type="text" id="libSearchInput" class="form-input" style="padding-left: 45px; padding-right:40px; margin-bottom: 0; border-radius: 30px;" placeholder="Ürün ara..." onkeyup="renderLibraryDrumpad()">
+                        <input type="text" id="libSearchInput" class="form-input" style="padding-left: 45px; padding-right:40px; margin-bottom: 0; border-radius: 30px;" placeholder="Ürün ara..." onkeyup="handleSearchInput()">
                         <i class="fa-solid fa-xmark" id="clearSearchBtn" style="position: absolute; right: 18px; top: 16px; color: var(--text-muted); cursor: pointer; display: none;" onclick="clearSearch()"></i>
                     </div>
-                    <button class="icon-btn" style="width: 50px; height: 50px; border-radius: 50%; flex-shrink:0; background: var(--surface-solid);" onclick="startBarcodeScanner()"><i class="fa-solid fa-qrcode"></i></button>
-                    <button class="icon-btn" style="width: 50px; height: 50px; border-radius: 50%; flex-shrink:0; background: var(--accent); color: white; border: none;" onclick="startVoiceSearch()"><i class="fa-solid fa-microphone"></i></button>
+                    <button class="icon-btn" id="barcodeBtn" style="width: 50px; height: 50px; border-radius: 50%; flex-shrink:0; background: var(--surface-solid);" onclick="startBarcodeScanner()"><i class="fa-solid fa-qrcode"></i></button>
+                    <button class="icon-btn" id="voiceBtn" style="width: 50px; height: 50px; border-radius: 50%; flex-shrink:0; background: var(--accent); color: white; border: none;" onclick="startVoiceSearch()"><i class="fa-solid fa-microphone"></i></button>
                 </div>
 
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
@@ -300,11 +290,13 @@
             <div id="tab-todos" class="tab-pane">
                 <h3 style="font-size: 22px; font-weight: 700; color: var(--text-main); margin-bottom: 20px;">Görev Panosu</h3>
 
-                <div style="background:var(--warning-light); padding:16px; border-radius:var(--radius-md); margin-bottom:20px;">
-                    <h4 style="font-size:13px; font-weight:700; color:var(--warning); margin-bottom:10px; display:flex; align-items:center; gap:8px;">
-                        <i class="fa-solid fa-clipboard"></i> VARDİYA TESLİM NOTU
-                    </h4>
-                    <textarea id="shiftNoteArea" onchange="updateShiftNote()" placeholder="Bir sonraki vardiyaya not bırakın..." style="width:100%; border:none; background:transparent; outline:none; font-family:inherit; font-size:14px; font-weight:500; color:var(--text-main); resize:none; min-height:60px;"></textarea>
+                <div style="background:var(--surface-solid); padding:16px; border-radius:var(--radius-md); margin-bottom:20px; border:1px solid var(--border); box-shadow:var(--shadow-sm);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                        <h4 style="font-size:14px; font-weight:700; color:var(--text-main); display:flex; align-items:center; gap:8px;">
+                            <i class="fa-solid fa-clipboard" style="color:var(--accent);"></i> VARDİYA TESLİM NOTU
+                        </h4>
+                    </div>
+                    <textarea id="shiftNoteArea" onchange="updateShiftNote()" placeholder="Bir sonraki vardiyaya not bırakın..." style="width:100%; border:none; background:var(--bg-color); outline:none; font-family:inherit; font-size:14px; font-weight:500; color:var(--text-main); resize:none; min-height:80px; padding:12px; border-radius:var(--radius-sm); box-shadow:inset 0 2px 4px rgba(0,0,0,0.02);"></textarea>
                 </div>
 
                 <div style="display:flex; gap:10px; margin-bottom:20px;">
@@ -341,13 +333,13 @@
         </div>
     </div>
 
-    <!-- GİZLİ REÇETE KİTAPÇIĞI MODALI -->
+    <!-- GİZLİ REÇETE MODALI -->
     <div class="modal-overlay" id="recipeModal" onclick="closeOnOutsideClick(event, 'recipeModal')">
         <div class="modal-content">
             <div class="drag-handle"></div>
-            <h3 id="recipeTitle" style="font-size:22px; font-weight:700; color:var(--text-main); margin-bottom:15px;"></h3>
-            <div id="recipeContent" style="color:var(--text-main); font-size:15px; font-weight:500; line-height:1.6; white-space: pre-wrap; background: var(--bg-color); padding: 20px; border-radius: var(--radius-md);"></div>
-            <button class="btn" style="margin-top:25px; background:var(--bg-color); color:var(--text-main);" onclick="closeModal('recipeModal')">Kapat</button>
+            <h3 id="recipeTitle" style="font-size:20px; font-weight:800; color:var(--text-main); margin-bottom:15px; display:flex; align-items:center; gap:8px;"></h3>
+            <div id="recipeContent" style="color:var(--text-main); font-size:15px; font-weight:500; line-height:1.6; white-space: pre-wrap; background: var(--bg-color); padding: 20px; border-radius: var(--radius-md); border:1px solid var(--border);"></div>
+            <button class="btn" style="margin-top:25px; background:var(--surface-solid); color:var(--text-main); border:1px solid var(--border);" onclick="closeModal('recipeModal')">Kapat</button>
         </div>
     </div>
 
@@ -466,6 +458,15 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <script>
+        // GÜVENLİ LOCALSTORAGE
+        function safeSetLocal(key, val) { try { localStorage.setItem(key, val); } catch(e) {} }
+        function safeGetLocal(key) { try { return localStorage.getItem(key); } catch(e) { return null; } }
+        function safeRemoveLocal(key) { try { localStorage.removeItem(key); } catch(e) {} }
+
+        let isDark = false;
+        try { isDark = localStorage.getItem('kd_theme') === 'dark'; } catch(e){}
+        if(isDark) document.body.classList.add('dark-mode');
+
         const firebaseConfig = {
           apiKey: "AIzaSyDxxGeAcvJfEtMUmDl_wMPBSGYqbaYUbRY",
           authDomain: "raf-omru-takip-uygulamasi.firebaseapp.com",
@@ -473,27 +474,25 @@
           projectId: "raf-omru-takip-uygulamasi",
           storageBucket: "raf-omru-takip-uygulamasi.firebasestorage.app"
         };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-        const dbRoot = 'kd_kordon_pro_v11'; 
-
+        
+        let db = null;
         let currentUser = null; 
         let currentPin = "";
-        let usersDB = {};
+        let usersDB = {
+            "1923": { name: "Yusuf (Yönetici)", role: "admin", pin: "1923" }
+        };
         
+        const dbRoot = 'kd_kordon_pro_v15_fixed';
+        let isAppLaunched = false;
         let appLoadTime = 0;
         let isEditMode = false;
         let isBulkMode = false;
         let selectedBulkItems = [];
-        
         let lastActionData = null;
         let undoTimeout = null;
 
         window.addEventListener('offline', () => { document.getElementById('offlineBanner').style.display = 'block'; });
         window.addEventListener('online', () => { document.getElementById('offlineBanner').style.display = 'none'; showToast("Bağlantı sağlandı."); });
-
-        let isDark = localStorage.getItem('kd_theme') === 'dark';
-        if(isDark) document.body.classList.add('dark-mode');
 
         const catColors = {
             "Şarküteri, Süt ve Soslar": "#007AFF", 
@@ -549,36 +548,67 @@
             });
         }
 
-        function initDatabase() {
-            let dbTimeout = setTimeout(() => {
-                const spinner = document.getElementById('fullScreenSpinner');
-                if(spinner.style.display !== 'none') {
-                    spinner.innerHTML = `<i class="fa-solid fa-triangle-exclamation fa-3x" style="color:var(--danger); margin-bottom:15px;"></i><span style="color:var(--text-main);">Bağlantı sağlanamadı. Yerel veriler kullanılıyor.</span>`;
-                    setTimeout(() => { document.getElementById('fullScreenSpinner').style.display = 'none'; }, 2000);
-                }
-            }, 5000);
-
-            db.ref(`${dbRoot}/users`).on('value', snap => {
-                clearTimeout(dbTimeout);
-                const data = snap.val();
-                if(!data) {
-                    const masterUser = { name: "Yusuf (Yönetici)", role: "admin", pin: "1923" };
-                    db.ref(`${dbRoot}/users/1923`).set(masterUser);
-                    usersDB = { "1923": masterUser };
-                } else {
-                    usersDB = data;
-                }
-                
-                document.getElementById('fullScreenSpinner').style.display = 'none';
-                
-                const savedPin = localStorage.getItem('kd_saved_pin');
+        function showLoginOrApp() {
+            if (!isAppLaunched) {
+                const savedPin = safeGetLocal('kd_saved_pin');
                 if(savedPin && usersDB[savedPin]) {
                     currentUser = usersDB[savedPin];
                     launchApp();
                 } else {
                     document.getElementById('authScreen').style.display = 'flex';
                 }
-            });
+            }
+        }
+
+        function initDatabase() {
+            // ZIRHLI FALLBACK: 2 saniye içinde Firebase yanıt vermezse Sistemi Yerel Olarak Aç
+            let dbTimeout = setTimeout(() => {
+                const spinner = document.getElementById('fullScreenSpinner');
+                if(spinner && spinner.style.display !== 'none') {
+                    spinner.style.display = 'none';
+                    showToast("Bulut bağlantısı yok. Yerel modda açılıyor.", true);
+                    document.getElementById('offlineBanner').style.display = 'block';
+                    showLoginOrApp();
+                }
+            }, 2000);
+
+            try {
+                if(typeof firebase !== 'undefined') {
+                    if (!firebase.apps.length) {
+                        firebase.initializeApp(firebaseConfig);
+                    }
+                    db = firebase.database();
+                    
+                    db.ref(`${dbRoot}/users`).on('value', snap => {
+                        clearTimeout(dbTimeout);
+                        const data = snap.val();
+                        if(!data) {
+                            db.ref(`${dbRoot}/users/1923`).set(usersDB["1923"]);
+                        } else {
+                            usersDB = data;
+                        }
+                        
+                        const spinner = document.getElementById('fullScreenSpinner');
+                        if(spinner && spinner.style.display !== 'none') {
+                            spinner.style.display = 'none';
+                            showLoginOrApp();
+                        } else if (isAppLaunched && document.getElementById('usersModal').classList.contains('active')) {
+                            renderUsersList();
+                        }
+                    });
+                } else {
+                    // Firebase blocklandıysa timeout'u beklemeden aç
+                    clearTimeout(dbTimeout);
+                    document.getElementById('fullScreenSpinner').style.display = 'none';
+                    showToast("Sistem engellendi. Yerel modda açılıyor.", true);
+                    showLoginOrApp();
+                }
+            } catch(e) {
+                console.warn("Firebase Başlatma Uyarısı:", e);
+                clearTimeout(dbTimeout);
+                document.getElementById('fullScreenSpinner').style.display = 'none';
+                showLoginOrApp();
+            }
         }
 
         function addPin(num) {
@@ -593,7 +623,7 @@
             if(currentPin.length !== 4) return;
             if(usersDB[currentPin]) {
                 currentUser = usersDB[currentPin];
-                localStorage.setItem('kd_saved_pin', currentPin);
+                safeSetLocal('kd_saved_pin', currentPin);
                 document.getElementById('authScreen').style.display = 'none';
                 launchApp();
             } else {
@@ -616,14 +646,12 @@
             if(e.target.checked && navigator.vibrate) navigator.vibrate(50);
         }
 
-        // FAZ 5: PUANLAMA SİSTEMİ
         function showSummary() {
             closeModal('checklistModal');
             const todayStr = new Date().toLocaleDateString('tr-TR');
             const myLogs = allLogs.filter(l => l.user === currentUser.name && l.date.includes(todayStr));
             const completedCount = myLogs.filter(l => l.action.includes('Tüketildi') || l.action.includes('İmha')).length;
             
-            // Puan hesaplama
             const allCheckboxes = document.querySelectorAll('.closing-cb');
             let checkedCount = 0;
             allCheckboxes.forEach(cb => { if(cb.checked) checkedCount++; });
@@ -644,72 +672,12 @@
         }
 
         function executeLogout() {
-            localStorage.removeItem('kd_saved_pin');
+            safeRemoveLocal('kd_saved_pin');
             location.reload();
         }
 
         let activeItems = [], todos = [], allLogs = [];
-
-        function launchApp() {
-            appLoadTime = Date.now();
-            document.getElementById('appContent').style.display = 'block';
-            document.getElementById('headerUserName').innerText = currentUser.name;
-            
-            if(currentUser.role === 'admin') {
-                document.getElementById('adminBtn').style.display = 'flex';
-                document.getElementById('editModeBtn').style.display = 'block'; 
-                document.getElementById('navOrder').style.display = 'flex';
-                switchTab('tab-order', document.getElementById('navOrder'));
-            } else {
-                document.getElementById('navOrder').style.display = 'none';
-                switchTab('tab-library', document.getElementById('navLibrary'));
-            }
-            
-            showToast(`Hoşgeldin, ${currentUser.name}`);
-            loadOrderTemplate('Manav', document.querySelector('.chip'));
-            
-            libraryDB = [...defaultLibrary];
-            renderLibraryDrumpad();
-
-            db.ref(`${dbRoot}/library`).on('value', snap => {
-                const data = snap.val();
-                if(!data) { db.ref(`${dbRoot}/library`).set(libraryDB); } else { libraryDB = Object.values(data); }
-                renderLibraryDrumpad();
-            });
-
-            db.ref(`${dbRoot}/active`).on('value', snap => {
-                activeItems = snap.val() ? Object.values(snap.val()) : [];
-                renderActiveList();
-            });
-            db.ref(`${dbRoot}/todos`).on('value', snap => {
-                todos = snap.val() ? Object.values(snap.val()) : [];
-                renderTodos();
-            });
-            db.ref(`${dbRoot}/logs`).on('value', snap => {
-                allLogs = snap.val() ? Object.values(snap.val()) : [];
-            });
-            
-            db.ref(`${dbRoot}/shiftNote`).on('value', snap => {
-                document.getElementById('shiftNoteArea').value = snap.val() || "";
-            });
-
-            db.ref(`${dbRoot}/todos`).on('child_added', snap => {
-                const t = snap.val();
-                if(t.timestamp && t.timestamp > appLoadTime && t.addedBy !== currentUser.name) {
-                    sendPushNotification("Yeni Görev Eklendi", `${t.addedBy}: ${t.text}`);
-                }
-            });
-
-            db.ref(`${dbRoot}/logs`).on('child_added', snap => {
-                const l = snap.val();
-                if(l.timestamp && l.timestamp > appLoadTime && l.user !== currentUser.name) {
-                    if(l.action === "Sipariş Verildi") { sendPushNotification("Sipariş İletildi", `${l.user} listeyi yolladı.`); }
-                }
-            });
-
-            setInterval(renderActiveList, 60000);
-        }
-
+        
         const defaultLibrary = [
             {id:"L1", kategori:"Şarküteri, Süt ve Soslar", urun:"Süzme Beyaz Peynir", raf_omru:3, birim:"Gün"},
             {id:"L2", kategori:"Şarküteri, Süt ve Soslar", urun:"Krem Peynir", raf_omru:3, birim:"Gün"},
@@ -824,7 +792,73 @@
             {id:"L111", kategori:"Paketli & Kuru Gıdalar", urun:"Fıstık Tane", raf_omru:1, birim:"Ay"},
             {id:"L112", kategori:"Paketli & Kuru Gıdalar", urun:"Kavanoz Vişne Sos", raf_omru:3, birim:"Gün"}
         ];
-        
+
+        let libraryDB = [...defaultLibrary]; 
+
+        function launchApp() {
+            isAppLaunched = true;
+            appLoadTime = Date.now();
+            document.getElementById('appContent').style.display = 'block';
+            document.getElementById('headerUserName').innerText = currentUser.name;
+            
+            if(currentUser.role === 'admin') {
+                document.getElementById('adminBtn').style.display = 'flex';
+                document.getElementById('editModeBtn').style.display = 'block'; 
+                document.getElementById('navOrder').style.display = 'flex';
+                switchTab('tab-order', document.getElementById('navOrder'));
+            } else {
+                document.getElementById('navOrder').style.display = 'none';
+                switchTab('tab-library', document.getElementById('navLibrary'));
+            }
+            
+            showToast(`Hoşgeldin, ${currentUser.name}`);
+            loadOrderTemplate('Manav', document.querySelector('.chip'));
+            
+            renderLibraryDrumpad();
+            renderActiveList();
+            renderTodos();
+
+            if (db) {
+                db.ref(`${dbRoot}/library`).on('value', snap => {
+                    const data = snap.val();
+                    if(!data) { db.ref(`${dbRoot}/library`).set(libraryDB); } else { libraryDB = Object.values(data); }
+                    renderLibraryDrumpad();
+                });
+
+                db.ref(`${dbRoot}/active`).on('value', snap => {
+                    activeItems = snap.val() ? Object.values(snap.val()) : [];
+                    renderActiveList();
+                });
+                db.ref(`${dbRoot}/todos`).on('value', snap => {
+                    todos = snap.val() ? Object.values(snap.val()) : [];
+                    renderTodos();
+                });
+                db.ref(`${dbRoot}/logs`).on('value', snap => {
+                    allLogs = snap.val() ? Object.values(snap.val()) : [];
+                });
+                
+                db.ref(`${dbRoot}/shiftNote`).on('value', snap => {
+                    document.getElementById('shiftNoteArea').value = snap.val() || "";
+                });
+
+                db.ref(`${dbRoot}/todos`).on('child_added', snap => {
+                    const t = snap.val();
+                    if(t.timestamp && t.timestamp > appLoadTime && t.addedBy !== currentUser.name) {
+                        sendPushNotification("Yeni Görev", `${t.addedBy}: ${t.text}`);
+                    }
+                });
+
+                db.ref(`${dbRoot}/logs`).on('child_added', snap => {
+                    const l = snap.val();
+                    if(l.timestamp && l.timestamp > appLoadTime && l.user !== currentUser.name) {
+                        if(l.action === "Sipariş Verildi") { sendPushNotification("Sipariş", `${l.user} listeyi yolladı.`); }
+                    }
+                });
+            }
+
+            setInterval(renderActiveList, 60000);
+        }
+
         let currentLibFilter = 'Tümü';
 
         function toggleEditMode() {
@@ -883,7 +917,11 @@
             const itemsToProcess = selectedBulkItems.map(id => activeItems.find(i => i.id === id)).filter(Boolean);
             lastActionData = { type: 'bulk', items: itemsToProcess, result: resultType };
             
-            itemsToProcess.forEach(item => { db.ref(`${dbRoot}/active/${item.id}`).remove(); });
+            itemsToProcess.forEach(item => { 
+                activeItems = activeItems.filter(i => i.id !== item.id);
+                if(db) db.ref(`${dbRoot}/active/${item.id}`).remove(); 
+            });
+            renderActiveList();
             
             if(navigator.vibrate) navigator.vibrate([50, 50]);
             
@@ -896,7 +934,11 @@
                 t.classList.remove('show');
                 clearTimeout(undoTimeout);
                 if(lastActionData && lastActionData.type === 'bulk') {
-                    lastActionData.items.forEach(item => { db.ref(`${dbRoot}/active/${item.id}`).set(item); });
+                    lastActionData.items.forEach(item => { 
+                        activeItems.push(item);
+                        if(db) db.ref(`${dbRoot}/active/${item.id}`).set(item); 
+                    });
+                    renderActiveList();
                     lastActionData = null;
                 }
             };
@@ -905,7 +947,7 @@
                 t.classList.remove('show');
                 if(lastActionData && lastActionData.type === 'bulk') {
                     lastActionData.items.forEach(item => {
-                        logAction(`SKT ${lastActionData.result}`, `${item.name} toplu işlemle sistemden düşüldü.`);
+                        logAction(`SKT ${lastActionData.result}`, `${item.name} toplu işlemle düştü.`);
                     });
                     lastActionData = null;
                     if(document.getElementById('adminModal').classList.contains('active')) renderAdminDashboard();
@@ -922,9 +964,22 @@
             renderLibraryDrumpad();
         }
 
+        function handleSearchInput() {
+            const inputVal = document.getElementById('libSearchInput').value;
+            const barcodeBtn = document.getElementById('barcodeBtn');
+            const voiceBtn = document.getElementById('voiceBtn');
+            const clearBtn = document.getElementById('clearSearchBtn');
+
+            if(clearBtn) clearBtn.style.display = inputVal.length > 0 ? 'block' : 'none';
+
+            if(barcodeBtn) barcodeBtn.style.display = 'flex';
+            if(voiceBtn) voiceBtn.style.display = 'flex';
+            renderLibraryDrumpad(); 
+        }
+
         function clearSearch() {
             document.getElementById('libSearchInput').value = '';
-            renderLibraryDrumpad();
+            handleSearchInput();
         }
 
         let pressTimer;
@@ -948,7 +1003,7 @@
         }
 
         function showSecretRecipe(name) {
-            document.getElementById('recipeTitle').innerText = name;
+            document.getElementById('recipeTitle').innerHTML = `<i class="fa-solid fa-scroll"></i> ${name}`;
             let rec = secretRecipes[name];
             if(!rec) return; 
             document.getElementById('recipeContent').innerText = rec;
@@ -965,7 +1020,6 @@
             }
             
             const searchInput = document.getElementById('libSearchInput').value;
-            document.getElementById('clearSearchBtn').style.display = searchInput.length > 0 ? 'block' : 'none';
             const searchTerm = normalizeTR(searchInput);
             
             libraryDB.filter(p => currentLibFilter === 'Tümü' || p.kategori === currentLibFilter)
@@ -1002,7 +1056,8 @@
             if(!isEditMode) return;
             if(confirm("Bu ürünü silmek istediğinize emin misiniz?")) {
                 libraryDB = libraryDB.filter(p => p.id !== id);
-                db.ref(`${dbRoot}/library`).set(libraryDB);
+                renderLibraryDrumpad();
+                if(db) db.ref(`${dbRoot}/library`).set(libraryDB);
                 showToast("Ürün silindi.");
             }
         }
@@ -1018,7 +1073,8 @@
                 birim: document.getElementById('newProdUnit').value
             };
             libraryDB.unshift(newItem);
-            db.ref(`${dbRoot}/library`).set(libraryDB);
+            renderLibraryDrumpad();
+            if(db) db.ref(`${dbRoot}/library`).set(libraryDB);
             closeModal('addProdModal');
             showToast("Yeni ürün eklendi.");
             document.getElementById('newProdName').value = "";
@@ -1046,7 +1102,9 @@
                 startedBy: currentUser.name
             };
             
-            db.ref(`${dbRoot}/active/${newItem.id}`).set(newItem);
+            activeItems.push(newItem);
+            renderActiveList();
+            if(db) db.ref(`${dbRoot}/active/${newItem.id}`).set(newItem);
             showToast(`${prod.urun} takibe alındı.`);
             if(navigator.vibrate) navigator.vibrate(50);
         }
@@ -1075,8 +1133,8 @@
                 searchInput.value = transcript.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,""); 
                 
                 document.querySelector('#libChips .chip').click(); // Tümü seç
-                renderLibraryDrumpad();
-                showToast(`Arama: "${searchInput.value}"`);
+                handleSearchInput(); 
+                showToast(`Sesli Girdi: "${searchInput.value}"`);
             };
             
             recognition.onerror = (event) => { 
@@ -1115,25 +1173,6 @@
             closeModal('barcodeModal');
             const video = document.getElementById('cameraStream');
             if(video.srcObject) { video.srcObject.getTracks().forEach(track => track.stop()); }
-        }
-
-        async function printLabel(name, expires) {
-            if (!navigator.bluetooth) {
-                alert("Cihazınız Bluetooth bağlantısını desteklemiyor (Chrome gereklidir).");
-                return;
-            }
-            try {
-                showToast("Bluetooth yazıcı aranıyor...");
-                const device = await navigator.bluetooth.requestDevice({
-                    acceptAllDevices: true,
-                    optionalServices: ['000018f0-0000-1000-8000-00805f9b34fb']
-                });
-                showToast(`${device.name} cihazına bağlanılıyor...`);
-                setTimeout(() => { showToast("Etiket başarıyla yazdırıldı!"); }, 2000);
-            } catch (error) {
-                console.warn(error);
-                showToast("Bluetooth bağlantısı iptal edildi.", true);
-            }
         }
 
         function renderActiveList() {
@@ -1192,8 +1231,6 @@
                                 <div class="progress-track"><div class="progress-fill" style="width:${percent}%; background:${color};"></div></div>
                             </div>
                             
-                            ${!isBulkMode ? `<button style="background:var(--bg-color); border:1px solid var(--border); width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--accent); cursor:pointer; margin-left:12px; flex-shrink:0; transition:var(--transition); box-shadow:var(--shadow-sm);" onclick="printLabel('${item.name}', '${timeStr}')"><i class="fa-solid fa-print"></i></button>` : ''}
-
                         </div>
                     </div>
                 `;
@@ -1213,10 +1250,15 @@
 
         function processItem(id, result) {
             clearTimeout(undoTimeout);
-            const item = activeItems.find(i => i.id === id);
+            const itemIndex = activeItems.findIndex(i => i.id === id);
+            if(itemIndex === -1) return;
+            const item = activeItems[itemIndex];
             
             lastActionData = { type: 'single', item: item, result: result };
-            db.ref(`${dbRoot}/active/${id}`).remove();
+            
+            activeItems.splice(itemIndex, 1);
+            renderActiveList();
+            if(db) db.ref(`${dbRoot}/active/${id}`).remove();
             
             if(navigator.vibrate) navigator.vibrate([50, 50]);
             
@@ -1229,7 +1271,9 @@
                 t.classList.remove('show');
                 clearTimeout(undoTimeout);
                 if(lastActionData && lastActionData.type === 'single') {
-                    db.ref(`${dbRoot}/active/${lastActionData.item.id}`).set(lastActionData.item);
+                    activeItems.push(lastActionData.item);
+                    renderActiveList();
+                    if(db) db.ref(`${dbRoot}/active/${lastActionData.item.id}`).set(lastActionData.item);
                     lastActionData = null;
                 }
             };
@@ -1237,7 +1281,7 @@
             undoTimeout = setTimeout(() => {
                 t.classList.remove('show');
                 if(lastActionData && lastActionData.type === 'single') {
-                    logAction(`SKT ${lastActionData.result}`, `${lastActionData.item.name} sistemden düşüldü.`);
+                    logAction(`SKT ${lastActionData.result}`, `${lastActionData.item.name} sistemden düştü.`);
                     lastActionData = null;
                     if(document.getElementById('adminModal').classList.contains('active')) renderAdminDashboard();
                 }
@@ -1289,12 +1333,14 @@
             orderCounts = {}; loadOrderTemplate(currentOrderCat, null);
         }
 
-        function updateShiftNote() { db.ref(`${dbRoot}/shiftNote`).set(document.getElementById('shiftNoteArea').value); }
+        function updateShiftNote() { if(db) db.ref(`${dbRoot}/shiftNote`).set(document.getElementById('shiftNoteArea').value); }
 
         function addTodo() {
             const txt = document.getElementById('todoInput').value.trim(); if(!txt) return;
             const newTodo = { id: Date.now().toString(), text: txt, done: false, addedBy: currentUser.name, timestamp: Date.now() };
-            db.ref(`${dbRoot}/todos/${newTodo.id}`).set(newTodo);
+            todos.push(newTodo);
+            renderTodos();
+            if(db) db.ref(`${dbRoot}/todos/${newTodo.id}`).set(newTodo);
             document.getElementById('todoInput').value = "";
             showToast("Görev eklendi.");
         }
@@ -1318,8 +1364,27 @@
                 `;
             });
         }
-        function toggleTodo(id, currentStatus) { db.ref(`${dbRoot}/todos/${id}`).update({ done: !currentStatus }); }
-        function deleteTodo(id) { db.ref(`${dbRoot}/todos/${id}`).remove(); }
+        function toggleTodo(id, currentStatus) { 
+            const t = todos.find(x=>x.id === id); if(t) t.done = !currentStatus; renderTodos();
+            if(db) db.ref(`${dbRoot}/todos/${id}`).update({ done: !currentStatus }); 
+        }
+        function deleteTodo(id) { 
+            todos = todos.filter(x=>x.id !== id); renderTodos();
+            if(db) db.ref(`${dbRoot}/todos/${id}`).remove(); 
+        }
+
+        function logAction(actionType, detail) {
+            const logItem = { 
+                id: Date.now().toString(), 
+                date: new Date().toLocaleString('tr-TR'), 
+                user: currentUser.name, 
+                action: actionType, 
+                detail: detail,
+                timestamp: Date.now()
+            };
+            allLogs.push(logItem);
+            if(db) db.ref(`${dbRoot}/logs/${logItem.id}`).set(logItem);
+        }
 
         function openModal(id) { 
             document.getElementById(id).classList.add('active'); 
@@ -1393,15 +1458,19 @@
             if(!name || pin.length !== 4) return alert("Lütfen eksiksiz ve 4 haneli PIN girin.");
             if(usersDB[pin]) return alert("Bu PIN kullanımda.");
 
-            db.ref(`${dbRoot}/users/${pin}`).set({ name: name, role: role, pin: pin });
+            usersDB[pin] = { name: name, role: role, pin: pin };
+            if(db) db.ref(`${dbRoot}/users/${pin}`).set({ name: name, role: role, pin: pin });
             document.getElementById('newUserName').value = ""; document.getElementById('newUserPin').value = "";
             showToast("Personel başarıyla eklendi.");
             renderUsersList();
         }
 
         function deleteUser(pin) {
-            if(confirm("Personeli silmek istediğinize emin misiniz?")) db.ref(`${dbRoot}/users/${pin}`).remove();
-            renderUsersList();
+            if(confirm("Personeli silmek istediğinize emin misiniz?")) {
+                delete usersDB[pin];
+                if(db) db.ref(`${dbRoot}/users/${pin}`).remove();
+                renderUsersList();
+            }
         }
 
         function checkNotificationStatus() { if("Notification" in window && Notification.permission === "granted") document.getElementById('bellBtn').style.display = 'none'; }
@@ -1420,7 +1489,7 @@
                 }
             }
         }
-        function toggleTheme() { isDark = !isDark; document.body.classList.toggle('dark-mode', isDark); localStorage.setItem('kd_theme', isDark ? 'dark' : 'light'); updateThemeIcon(); renderLibraryDrumpad(); }
+        function toggleTheme() { isDark = !isDark; safeSetLocal('kd_theme', isDark ? 'dark' : 'light'); document.body.classList.toggle('dark-mode', isDark); updateThemeIcon(); renderLibraryDrumpad(); }
         function updateThemeIcon() { const i = document.getElementById('themeIcon'); if(i) i.className = isDark ? "fa-solid fa-sun" : "fa-solid fa-moon"; }
         function switchTab(tId, el) { document.querySelectorAll('.tab-pane').forEach(e => e.classList.remove('active')); document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active')); document.getElementById(tId).classList.add('active'); el.classList.add('active'); }
         function showToast(msg, isErr=false) { 
