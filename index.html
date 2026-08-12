@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KD Kordon Pro - Phase 5 (Gamification & Performance)</title>
+    <title>KD Kordon Pro - Phase 6 (AI Master Chef)</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3003/3003984.png">
     
-    <!-- Clean, Modern Font -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -34,7 +33,6 @@
             
             --border: rgba(0, 0, 0, 0.06); 
             
-            /* YUMUŞAK HATLAR */
             --radius-lg: 24px; 
             --radius-md: 16px; 
             --radius-sm: 10px; 
@@ -70,9 +68,13 @@
 
         /* HEADER & NAV */
         .app-header { background: var(--surface-glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
-        .user-badge { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; color: var(--danger); background: var(--danger-light); padding: 8px 16px; border-radius: 30px; cursor: pointer; transition: var(--transition); }
-        .user-badge:active { transform: scale(0.95); opacity: 0.8; }
-        .header-actions { display: flex; align-items: center; gap: 10px; }
+        
+        /* SAAT VE TARİH ALANI */
+        .datetime-container { display: flex; flex-direction: column; }
+        .clock-text { font-size: 20px; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; line-height: 1.1; }
+        .date-text { font-size: 11px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .header-actions { display: flex; align-items: center; gap: 8px; }
         .icon-btn { background: var(--surface-solid); border: 1px solid var(--border); box-shadow: var(--shadow-sm); width: 40px; height: 40px; border-radius: 50%; color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: var(--transition); }
         .icon-btn:active { transform: scale(0.9); }
 
@@ -99,6 +101,13 @@
         
         .form-input { width: 100%; padding: 16px 20px; background: var(--surface-solid); border: 1px solid var(--border); border-radius: var(--radius-md); font-family: inherit; font-size: 15px; font-weight: 500; color: var(--text-main); margin-bottom: 15px; transition: var(--transition); box-shadow: var(--shadow-sm); outline: none;}
         .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-light); }
+
+        /* AI ZAMAN ASİSTANI WIDGET */
+        .ai-widget { background: linear-gradient(135deg, var(--accent-light), transparent); border: 1px solid var(--accent-light); padding: 16px; border-radius: var(--radius-md); margin-bottom: 20px; display: flex; gap: 15px; align-items: flex-start; }
+        .ai-icon { width: 40px; height: 40px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; color: white; box-shadow: var(--shadow-sm); flex-shrink: 0; }
+        .ai-text { flex: 1; }
+        .ai-title { font-size: 14px; font-weight: 800; color: var(--accent); margin-bottom: 4px; display: flex; align-items:center; gap: 6px; }
+        .ai-desc { font-size: 13px; font-weight: 600; color: var(--text-main); line-height: 1.5; }
 
         /* Sipariş Satırları */
         .order-row { background: var(--surface-solid); border-radius: var(--radius-md); padding: 16px; box-shadow: var(--shadow-sm); display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); margin-bottom:12px; transition: var(--transition);}
@@ -211,14 +220,18 @@
     <div id="appContent">
         <div id="offlineBanner"><i class="fa-solid fa-wifi" style="text-decoration: line-through;"></i> Çevrimdışı mod aktif. Veriler cihaza kaydediliyor.</div>
         <header class="app-header">
-            <div class="user-badge" onclick="triggerLogoutFlow()">
-                <i class="fa-solid fa-user-circle" style="font-size: 16px;"></i> 
-                <span id="headerUserName">Personel</span> 
+            <!-- FAZ 6: ZAMAN VE TARİH ENTEGRASYONU -->
+            <div class="datetime-container" onclick="triggerLogoutFlow()" style="cursor: pointer;">
+                <div class="clock-text" id="clockDisplay">--:--</div>
+                <div class="date-text" id="dateDisplay">-- --- ----</div>
             </div>
+            
             <div class="header-actions">
-                <button class="icon-btn" onclick="requestNotificationPermission()" id="bellBtn"><i class="fa-regular fa-bell"></i></button>
+                <div class="user-badge" onclick="openModal('adminModal')">
+                    <i class="fa-solid fa-user-circle" style="font-size: 16px;"></i> 
+                    <span id="headerUserName">Personel</span> 
+                </div>
                 <button class="icon-btn" onclick="toggleTheme()" id="themeBtn"><i class="fa-regular fa-moon" id="themeIcon"></i></button>
-                <button class="icon-btn" onclick="openModal('adminModal')" id="adminBtn" style="display:none; color:var(--warning);"><i class="fa-solid fa-sliders"></i></button>
             </div>
         </header>
 
@@ -243,15 +256,25 @@
             <!-- 2. ÜRETİM (DRUMPAD) -->
             <div id="tab-library" class="tab-pane active">
                 
-                <!-- ŞİMŞEK ARAMA, BARKOD VE SESLİ ASİSTAN -->
+                <!-- FAZ 6: AI ZAMAN ASİSTANI -->
+                <div class="ai-widget">
+                    <div class="ai-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                    <div class="ai-text">
+                        <div class="ai-title">Dijital Şef Önerisi</div>
+                        <div class="ai-desc" id="aiTimePromptText">Yükleniyor...</div>
+                    </div>
+                </div>
+
+                <!-- ŞİMŞEK ARAMA, BARKOD VE SESLİ ASİSTAN + NÖBETÇİ USTA (FAZ 6) -->
                 <div style="display:flex; gap:10px; margin-bottom: 20px; align-items:center;">
                     <div style="position: relative; flex: 1;">
                         <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 18px; top: 16px; color: var(--text-muted);"></i>
-                        <input type="text" id="libSearchInput" class="form-input" style="padding-left: 45px; padding-right:40px; margin-bottom: 0; border-radius: 30px;" placeholder="Ürün ara..." onkeyup="renderLibraryDrumpad()">
+                        <input type="text" id="libSearchInput" class="form-input" style="padding-left: 45px; padding-right:40px; margin-bottom: 0; border-radius: 30px;" placeholder="Ürün ara veya soru sor..." onkeyup="handleSearchInput()">
                         <i class="fa-solid fa-xmark" id="clearSearchBtn" style="position: absolute; right: 18px; top: 16px; color: var(--text-muted); cursor: pointer; display: none;" onclick="clearSearch()"></i>
                     </div>
-                    <button class="icon-btn" style="width: 50px; height: 50px; border-radius: 50%; flex-shrink:0; background: var(--surface-solid);" onclick="startBarcodeScanner()"><i class="fa-solid fa-qrcode"></i></button>
-                    <button class="icon-btn" style="width: 50px; height: 50px; border-radius: 50%; flex-shrink:0; background: var(--accent); color: white; border: none;" onclick="startVoiceSearch()"><i class="fa-solid fa-microphone"></i></button>
+                    <button class="icon-btn" id="aiSolverBtn" style="width: 50px; height: 50px; border-radius: 50%; flex-shrink:0; background: var(--warning); color: white; border: none; display:none;" onclick="triggerAISolver()"><i class="fa-solid fa-brain"></i></button>
+                    <button class="icon-btn" id="barcodeBtn" style="width: 50px; height: 50px; border-radius: 50%; flex-shrink:0; background: var(--surface-solid);" onclick="startBarcodeScanner()"><i class="fa-solid fa-qrcode"></i></button>
+                    <button class="icon-btn" id="voiceBtn" style="width: 50px; height: 50px; border-radius: 50%; flex-shrink:0; background: var(--accent); color: white; border: none;" onclick="startVoiceSearch()"><i class="fa-solid fa-microphone"></i></button>
                 </div>
 
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
@@ -300,11 +323,15 @@
             <div id="tab-todos" class="tab-pane">
                 <h3 style="font-size: 22px; font-weight: 700; color: var(--text-main); margin-bottom: 20px;">Görev Panosu</h3>
 
-                <div style="background:var(--warning-light); padding:16px; border-radius:var(--radius-md); margin-bottom:20px;">
-                    <h4 style="font-size:13px; font-weight:700; color:var(--warning); margin-bottom:10px; display:flex; align-items:center; gap:8px;">
-                        <i class="fa-solid fa-clipboard"></i> VARDİYA TESLİM NOTU
-                    </h4>
-                    <textarea id="shiftNoteArea" onchange="updateShiftNote()" placeholder="Bir sonraki vardiyaya not bırakın..." style="width:100%; border:none; background:transparent; outline:none; font-family:inherit; font-size:14px; font-weight:500; color:var(--text-main); resize:none; min-height:60px;"></textarea>
+                <div style="background:var(--surface-solid); padding:16px; border-radius:var(--radius-md); margin-bottom:20px; border:1px solid var(--border); box-shadow:var(--shadow-sm);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                        <h4 style="font-size:14px; font-weight:700; color:var(--text-main); display:flex; align-items:center; gap:8px;">
+                            <i class="fa-solid fa-clipboard" style="color:var(--accent);"></i> VARDİYA TESLİM NOTU
+                        </h4>
+                        <!-- FAZ 6: AI SEKRETER BUTONU -->
+                        <button onclick="summarizeShiftNoteWithAI()" style="background:var(--accent-light); color:var(--accent); border:none; padding:4px 10px; border-radius:20px; font-size:11px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:4px;"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Özetle</button>
+                    </div>
+                    <textarea id="shiftNoteArea" onchange="updateShiftNote()" placeholder="Bir sonraki vardiyaya not bırakın... (Dağınık yazabilirsiniz, AI toparlar)" style="width:100%; border:none; background:var(--bg-color); outline:none; font-family:inherit; font-size:14px; font-weight:500; color:var(--text-main); resize:none; min-height:80px; padding:10px; border-radius:var(--radius-sm);"></textarea>
                 </div>
 
                 <div style="display:flex; gap:10px; margin-bottom:20px;">
@@ -341,13 +368,13 @@
         </div>
     </div>
 
-    <!-- GİZLİ REÇETE KİTAPÇIĞI MODALI -->
+    <!-- GİZLİ REÇETE & AI ÇÖZÜCÜ MODALI -->
     <div class="modal-overlay" id="recipeModal" onclick="closeOnOutsideClick(event, 'recipeModal')">
         <div class="modal-content">
             <div class="drag-handle"></div>
-            <h3 id="recipeTitle" style="font-size:22px; font-weight:700; color:var(--text-main); margin-bottom:15px;"></h3>
-            <div id="recipeContent" style="color:var(--text-main); font-size:15px; font-weight:500; line-height:1.6; white-space: pre-wrap; background: var(--bg-color); padding: 20px; border-radius: var(--radius-md);"></div>
-            <button class="btn" style="margin-top:25px; background:var(--bg-color); color:var(--text-main);" onclick="closeModal('recipeModal')">Kapat</button>
+            <h3 id="recipeTitle" style="font-size:22px; font-weight:700; color:var(--text-main); margin-bottom:15px; display:flex; align-items:center; gap:8px;"></h3>
+            <div id="recipeContent" style="color:var(--text-main); font-size:15px; font-weight:500; line-height:1.6; white-space: pre-wrap; background: var(--bg-color); padding: 20px; border-radius: var(--radius-md); border:1px solid var(--border);"></div>
+            <button class="btn" style="margin-top:25px; background:var(--surface-solid); color:var(--text-main); border:1px solid var(--border);" onclick="closeModal('recipeModal')">Kapat</button>
         </div>
     </div>
 
@@ -363,7 +390,6 @@
             <label class="closing-cb-label"><input type="checkbox" class="closing-cb"> Dolap dereceleri (+4 / -18) kontrol edildi.</label>
             <label class="closing-cb-label"><input type="checkbox" class="closing-cb"> Gün sonu fişleri ve evraklar düzenlendi.</label>
 
-            <!-- FAZ 5: DISABLED KALDIRILDI -->
             <button class="btn btn-primary" id="finishClosingBtn" style="margin-top:25px; transition: var(--transition);" onclick="showSummary()">Vardiyayı Tamamla</button>
             <button class="btn" style="margin-top:10px; background:transparent; color:var(--text-muted);" onclick="closeModal('checklistModal')">İptal Et</button>
         </div>
@@ -475,7 +501,7 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-        const dbRoot = 'kd_kordon_pro_v11'; 
+        const dbRoot = 'kd_kordon_pro_v12'; 
 
         let currentUser = null; 
         let currentPin = "";
@@ -488,9 +514,6 @@
         
         let lastActionData = null;
         let undoTimeout = null;
-
-        window.addEventListener('offline', () => { document.getElementById('offlineBanner').style.display = 'block'; });
-        window.addEventListener('online', () => { document.getElementById('offlineBanner').style.display = 'none'; showToast("Bağlantı sağlandı."); });
 
         let isDark = localStorage.getItem('kd_theme') === 'dark';
         if(isDark) document.body.classList.add('dark-mode');
@@ -517,14 +540,120 @@
         }
 
         document.addEventListener("DOMContentLoaded", () => {
-            if(!navigator.onLine) document.getElementById('offlineBanner').style.display = 'block';
             updateThemeIcon();
             checkNotificationStatus();
             initDatabase();
             initSwipeNavigation();
             
             document.querySelectorAll('.closing-cb').forEach(cb => { cb.addEventListener('change', checkClosingChecklist); });
+            
+            // FAZ 6: CLOCK INITIALIZATION
+            setInterval(updateDateTime, 1000);
+            updateDateTime();
         });
+
+        // FAZ 6: ZAMAN YÖNETİMİ VE AI ASİSTAN TETİKLEYİCİSİ
+        function updateDateTime() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+            const dateStr = now.toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric', weekday: 'long' });
+            
+            document.getElementById('clockDisplay').innerText = timeStr;
+            document.getElementById('dateDisplay').innerText = dateStr;
+
+            // Zaman odaklı AI tavsiyesi (Her dakika kontrol edilir)
+            updateAITimePrompt(now.getHours());
+        }
+
+        function updateAITimePrompt(hour) {
+            let msg = "";
+            if(hour >= 7 && hour < 11) {
+                msg = "Sabah yoğunluğu! Garnitürler (Limon, Nane) kesildi mi? Soğuk Espresso stoklarını kontrol edin.";
+            } else if (hour >= 11 && hour < 15) {
+                msg = "Öğle servisi başladı. Teşhir ürünleri tam mı? Süt stokları azalmış olabilir.";
+            } else if (hour >= 15 && hour < 19) {
+                msg = "Öğleden sonra molası. Çekirdek kahve hazneleri dolu mu? Tatlı vitrinini kontrol edin.";
+            } else {
+                msg = "Akşam kapanışa doğru... Temizlik hazırlıkları başlasın. Zayi oranlarına dikkat edin.";
+            }
+            document.getElementById('aiTimePromptText').innerText = msg;
+        }
+
+        // FAZ 6: VARDİYA NOTU AI ÖZETLEYİCİ
+        function summarizeShiftNoteWithAI() {
+            const textArea = document.getElementById('shiftNoteArea');
+            const rawText = textArea.value.trim();
+            if(!rawText) {
+                showToast("Lütfen önce not girin.", true);
+                return;
+            }
+            
+            showToast("🪄 AI Notu Düzenliyor...");
+            
+            // Mock AI İşlemi
+            setTimeout(() => {
+                let structured = "🤖 SİSTEM ÖZETİ:\n";
+                if(rawText.toLowerCase().includes('bozuk') || rawText.toLowerCase().includes('çatladı') || rawText.toLowerCase().includes('kırıldı')) {
+                    structured += "🔴 HASAR/SORUN: Ekipman/Ürün hasarı tespit edildi.\n";
+                }
+                if(rawText.toLowerCase().includes('bitti') || rawText.toLowerCase().includes('alınsın') || rawText.toLowerCase().includes('eksik')) {
+                    structured += "⚠️ STOK/SİPARİŞ: Malzeme eksikliği var.\n";
+                }
+                if(rawText.toLowerCase().includes('silinmedi') || rawText.toLowerCase().includes('yapılmadı') || rawText.toLowerCase().includes('kaldı')) {
+                    structured += "📋 EKSİK GÖREV: Bazı rutin görevler tamamlanamadı.\n";
+                }
+                
+                structured += `\n📌 Orijinal Not:\n"${rawText.toUpperCase()}"`;
+                
+                textArea.value = structured;
+                updateShiftNote();
+                showToast("Not başarıyla formatlandı!");
+                if(navigator.vibrate) navigator.vibrate(50);
+            }, 1200);
+        }
+
+        // FAZ 6: NÖBETÇİ USTA (SORU ÇÖZÜCÜ)
+        function handleSearchInput() {
+            const inputVal = document.getElementById('libSearchInput').value;
+            const solverBtn = document.getElementById('aiSolverBtn');
+            const barcodeBtn = document.getElementById('barcodeBtn');
+            const voiceBtn = document.getElementById('voiceBtn');
+            const clearBtn = document.getElementById('clearSearchBtn');
+
+            clearBtn.style.display = inputVal.length > 0 ? 'block' : 'none';
+
+            // Eğer soru işareti varsa veya "nasıl", "neden" gibi kelimeler geçiyorsa Soru Moduna geç
+            const isQuestion = inputVal.includes('?') || inputVal.toLowerCase().includes('nasıl') || inputVal.toLowerCase().includes('neden');
+
+            if(isQuestion) {
+                solverBtn.style.display = 'block';
+                barcodeBtn.style.display = 'none';
+                voiceBtn.style.display = 'none';
+            } else {
+                solverBtn.style.display = 'none';
+                barcodeBtn.style.display = 'block';
+                voiceBtn.style.display = 'block';
+                renderLibraryDrumpad(); // Normal arama filtresi
+            }
+        }
+
+        function triggerAISolver() {
+            const query = document.getElementById('libSearchInput').value.toLowerCase();
+            let title = "🤖 Nöbetçi Usta";
+            let answer = "Bu konuda net bir veri bulamadım. Lütfen mağaza yöneticisine danışın.";
+
+            if(query.includes('süt') && (query.includes('köpür') || query.includes('şiş'))) {
+                answer = "Buhar çubuğunun (steam wand) ucunda tıkanıklık olabilir. 3 saniye boşta buhar verip temiz bir bezle silin. Sütün dolap sıcaklığında (+4°C) olduğundan emin olun.";
+            } else if (query.includes('acı') || query.includes('yanık') || query.includes('espresso')) {
+                answer = "Değirmen ayarınız çok ince kalmış olabilir veya demleme süresini (25-30 sn) aşmış olabilirsiniz. 18 gramı tekrar tartıp kalibrasyon yapın.";
+            } else if (query.includes('buz') && query.includes('yapmıyor')) {
+                answer = "Buz makinesinin su giriş valfini kontrol edin. Su filtresi tıkalı olabilir. Acilen şalteri kapatıp teknik servise haber verin.";
+            }
+
+            document.getElementById('recipeTitle').innerHTML = `<i class="fa-solid fa-brain" style="color:var(--warning);"></i> ${title}`;
+            document.getElementById('recipeContent').innerText = answer;
+            openModal('recipeModal');
+        }
 
         function initSwipeNavigation() {
             let dragStartX = 0;
@@ -623,7 +752,6 @@
             const myLogs = allLogs.filter(l => l.user === currentUser.name && l.date.includes(todayStr));
             const completedCount = myLogs.filter(l => l.action.includes('Tüketildi') || l.action.includes('İmha')).length;
             
-            // Puan hesaplama
             const allCheckboxes = document.querySelectorAll('.closing-cb');
             let checkedCount = 0;
             allCheckboxes.forEach(cb => { if(cb.checked) checkedCount++; });
@@ -924,7 +1052,7 @@
 
         function clearSearch() {
             document.getElementById('libSearchInput').value = '';
-            renderLibraryDrumpad();
+            handleSearchInput();
         }
 
         let pressTimer;
@@ -965,7 +1093,6 @@
             }
             
             const searchInput = document.getElementById('libSearchInput').value;
-            document.getElementById('clearSearchBtn').style.display = searchInput.length > 0 ? 'block' : 'none';
             const searchTerm = normalizeTR(searchInput);
             
             libraryDB.filter(p => currentLibFilter === 'Tümü' || p.kategori === currentLibFilter)
@@ -1075,13 +1202,13 @@
                 searchInput.value = transcript.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,""); 
                 
                 document.querySelector('#libChips .chip').click(); // Tümü seç
-                renderLibraryDrumpad();
-                showToast(`Arama: "${searchInput.value}"`);
+                handleSearchInput(); // Arama tetikleyiciyi çağır (AI mi Arama mı anlasın)
+                showToast(`Sesli Girdi: "${searchInput.value}"`);
             };
             
             recognition.onerror = (event) => { 
                 showToast("Ses algılanamadı, tekrar deneyin.", true); 
-                document.getElementById('libSearchInput').placeholder = "Ürün ara...";
+                document.getElementById('libSearchInput').placeholder = "Ürün ara veya soru sor...";
             };
             
             recognition.start();
