@@ -3,18 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KD Kordon Pro - Final AI Master</title>
+    <title>KD Kordon Pro - Phase 5 (Gamification & Performance)</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3003/3003984.png">
     
+    <!-- Clean, Modern Font -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
+            /* APPLE iOS / GLASSMORPHISM PALETİ */
             --bg-color: #F2F4F7; 
             --surface-solid: #FFFFFF; 
             --surface-glass: rgba(255, 255, 255, 0.85); 
@@ -32,6 +34,7 @@
             
             --border: rgba(0, 0, 0, 0.06); 
             
+            /* YUMUŞAK HATLAR */
             --radius-lg: 24px; 
             --radius-md: 16px; 
             --radius-sm: 10px; 
@@ -65,19 +68,14 @@
         
         #appContent { display: none; padding-bottom: 100px; }
 
-        /* HEADER */
+        /* HEADER & NAV */
         .app-header { background: var(--surface-glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
-        .datetime-container { display: flex; flex-direction: column; }
-        .clock-text { font-size: 20px; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; line-height: 1.1; }
-        .date-text { font-size: 11px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; }
-
-        .header-actions { display: flex; align-items: center; gap: 8px; }
-        .user-badge { display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 13px; color: var(--text-main); background: var(--bg-color); padding: 8px 12px; border-radius: 30px; cursor: pointer; transition: var(--transition); }
+        .user-badge { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; color: var(--danger); background: var(--danger-light); padding: 8px 16px; border-radius: 30px; cursor: pointer; transition: var(--transition); }
         .user-badge:active { transform: scale(0.95); opacity: 0.8; }
+        .header-actions { display: flex; align-items: center; gap: 10px; }
         .icon-btn { background: var(--surface-solid); border: 1px solid var(--border); box-shadow: var(--shadow-sm); width: 40px; height: 40px; border-radius: 50%; color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: var(--transition); }
         .icon-btn:active { transform: scale(0.9); }
 
-        /* BOTTOM NAV */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--surface-glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); display: flex; justify-content: space-around; padding: 15px 10px 25px 10px; z-index: 100; border-top: 1px solid var(--border); }
         .nav-item { display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--text-muted); font-size: 11px; font-weight: 600; cursor: pointer; flex: 1; transition: var(--transition); }
         .nav-item i { font-size: 20px; padding: 10px 20px; border-radius: 30px; transition: var(--transition); }
@@ -101,13 +99,6 @@
         
         .form-input { width: 100%; padding: 16px 20px; background: var(--surface-solid); border: 1px solid var(--border); border-radius: var(--radius-md); font-family: inherit; font-size: 15px; font-weight: 500; color: var(--text-main); margin-bottom: 15px; transition: var(--transition); box-shadow: var(--shadow-sm); outline: none;}
         .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-light); }
-
-        /* AI ZAMAN ASİSTANI WIDGET */
-        .ai-widget { background: linear-gradient(135deg, var(--accent-light), transparent); border: 1px solid var(--accent-light); padding: 16px; border-radius: var(--radius-md); margin-bottom: 20px; display: flex; gap: 15px; align-items: flex-start; }
-        .ai-icon { width: 40px; height: 40px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; color: white; box-shadow: var(--shadow-sm); flex-shrink: 0; }
-        .ai-text { flex: 1; }
-        .ai-title { font-size: 14px; font-weight: 800; color: var(--accent); margin-bottom: 4px; display: flex; align-items:center; gap: 6px; }
-        .ai-desc { font-size: 13px; font-weight: 600; color: var(--text-main); line-height: 1.5; }
 
         /* Sipariş Satırları */
         .order-row { background: var(--surface-solid); border-radius: var(--radius-md); padding: 16px; box-shadow: var(--shadow-sm); display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); margin-bottom:12px; transition: var(--transition);}
@@ -191,7 +182,7 @@
 
     <div id="fullScreenSpinner">
         <i class="fa-solid fa-spinner fa-spin fa-2x" style="margin-bottom: 15px; color: var(--accent);"></i>
-        <span id="spinnerText">Sistem Başlatılıyor...</span>
+        <span id="spinnerText">Sistem Bulutla Eşleşiyor...</span>
     </div>
 
     <div id="authScreen" style="display:none;">
@@ -218,25 +209,22 @@
 
     <!-- ANA UYGULAMA -->
     <div id="appContent">
-        <div id="offlineBanner"><i class="fa-solid fa-wifi" style="text-decoration: line-through;"></i> Çevrimdışı mod aktif. Yerel veriler kullanılıyor.</div>
+        <div id="offlineBanner"><i class="fa-solid fa-wifi" style="text-decoration: line-through;"></i> Çevrimdışı mod aktif. Veriler cihaza kaydediliyor.</div>
         <header class="app-header">
-            <div class="datetime-container" onclick="triggerLogoutFlow()" style="cursor: pointer;">
-                <div class="clock-text" id="clockDisplay">--:--</div>
-                <div class="date-text" id="dateDisplay">-- --- ----</div>
+            <div class="user-badge" onclick="triggerLogoutFlow()">
+                <i class="fa-solid fa-user-circle" style="font-size: 16px;"></i> 
+                <span id="headerUserName">Personel</span> 
             </div>
-            
             <div class="header-actions">
-                <div class="user-badge" onclick="openModal('adminModal')">
-                    <i class="fa-solid fa-user-circle" style="font-size: 16px;"></i> 
-                    <span id="headerUserName">Personel</span> 
-                </div>
+                <button class="icon-btn" onclick="requestNotificationPermission()" id="bellBtn"><i class="fa-regular fa-bell"></i></button>
                 <button class="icon-btn" onclick="toggleTheme()" id="themeBtn"><i class="fa-regular fa-moon" id="themeIcon"></i></button>
+                <button class="icon-btn" onclick="openModal('adminModal')" id="adminBtn" style="display:none; color:var(--warning);"><i class="fa-solid fa-sliders"></i></button>
             </div>
         </header>
 
         <div class="app-container">
             
-            <!-- 1. SİPARİŞ -->
+            <!-- 1. SİPARİŞ (SADECE YÖNETİCİ GÖREBİLİR) -->
             <div id="tab-order" class="tab-pane">
                 <div class="chips-container" id="categoryChips">
                     <div class="chip active" onclick="loadOrderTemplate('Manav', this)">🥦 Manav</div>
@@ -255,25 +243,15 @@
             <!-- 2. ÜRETİM (DRUMPAD) -->
             <div id="tab-library" class="tab-pane active">
                 
-                <!-- AI ZAMAN ASİSTANI -->
-                <div class="ai-widget">
-                    <div class="ai-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
-                    <div class="ai-text">
-                        <div class="ai-title">Dijital Şef Önerisi</div>
-                        <div class="ai-desc" id="aiTimePromptText">Yükleniyor...</div>
-                    </div>
-                </div>
-
                 <!-- ŞİMŞEK ARAMA, BARKOD VE SESLİ ASİSTAN -->
                 <div style="display:flex; gap:10px; margin-bottom: 20px; align-items:center;">
                     <div style="position: relative; flex: 1;">
                         <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 18px; top: 16px; color: var(--text-muted);"></i>
-                        <input type="text" id="libSearchInput" class="form-input" style="padding-left: 45px; padding-right:40px; margin-bottom: 0; border-radius: 30px;" placeholder="Ürün ara veya soru sor..." onkeyup="handleSearchInput()">
+                        <input type="text" id="libSearchInput" class="form-input" style="padding-left: 45px; padding-right:40px; margin-bottom: 0; border-radius: 30px;" placeholder="Ürün ara..." onkeyup="renderLibraryDrumpad()">
                         <i class="fa-solid fa-xmark" id="clearSearchBtn" style="position: absolute; right: 18px; top: 16px; color: var(--text-muted); cursor: pointer; display: none;" onclick="clearSearch()"></i>
                     </div>
-                    <button class="icon-btn" id="aiSolverBtn" style="width: 50px; height: 50px; border-radius: 50%; flex-shrink:0; background: var(--warning); color: white; border: none; display:none;" onclick="triggerAISolver()"><i class="fa-solid fa-brain"></i></button>
-                    <button class="icon-btn" id="barcodeBtn" style="width: 50px; height: 50px; border-radius: 50%; flex-shrink:0; background: var(--surface-solid);" onclick="startBarcodeScanner()"><i class="fa-solid fa-qrcode"></i></button>
-                    <button class="icon-btn" id="voiceBtn" style="width: 50px; height: 50px; border-radius: 50%; flex-shrink:0; background: var(--accent); color: white; border: none;" onclick="startVoiceSearch()"><i class="fa-solid fa-microphone"></i></button>
+                    <button class="icon-btn" style="width: 50px; height: 50px; border-radius: 50%; flex-shrink:0; background: var(--surface-solid);" onclick="startBarcodeScanner()"><i class="fa-solid fa-qrcode"></i></button>
+                    <button class="icon-btn" style="width: 50px; height: 50px; border-radius: 50%; flex-shrink:0; background: var(--accent); color: white; border: none;" onclick="startVoiceSearch()"><i class="fa-solid fa-microphone"></i></button>
                 </div>
 
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
@@ -322,15 +300,11 @@
             <div id="tab-todos" class="tab-pane">
                 <h3 style="font-size: 22px; font-weight: 700; color: var(--text-main); margin-bottom: 20px;">Görev Panosu</h3>
 
-                <div style="background:var(--surface-solid); padding:16px; border-radius:var(--radius-md); margin-bottom:20px; border:1px solid var(--border); box-shadow:var(--shadow-sm);">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                        <h4 style="font-size:14px; font-weight:700; color:var(--text-main); display:flex; align-items:center; gap:8px;">
-                            <i class="fa-solid fa-clipboard" style="color:var(--accent);"></i> VARDİYA TESLİM NOTU
-                        </h4>
-                        <!-- AI SEKRETER BUTONU -->
-                        <button onclick="summarizeShiftNoteWithAI()" style="background:var(--accent-light); color:var(--accent); border:none; padding:6px 12px; border-radius:20px; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; transition:var(--transition);"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Özetle</button>
-                    </div>
-                    <textarea id="shiftNoteArea" onchange="updateShiftNote()" placeholder="Bir sonraki vardiyaya not bırakın... (Dağınık yazabilirsiniz, AI toparlar)" style="width:100%; border:none; background:var(--bg-color); outline:none; font-family:inherit; font-size:14px; font-weight:500; color:var(--text-main); resize:none; min-height:80px; padding:12px; border-radius:var(--radius-sm); box-shadow:inset 0 2px 4px rgba(0,0,0,0.02);"></textarea>
+                <div style="background:var(--warning-light); padding:16px; border-radius:var(--radius-md); margin-bottom:20px;">
+                    <h4 style="font-size:13px; font-weight:700; color:var(--warning); margin-bottom:10px; display:flex; align-items:center; gap:8px;">
+                        <i class="fa-solid fa-clipboard"></i> VARDİYA TESLİM NOTU
+                    </h4>
+                    <textarea id="shiftNoteArea" onchange="updateShiftNote()" placeholder="Bir sonraki vardiyaya not bırakın..." style="width:100%; border:none; background:transparent; outline:none; font-family:inherit; font-size:14px; font-weight:500; color:var(--text-main); resize:none; min-height:60px;"></textarea>
                 </div>
 
                 <div style="display:flex; gap:10px; margin-bottom:20px;">
@@ -367,13 +341,13 @@
         </div>
     </div>
 
-    <!-- GİZLİ REÇETE & AI ÇÖZÜCÜ MODALI -->
+    <!-- GİZLİ REÇETE KİTAPÇIĞI MODALI -->
     <div class="modal-overlay" id="recipeModal" onclick="closeOnOutsideClick(event, 'recipeModal')">
         <div class="modal-content">
             <div class="drag-handle"></div>
-            <h3 id="recipeTitle" style="font-size:20px; font-weight:800; color:var(--text-main); margin-bottom:15px; display:flex; align-items:center; gap:8px;"></h3>
-            <div id="recipeContent" style="color:var(--text-main); font-size:15px; font-weight:500; line-height:1.6; white-space: pre-wrap; background: var(--bg-color); padding: 20px; border-radius: var(--radius-md); border:1px solid var(--border);"></div>
-            <button class="btn" style="margin-top:25px; background:var(--surface-solid); color:var(--text-main); border:1px solid var(--border);" onclick="closeModal('recipeModal')">Kapat</button>
+            <h3 id="recipeTitle" style="font-size:22px; font-weight:700; color:var(--text-main); margin-bottom:15px;"></h3>
+            <div id="recipeContent" style="color:var(--text-main); font-size:15px; font-weight:500; line-height:1.6; white-space: pre-wrap; background: var(--bg-color); padding: 20px; border-radius: var(--radius-md);"></div>
+            <button class="btn" style="margin-top:25px; background:var(--bg-color); color:var(--text-main);" onclick="closeModal('recipeModal')">Kapat</button>
         </div>
     </div>
 
@@ -389,6 +363,7 @@
             <label class="closing-cb-label"><input type="checkbox" class="closing-cb"> Dolap dereceleri (+4 / -18) kontrol edildi.</label>
             <label class="closing-cb-label"><input type="checkbox" class="closing-cb"> Gün sonu fişleri ve evraklar düzenlendi.</label>
 
+            <!-- FAZ 5: DISABLED KALDIRILDI -->
             <button class="btn btn-primary" id="finishClosingBtn" style="margin-top:25px; transition: var(--transition);" onclick="showSummary()">Vardiyayı Tamamla</button>
             <button class="btn" style="margin-top:10px; background:transparent; color:var(--text-muted);" onclick="closeModal('checklistModal')">İptal Et</button>
         </div>
@@ -491,15 +466,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <script>
-        // GÜVENLİ LOCALSTORAGE
-        function safeSetLocal(key, val) { try { localStorage.setItem(key, val); } catch(e) {} }
-        function safeGetLocal(key) { try { return localStorage.getItem(key); } catch(e) { return null; } }
-        function safeRemoveLocal(key) { try { localStorage.removeItem(key); } catch(e) {} }
-
-        let isDark = false;
-        try { isDark = localStorage.getItem('kd_theme') === 'dark'; } catch(e){}
-        if(isDark) document.body.classList.add('dark-mode');
-
         const firebaseConfig = {
           apiKey: "AIzaSyDxxGeAcvJfEtMUmDl_wMPBSGYqbaYUbRY",
           authDomain: "raf-omru-takip-uygulamasi.firebaseapp.com",
@@ -507,25 +473,27 @@
           projectId: "raf-omru-takip-uygulamasi",
           storageBucket: "raf-omru-takip-uygulamasi.firebasestorage.app"
         };
-        
-        let db = null;
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        const dbRoot = 'kd_kordon_pro_v11'; 
+
         let currentUser = null; 
         let currentPin = "";
-        let usersDB = {
-            "1923": { name: "Yusuf (Yönetici)", role: "admin", pin: "1923" }
-        };
+        let usersDB = {};
         
-        const dbRoot = 'kd_kordon_pro_v16';
-        let isAppLaunched = false;
         let appLoadTime = 0;
         let isEditMode = false;
         let isBulkMode = false;
         let selectedBulkItems = [];
+        
         let lastActionData = null;
         let undoTimeout = null;
 
         window.addEventListener('offline', () => { document.getElementById('offlineBanner').style.display = 'block'; });
         window.addEventListener('online', () => { document.getElementById('offlineBanner').style.display = 'none'; showToast("Bağlantı sağlandı."); });
+
+        let isDark = localStorage.getItem('kd_theme') === 'dark';
+        if(isDark) document.body.classList.add('dark-mode');
 
         const catColors = {
             "Şarküteri, Süt ve Soslar": "#007AFF", 
@@ -556,39 +524,7 @@
             initSwipeNavigation();
             
             document.querySelectorAll('.closing-cb').forEach(cb => { cb.addEventListener('change', checkClosingChecklist); });
-            
-            setInterval(updateDateTime, 60000);
-            updateDateTime();
         });
-
-        function updateDateTime() {
-            const now = new Date();
-            const timeStr = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
-            const dateStr = now.toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric', weekday: 'long' });
-            
-            const clockEl = document.getElementById('clockDisplay');
-            const dateEl = document.getElementById('dateDisplay');
-            
-            if(clockEl) clockEl.innerText = timeStr;
-            if(dateEl) dateEl.innerText = dateStr;
-
-            updateAITimePrompt(now.getHours());
-        }
-
-        function updateAITimePrompt(hour) {
-            let msg = "";
-            if(hour >= 6 && hour < 11) {
-                msg = "Sabah yoğunluğu! Garnitürler (Limon, Nane) kesildi mi? Soğuk Espresso stoklarını kontrol edin.";
-            } else if (hour >= 11 && hour < 15) {
-                msg = "Öğle servisi başladı. Teşhir ürünleri tam mı? Süt stokları azalmış olabilir.";
-            } else if (hour >= 15 && hour < 19) {
-                msg = "Öğleden sonra molası. Çekirdek kahve hazneleri dolu mu? Tatlı vitrinini kontrol edin.";
-            } else {
-                msg = "Akşam kapanışa doğru... Temizlik hazırlıkları başlasın. Zayi oranlarına dikkat edin.";
-            }
-            const el = document.getElementById('aiTimePromptText');
-            if(el) el.innerText = msg;
-        }
 
         function initSwipeNavigation() {
             let dragStartX = 0;
@@ -613,67 +549,36 @@
             });
         }
 
-        function showLoginOrApp() {
-            if (!isAppLaunched) {
-                const savedPin = safeGetLocal('kd_saved_pin');
+        function initDatabase() {
+            let dbTimeout = setTimeout(() => {
+                const spinner = document.getElementById('fullScreenSpinner');
+                if(spinner.style.display !== 'none') {
+                    spinner.innerHTML = `<i class="fa-solid fa-triangle-exclamation fa-3x" style="color:var(--danger); margin-bottom:15px;"></i><span style="color:var(--text-main);">Bağlantı sağlanamadı. Yerel veriler kullanılıyor.</span>`;
+                    setTimeout(() => { document.getElementById('fullScreenSpinner').style.display = 'none'; }, 2000);
+                }
+            }, 5000);
+
+            db.ref(`${dbRoot}/users`).on('value', snap => {
+                clearTimeout(dbTimeout);
+                const data = snap.val();
+                if(!data) {
+                    const masterUser = { name: "Yusuf (Yönetici)", role: "admin", pin: "1923" };
+                    db.ref(`${dbRoot}/users/1923`).set(masterUser);
+                    usersDB = { "1923": masterUser };
+                } else {
+                    usersDB = data;
+                }
+                
+                document.getElementById('fullScreenSpinner').style.display = 'none';
+                
+                const savedPin = localStorage.getItem('kd_saved_pin');
                 if(savedPin && usersDB[savedPin]) {
                     currentUser = usersDB[savedPin];
                     launchApp();
                 } else {
                     document.getElementById('authScreen').style.display = 'flex';
                 }
-            }
-        }
-
-        function initDatabase() {
-            // ZIRHLI FALLBACK: 2 saniye içinde Firebase yanıt vermezse Sistemi Yerel Olarak Aç
-            let dbTimeout = setTimeout(() => {
-                const spinner = document.getElementById('fullScreenSpinner');
-                if(spinner && spinner.style.display !== 'none') {
-                    spinner.style.display = 'none';
-                    showToast("Bulut bağlantısı yok. Çevrimdışı Mod.", true);
-                    document.getElementById('offlineBanner').style.display = 'block';
-                    showLoginOrApp();
-                }
-            }, 2000);
-
-            try {
-                if(typeof firebase !== 'undefined') {
-                    if (!firebase.apps.length) {
-                        firebase.initializeApp(firebaseConfig);
-                    }
-                    db = firebase.database();
-                    
-                    db.ref(`${dbRoot}/users`).on('value', snap => {
-                        clearTimeout(dbTimeout);
-                        const data = snap.val();
-                        if(!data) {
-                            db.ref(`${dbRoot}/users/1923`).set(usersDB["1923"]);
-                        } else {
-                            usersDB = data;
-                        }
-                        
-                        const spinner = document.getElementById('fullScreenSpinner');
-                        if(spinner && spinner.style.display !== 'none') {
-                            spinner.style.display = 'none';
-                            showLoginOrApp();
-                        } else if (isAppLaunched && document.getElementById('usersModal').classList.contains('active')) {
-                            renderUsersList();
-                        }
-                    });
-                } else {
-                    // Firebase blocklandıysa timeout'u beklemeden aç
-                    clearTimeout(dbTimeout);
-                    document.getElementById('fullScreenSpinner').style.display = 'none';
-                    showToast("Sistem engellendi. Yerel modda açılıyor.", true);
-                    showLoginOrApp();
-                }
-            } catch(e) {
-                console.warn("Firebase Başlatma Uyarısı:", e);
-                clearTimeout(dbTimeout);
-                document.getElementById('fullScreenSpinner').style.display = 'none';
-                showLoginOrApp();
-            }
+            });
         }
 
         function addPin(num) {
@@ -688,7 +593,7 @@
             if(currentPin.length !== 4) return;
             if(usersDB[currentPin]) {
                 currentUser = usersDB[currentPin];
-                safeSetLocal('kd_saved_pin', currentPin);
+                localStorage.setItem('kd_saved_pin', currentPin);
                 document.getElementById('authScreen').style.display = 'none';
                 launchApp();
             } else {
@@ -711,12 +616,14 @@
             if(e.target.checked && navigator.vibrate) navigator.vibrate(50);
         }
 
+        // FAZ 5: PUANLAMA SİSTEMİ
         function showSummary() {
             closeModal('checklistModal');
             const todayStr = new Date().toLocaleDateString('tr-TR');
             const myLogs = allLogs.filter(l => l.user === currentUser.name && l.date.includes(todayStr));
             const completedCount = myLogs.filter(l => l.action.includes('Tüketildi') || l.action.includes('İmha')).length;
             
+            // Puan hesaplama
             const allCheckboxes = document.querySelectorAll('.closing-cb');
             let checkedCount = 0;
             allCheckboxes.forEach(cb => { if(cb.checked) checkedCount++; });
@@ -737,12 +644,72 @@
         }
 
         function executeLogout() {
-            safeRemoveLocal('kd_saved_pin');
+            localStorage.removeItem('kd_saved_pin');
             location.reload();
         }
 
         let activeItems = [], todos = [], allLogs = [];
-        
+
+        function launchApp() {
+            appLoadTime = Date.now();
+            document.getElementById('appContent').style.display = 'block';
+            document.getElementById('headerUserName').innerText = currentUser.name;
+            
+            if(currentUser.role === 'admin') {
+                document.getElementById('adminBtn').style.display = 'flex';
+                document.getElementById('editModeBtn').style.display = 'block'; 
+                document.getElementById('navOrder').style.display = 'flex';
+                switchTab('tab-order', document.getElementById('navOrder'));
+            } else {
+                document.getElementById('navOrder').style.display = 'none';
+                switchTab('tab-library', document.getElementById('navLibrary'));
+            }
+            
+            showToast(`Hoşgeldin, ${currentUser.name}`);
+            loadOrderTemplate('Manav', document.querySelector('.chip'));
+            
+            libraryDB = [...defaultLibrary];
+            renderLibraryDrumpad();
+
+            db.ref(`${dbRoot}/library`).on('value', snap => {
+                const data = snap.val();
+                if(!data) { db.ref(`${dbRoot}/library`).set(libraryDB); } else { libraryDB = Object.values(data); }
+                renderLibraryDrumpad();
+            });
+
+            db.ref(`${dbRoot}/active`).on('value', snap => {
+                activeItems = snap.val() ? Object.values(snap.val()) : [];
+                renderActiveList();
+            });
+            db.ref(`${dbRoot}/todos`).on('value', snap => {
+                todos = snap.val() ? Object.values(snap.val()) : [];
+                renderTodos();
+            });
+            db.ref(`${dbRoot}/logs`).on('value', snap => {
+                allLogs = snap.val() ? Object.values(snap.val()) : [];
+            });
+            
+            db.ref(`${dbRoot}/shiftNote`).on('value', snap => {
+                document.getElementById('shiftNoteArea').value = snap.val() || "";
+            });
+
+            db.ref(`${dbRoot}/todos`).on('child_added', snap => {
+                const t = snap.val();
+                if(t.timestamp && t.timestamp > appLoadTime && t.addedBy !== currentUser.name) {
+                    sendPushNotification("Yeni Görev Eklendi", `${t.addedBy}: ${t.text}`);
+                }
+            });
+
+            db.ref(`${dbRoot}/logs`).on('child_added', snap => {
+                const l = snap.val();
+                if(l.timestamp && l.timestamp > appLoadTime && l.user !== currentUser.name) {
+                    if(l.action === "Sipariş Verildi") { sendPushNotification("Sipariş İletildi", `${l.user} listeyi yolladı.`); }
+                }
+            });
+
+            setInterval(renderActiveList, 60000);
+        }
+
         const defaultLibrary = [
             {id:"L1", kategori:"Şarküteri, Süt ve Soslar", urun:"Süzme Beyaz Peynir", raf_omru:3, birim:"Gün"},
             {id:"L2", kategori:"Şarküteri, Süt ve Soslar", urun:"Krem Peynir", raf_omru:3, birim:"Gün"},
@@ -857,73 +824,7 @@
             {id:"L111", kategori:"Paketli & Kuru Gıdalar", urun:"Fıstık Tane", raf_omru:1, birim:"Ay"},
             {id:"L112", kategori:"Paketli & Kuru Gıdalar", urun:"Kavanoz Vişne Sos", raf_omru:3, birim:"Gün"}
         ];
-
-        let libraryDB = [...defaultLibrary]; 
-
-        function launchApp() {
-            isAppLaunched = true;
-            appLoadTime = Date.now();
-            document.getElementById('appContent').style.display = 'block';
-            document.getElementById('headerUserName').innerText = currentUser.name;
-            
-            if(currentUser.role === 'admin') {
-                document.getElementById('adminBtn').style.display = 'flex';
-                document.getElementById('editModeBtn').style.display = 'block'; 
-                document.getElementById('navOrder').style.display = 'flex';
-                switchTab('tab-order', document.getElementById('navOrder'));
-            } else {
-                document.getElementById('navOrder').style.display = 'none';
-                switchTab('tab-library', document.getElementById('navLibrary'));
-            }
-            
-            showToast(`Hoşgeldin, ${currentUser.name}`);
-            loadOrderTemplate('Manav', document.querySelector('.chip'));
-            
-            renderLibraryDrumpad();
-            renderActiveList();
-            renderTodos();
-
-            if (db) {
-                db.ref(`${dbRoot}/library`).on('value', snap => {
-                    const data = snap.val();
-                    if(!data) { db.ref(`${dbRoot}/library`).set(libraryDB); } else { libraryDB = Object.values(data); }
-                    renderLibraryDrumpad();
-                });
-
-                db.ref(`${dbRoot}/active`).on('value', snap => {
-                    activeItems = snap.val() ? Object.values(snap.val()) : [];
-                    renderActiveList();
-                });
-                db.ref(`${dbRoot}/todos`).on('value', snap => {
-                    todos = snap.val() ? Object.values(snap.val()) : [];
-                    renderTodos();
-                });
-                db.ref(`${dbRoot}/logs`).on('value', snap => {
-                    allLogs = snap.val() ? Object.values(snap.val()) : [];
-                });
-                
-                db.ref(`${dbRoot}/shiftNote`).on('value', snap => {
-                    document.getElementById('shiftNoteArea').value = snap.val() || "";
-                });
-
-                db.ref(`${dbRoot}/todos`).on('child_added', snap => {
-                    const t = snap.val();
-                    if(t.timestamp && t.timestamp > appLoadTime && t.addedBy !== currentUser.name) {
-                        sendPushNotification("Yeni Görev", `${t.addedBy}: ${t.text}`);
-                    }
-                });
-
-                db.ref(`${dbRoot}/logs`).on('child_added', snap => {
-                    const l = snap.val();
-                    if(l.timestamp && l.timestamp > appLoadTime && l.user !== currentUser.name) {
-                        if(l.action === "Sipariş Verildi") { sendPushNotification("Sipariş", `${l.user} listeyi yolladı.`); }
-                    }
-                });
-            }
-
-            setInterval(renderActiveList, 60000);
-        }
-
+        
         let currentLibFilter = 'Tümü';
 
         function toggleEditMode() {
@@ -982,11 +883,7 @@
             const itemsToProcess = selectedBulkItems.map(id => activeItems.find(i => i.id === id)).filter(Boolean);
             lastActionData = { type: 'bulk', items: itemsToProcess, result: resultType };
             
-            itemsToProcess.forEach(item => { 
-                activeItems = activeItems.filter(i => i.id !== item.id);
-                if(db) db.ref(`${dbRoot}/active/${item.id}`).remove(); 
-            });
-            renderActiveList();
+            itemsToProcess.forEach(item => { db.ref(`${dbRoot}/active/${item.id}`).remove(); });
             
             if(navigator.vibrate) navigator.vibrate([50, 50]);
             
@@ -999,11 +896,7 @@
                 t.classList.remove('show');
                 clearTimeout(undoTimeout);
                 if(lastActionData && lastActionData.type === 'bulk') {
-                    lastActionData.items.forEach(item => { 
-                        activeItems.push(item);
-                        if(db) db.ref(`${dbRoot}/active/${item.id}`).set(item); 
-                    });
-                    renderActiveList();
+                    lastActionData.items.forEach(item => { db.ref(`${dbRoot}/active/${item.id}`).set(item); });
                     lastActionData = null;
                 }
             };
@@ -1012,7 +905,7 @@
                 t.classList.remove('show');
                 if(lastActionData && lastActionData.type === 'bulk') {
                     lastActionData.items.forEach(item => {
-                        logAction(`SKT ${lastActionData.result}`, `${item.name} toplu işlemle düştü.`);
+                        logAction(`SKT ${lastActionData.result}`, `${item.name} toplu işlemle sistemden düşüldü.`);
                     });
                     lastActionData = null;
                     if(document.getElementById('adminModal').classList.contains('active')) renderAdminDashboard();
@@ -1029,81 +922,9 @@
             renderLibraryDrumpad();
         }
 
-        function handleSearchInput() {
-            const inputVal = document.getElementById('libSearchInput').value;
-            const solverBtn = document.getElementById('aiSolverBtn');
-            const barcodeBtn = document.getElementById('barcodeBtn');
-            const voiceBtn = document.getElementById('voiceBtn');
-            const clearBtn = document.getElementById('clearSearchBtn');
-
-            if(clearBtn) clearBtn.style.display = inputVal.length > 0 ? 'block' : 'none';
-
-            const isQuestion = inputVal.includes('?') || inputVal.toLowerCase().includes('nasıl') || inputVal.toLowerCase().includes('neden');
-
-            if(isQuestion) {
-                if(solverBtn) solverBtn.style.display = 'flex';
-                if(barcodeBtn) barcodeBtn.style.display = 'none';
-                if(voiceBtn) voiceBtn.style.display = 'none';
-            } else {
-                if(solverBtn) solverBtn.style.display = 'none';
-                if(barcodeBtn) barcodeBtn.style.display = 'flex';
-                if(voiceBtn) voiceBtn.style.display = 'flex';
-                renderLibraryDrumpad(); 
-            }
-        }
-
         function clearSearch() {
             document.getElementById('libSearchInput').value = '';
-            handleSearchInput();
-        }
-
-        function triggerAISolver() {
-            const query = document.getElementById('libSearchInput').value.toLowerCase();
-            let title = "Nöbetçi Usta Asistanı";
-            let answer = "Bu konuda net bir veri bulamadım. Lütfen mağaza yöneticisine danışın.";
-
-            if(query.includes('süt') && (query.includes('köpür') || query.includes('şiş'))) {
-                answer = "Buhar çubuğunun (steam wand) ucunda tıkanıklık olabilir. 3 saniye boşta buhar verip temiz bir bezle silin. Sütün dolap sıcaklığında (+4°C) olduğundan emin olun.";
-            } else if (query.includes('acı') || query.includes('yanık') || query.includes('espresso')) {
-                answer = "Değirmen ayarınız çok ince kalmış olabilir veya demleme süresini (25-30 sn) aşmış olabilirsiniz. 18 gramı tekrar tartıp kalibrasyon yapın.";
-            } else if (query.includes('buz') && query.includes('yapmıyor')) {
-                answer = "Buz makinesinin su giriş valfini kontrol edin. Su filtresi tıkalı olabilir. Acilen şalteri kapatıp teknik servise haber verin.";
-            }
-
-            document.getElementById('recipeTitle').innerHTML = `<i class="fa-solid fa-brain" style="color:var(--warning);"></i> ${title}`;
-            document.getElementById('recipeContent').innerText = answer;
-            openModal('recipeModal');
-        }
-
-        function summarizeShiftNoteWithAI() {
-            const textArea = document.getElementById('shiftNoteArea');
-            const rawText = textArea.value.trim();
-            if(!rawText) {
-                showToast("Lütfen önce not girin.", true);
-                return;
-            }
-            
-            showToast("🪄 AI Notu Düzenliyor...");
-            
-            setTimeout(() => {
-                let structured = "SİSTEM ÖZETİ:\n";
-                if(rawText.toLowerCase().includes('bozuk') || rawText.toLowerCase().includes('çatladı') || rawText.toLowerCase().includes('kırıldı') || rawText.toLowerCase().includes('arızalı')) {
-                    structured += "🔴 HASAR/SORUN: Ekipman arızası/hasarı.\n";
-                }
-                if(rawText.toLowerCase().includes('bitti') || rawText.toLowerCase().includes('alınsın') || rawText.toLowerCase().includes('eksik') || rawText.toLowerCase().includes('kalmadı')) {
-                    structured += "⚠️ STOK EKSİĞİ: Malzeme sipariş ihtiyacı var.\n";
-                }
-                if(rawText.toLowerCase().includes('silinmedi') || rawText.toLowerCase().includes('yapılmadı') || rawText.toLowerCase().includes('kaldı') || rawText.toLowerCase().includes('unutulmuş')) {
-                    structured += "📋 EKSİK GÖREV: Rutin dışı tamamlanmayan iş.\n";
-                }
-                
-                structured += `\n📌 Orijinal Not:\n"${rawText.toUpperCase()}"`;
-                
-                textArea.value = structured;
-                updateShiftNote();
-                showToast("Not başarıyla formatlandı!");
-                if(navigator.vibrate) navigator.vibrate(50);
-            }, 1000);
+            renderLibraryDrumpad();
         }
 
         let pressTimer;
@@ -1127,7 +948,7 @@
         }
 
         function showSecretRecipe(name) {
-            document.getElementById('recipeTitle').innerHTML = `<i class="fa-solid fa-scroll"></i> ${name}`;
+            document.getElementById('recipeTitle').innerText = name;
             let rec = secretRecipes[name];
             if(!rec) return; 
             document.getElementById('recipeContent').innerText = rec;
@@ -1144,6 +965,7 @@
             }
             
             const searchInput = document.getElementById('libSearchInput').value;
+            document.getElementById('clearSearchBtn').style.display = searchInput.length > 0 ? 'block' : 'none';
             const searchTerm = normalizeTR(searchInput);
             
             libraryDB.filter(p => currentLibFilter === 'Tümü' || p.kategori === currentLibFilter)
@@ -1180,8 +1002,7 @@
             if(!isEditMode) return;
             if(confirm("Bu ürünü silmek istediğinize emin misiniz?")) {
                 libraryDB = libraryDB.filter(p => p.id !== id);
-                renderLibraryDrumpad();
-                if(db) db.ref(`${dbRoot}/library`).set(libraryDB);
+                db.ref(`${dbRoot}/library`).set(libraryDB);
                 showToast("Ürün silindi.");
             }
         }
@@ -1197,8 +1018,7 @@
                 birim: document.getElementById('newProdUnit').value
             };
             libraryDB.unshift(newItem);
-            renderLibraryDrumpad();
-            if(db) db.ref(`${dbRoot}/library`).set(libraryDB);
+            db.ref(`${dbRoot}/library`).set(libraryDB);
             closeModal('addProdModal');
             showToast("Yeni ürün eklendi.");
             document.getElementById('newProdName').value = "";
@@ -1226,9 +1046,7 @@
                 startedBy: currentUser.name
             };
             
-            activeItems.push(newItem);
-            renderActiveList();
-            if(db) db.ref(`${dbRoot}/active/${newItem.id}`).set(newItem);
+            db.ref(`${dbRoot}/active/${newItem.id}`).set(newItem);
             showToast(`${prod.urun} takibe alındı.`);
             if(navigator.vibrate) navigator.vibrate(50);
         }
@@ -1257,13 +1075,13 @@
                 searchInput.value = transcript.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,""); 
                 
                 document.querySelector('#libChips .chip').click(); // Tümü seç
-                handleSearchInput();
-                showToast(`Sesli Girdi: "${searchInput.value}"`);
+                renderLibraryDrumpad();
+                showToast(`Arama: "${searchInput.value}"`);
             };
             
             recognition.onerror = (event) => { 
                 showToast("Ses algılanamadı, tekrar deneyin.", true); 
-                document.getElementById('libSearchInput').placeholder = "Ürün ara veya soru sor...";
+                document.getElementById('libSearchInput').placeholder = "Ürün ara...";
             };
             
             recognition.start();
@@ -1395,15 +1213,10 @@
 
         function processItem(id, result) {
             clearTimeout(undoTimeout);
-            const itemIndex = activeItems.findIndex(i => i.id === id);
-            if(itemIndex === -1) return;
-            const item = activeItems[itemIndex];
+            const item = activeItems.find(i => i.id === id);
             
             lastActionData = { type: 'single', item: item, result: result };
-            
-            activeItems.splice(itemIndex, 1);
-            renderActiveList();
-            if(db) db.ref(`${dbRoot}/active/${id}`).remove();
+            db.ref(`${dbRoot}/active/${id}`).remove();
             
             if(navigator.vibrate) navigator.vibrate([50, 50]);
             
@@ -1416,9 +1229,7 @@
                 t.classList.remove('show');
                 clearTimeout(undoTimeout);
                 if(lastActionData && lastActionData.type === 'single') {
-                    activeItems.push(lastActionData.item);
-                    renderActiveList();
-                    if(db) db.ref(`${dbRoot}/active/${lastActionData.item.id}`).set(lastActionData.item);
+                    db.ref(`${dbRoot}/active/${lastActionData.item.id}`).set(lastActionData.item);
                     lastActionData = null;
                 }
             };
@@ -1426,7 +1237,7 @@
             undoTimeout = setTimeout(() => {
                 t.classList.remove('show');
                 if(lastActionData && lastActionData.type === 'single') {
-                    logAction(`SKT ${lastActionData.result}`, `${lastActionData.item.name} sistemden düştü.`);
+                    logAction(`SKT ${lastActionData.result}`, `${lastActionData.item.name} sistemden düşüldü.`);
                     lastActionData = null;
                     if(document.getElementById('adminModal').classList.contains('active')) renderAdminDashboard();
                 }
@@ -1478,14 +1289,12 @@
             orderCounts = {}; loadOrderTemplate(currentOrderCat, null);
         }
 
-        function updateShiftNote() { if(db) db.ref(`${dbRoot}/shiftNote`).set(document.getElementById('shiftNoteArea').value); }
+        function updateShiftNote() { db.ref(`${dbRoot}/shiftNote`).set(document.getElementById('shiftNoteArea').value); }
 
         function addTodo() {
             const txt = document.getElementById('todoInput').value.trim(); if(!txt) return;
             const newTodo = { id: Date.now().toString(), text: txt, done: false, addedBy: currentUser.name, timestamp: Date.now() };
-            todos.push(newTodo);
-            renderTodos();
-            if(db) db.ref(`${dbRoot}/todos/${newTodo.id}`).set(newTodo);
+            db.ref(`${dbRoot}/todos/${newTodo.id}`).set(newTodo);
             document.getElementById('todoInput').value = "";
             showToast("Görev eklendi.");
         }
@@ -1509,27 +1318,8 @@
                 `;
             });
         }
-        function toggleTodo(id, currentStatus) { 
-            const t = todos.find(x=>x.id === id); if(t) t.done = !currentStatus; renderTodos();
-            if(db) db.ref(`${dbRoot}/todos/${id}`).update({ done: !currentStatus }); 
-        }
-        function deleteTodo(id) { 
-            todos = todos.filter(x=>x.id !== id); renderTodos();
-            if(db) db.ref(`${dbRoot}/todos/${id}`).remove(); 
-        }
-
-        function logAction(actionType, detail) {
-            const logItem = { 
-                id: Date.now().toString(), 
-                date: new Date().toLocaleString('tr-TR'), 
-                user: currentUser.name, 
-                action: actionType, 
-                detail: detail,
-                timestamp: Date.now()
-            };
-            allLogs.push(logItem);
-            if(db) db.ref(`${dbRoot}/logs/${logItem.id}`).set(logItem);
-        }
+        function toggleTodo(id, currentStatus) { db.ref(`${dbRoot}/todos/${id}`).update({ done: !currentStatus }); }
+        function deleteTodo(id) { db.ref(`${dbRoot}/todos/${id}`).remove(); }
 
         function openModal(id) { 
             document.getElementById(id).classList.add('active'); 
@@ -1603,19 +1393,15 @@
             if(!name || pin.length !== 4) return alert("Lütfen eksiksiz ve 4 haneli PIN girin.");
             if(usersDB[pin]) return alert("Bu PIN kullanımda.");
 
-            usersDB[pin] = { name: name, role: role, pin: pin };
-            if(db) db.ref(`${dbRoot}/users/${pin}`).set({ name: name, role: role, pin: pin });
+            db.ref(`${dbRoot}/users/${pin}`).set({ name: name, role: role, pin: pin });
             document.getElementById('newUserName').value = ""; document.getElementById('newUserPin').value = "";
             showToast("Personel başarıyla eklendi.");
             renderUsersList();
         }
 
         function deleteUser(pin) {
-            if(confirm("Personeli silmek istediğinize emin misiniz?")) {
-                delete usersDB[pin];
-                if(db) db.ref(`${dbRoot}/users/${pin}`).remove();
-                renderUsersList();
-            }
+            if(confirm("Personeli silmek istediğinize emin misiniz?")) db.ref(`${dbRoot}/users/${pin}`).remove();
+            renderUsersList();
         }
 
         function checkNotificationStatus() { if("Notification" in window && Notification.permission === "granted") document.getElementById('bellBtn').style.display = 'none'; }
@@ -1634,7 +1420,7 @@
                 }
             }
         }
-        function toggleTheme() { isDark = !isDark; safeSetLocal('kd_theme', isDark ? 'dark' : 'light'); document.body.classList.toggle('dark-mode', isDark); updateThemeIcon(); renderLibraryDrumpad(); }
+        function toggleTheme() { isDark = !isDark; document.body.classList.toggle('dark-mode', isDark); localStorage.setItem('kd_theme', isDark ? 'dark' : 'light'); updateThemeIcon(); renderLibraryDrumpad(); }
         function updateThemeIcon() { const i = document.getElementById('themeIcon'); if(i) i.className = isDark ? "fa-solid fa-sun" : "fa-solid fa-moon"; }
         function switchTab(tId, el) { document.querySelectorAll('.tab-pane').forEach(e => e.classList.remove('active')); document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active')); document.getElementById(tId).classList.add('active'); el.classList.add('active'); }
         function showToast(msg, isErr=false) { 
