@@ -3,20 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KD Kordon Pro - Phase 5 (Stable & Gamified)</title>
+    <title>KD Kordon Pro - Final (Fixed UX & Admin)</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3003/3003984.png">
     
-    <!-- Clean, Modern Font -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            /* APPLE iOS / GLASSMORPHISM PALETİ */
             --bg-color: #F2F4F7; 
             --surface-solid: #FFFFFF; 
             --surface-glass: rgba(255, 255, 255, 0.85); 
@@ -67,14 +65,19 @@
         
         #appContent { display: none; padding-bottom: 100px; }
 
-        /* HEADER & NAV */
+        /* HEADER */
         .app-header { background: var(--surface-glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
-        .user-badge { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; color: var(--danger); background: var(--danger-light); padding: 8px 16px; border-radius: 30px; cursor: pointer; transition: var(--transition); }
-        .user-badge:active { transform: scale(0.95); opacity: 0.8; }
+        .datetime-container { display: flex; flex-direction: column; }
+        .clock-text { font-size: 20px; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; line-height: 1.1; }
+        .date-text { font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; }
+
         .header-actions { display: flex; align-items: center; gap: 10px; }
+        .user-badge { display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 13px; color: var(--text-main); background: var(--surface-solid); padding: 8px 14px; border-radius: 30px; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-sm); border: 1px solid var(--border); }
+        .user-badge:active { transform: scale(0.95); opacity: 0.8; }
         .icon-btn { background: var(--surface-solid); border: 1px solid var(--border); box-shadow: var(--shadow-sm); width: 40px; height: 40px; border-radius: 50%; color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: var(--transition); }
         .icon-btn:active { transform: scale(0.9); }
 
+        /* BOTTOM NAV */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--surface-glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); display: flex; justify-content: space-around; padding: 15px 10px 25px 10px; z-index: 100; border-top: 1px solid var(--border); }
         .nav-item { display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--text-muted); font-size: 11px; font-weight: 600; cursor: pointer; flex: 1; transition: var(--transition); }
         .nav-item i { font-size: 20px; padding: 10px 20px; border-radius: 30px; transition: var(--transition); }
@@ -119,7 +122,7 @@
         .drumpad-grid.edit-mode .pad { border: 2px dashed var(--danger-light); background: var(--bg-color); box-shadow: none; }
         .drumpad-grid.edit-mode .pad i, .drumpad-grid.edit-mode .pad-name { opacity: 0.5; }
 
-        /* Aktif SKT Swipe & Toplu Seçim - FAZ 4 UI DÜZELTMESİ YAPILDI */
+        /* Aktif SKT Swipe & Toplu Seçim */
         .swipe-container { position: relative; overflow: hidden; border-radius: var(--radius-md); background: var(--bg-color); margin-bottom:12px; border: 1px solid var(--border); }
         .swipe-bg { position: absolute; inset:0; display:flex; justify-content:space-between; align-items:center; color:white; font-size:22px; font-weight:800; border-radius: var(--radius-md); overflow:hidden; }
         .bg-left { background: var(--accent); width: 50%; height: 100%; display:flex; align-items:center; padding-left: 20px; }
@@ -161,6 +164,15 @@
         #fullScreenSpinner { position: fixed; inset:0; background:var(--bg-color); z-index:999999; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--text-muted); font-weight:500; font-size:15px; text-align: center; padding: 20px;}
         #offlineBanner { display: none; background: var(--warning); color: white; text-align: center; padding: 8px; font-size: 12px; font-weight: 700; position: sticky; top: 0; z-index: 51; }
 
+        .dashboard-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .stat-card { background: var(--bg-color); padding: 15px; border-radius: var(--radius-md); text-align: center; border: 1px solid var(--border); }
+        .stat-card .value { font-size: 24px; font-weight: 800; color: var(--text-main); margin-bottom: 5px; }
+        .stat-card .label { font-size: 11px; font-weight: 600; color: var(--text-muted); }
+        .stat-card.danger { background: var(--danger-light); border-color: var(--danger-light); }
+        .stat-card.danger .value { color: var(--danger); }
+        .stat-card.success { background: var(--success-light); border-color: var(--success-light); }
+        .stat-card.success .value { color: var(--success); }
+
         /* CAMERA / BARCODE MODAL */
         #cameraStream { width: 100%; border-radius: var(--radius-md); background: #000; min-height: 250px; object-fit: cover; }
         .scan-line { position: absolute; width: 100%; height: 2px; background: var(--success); top: 50%; box-shadow: 0 0 10px var(--success); animation: scan 2s infinite linear; }
@@ -201,20 +213,25 @@
     <div id="appContent">
         <div id="offlineBanner"><i class="fa-solid fa-wifi" style="text-decoration: line-through;"></i> Çevrimdışı mod aktif. Yerel veriler kullanılıyor.</div>
         <header class="app-header">
-            <div class="user-badge" onclick="triggerLogoutFlow()">
-                <i class="fa-solid fa-user-circle" style="font-size: 16px;"></i> 
-                <span id="headerUserName">Personel</span> 
+            <!-- Saat ve Tarih Alanı -->
+            <div class="datetime-container">
+                <div class="clock-text" id="clockDisplay">--:--</div>
+                <div class="date-text" id="dateDisplay">-- --- ----</div>
             </div>
+            
             <div class="header-actions">
-                <button class="icon-btn" onclick="requestNotificationPermission()" id="bellBtn"><i class="fa-regular fa-bell"></i></button>
+                <div class="user-badge" onclick="triggerLogoutFlow()">
+                    <i class="fa-solid fa-user-circle" style="font-size: 16px;"></i> 
+                    <span id="headerUserName">Personel</span> 
+                </div>
                 <button class="icon-btn" onclick="toggleTheme()" id="themeBtn"><i class="fa-regular fa-moon" id="themeIcon"></i></button>
-                <button class="icon-btn" onclick="openModal('adminModal')" id="adminBtn" style="display:none; color:var(--warning);"><i class="fa-solid fa-sliders"></i></button>
+                <button class="icon-btn" onclick="openModal('adminModal')" id="adminBtn" style="display:none; color:var(--warning); border-color:var(--warning);"><i class="fa-solid fa-sliders"></i></button>
             </div>
         </header>
 
         <div class="app-container">
             
-            <!-- 1. SİPARİŞ -->
+            <!-- 1. SİPARİŞ (SADECE YÖNETİCİ GÖREBİLİR) -->
             <div id="tab-order" class="tab-pane">
                 <div class="chips-container" id="categoryChips">
                     <div class="chip active" onclick="loadOrderTemplate('Manav', this)">🥦 Manav</div>
@@ -233,7 +250,7 @@
             <!-- 2. ÜRETİM (DRUMPAD) -->
             <div id="tab-library" class="tab-pane active">
 
-                <!-- ŞİMŞEK ARAMA, BARKOD VE SESLİ ASİSTAN (FAZ 4 - ARAMA OPTİMİZASYONU) -->
+                <!-- ŞİMŞEK ARAMA, BARKOD VE SESLİ ASİSTAN -->
                 <div style="display:flex; gap:10px; margin-bottom: 20px; align-items:center;">
                     <div style="position: relative; flex: 1;">
                         <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 18px; top: 16px; color: var(--text-muted);"></i>
@@ -355,7 +372,6 @@
             <label class="closing-cb-label"><input type="checkbox" class="closing-cb"> Dolap dereceleri (+4 / -18) kontrol edildi.</label>
             <label class="closing-cb-label"><input type="checkbox" class="closing-cb"> Gün sonu fişleri ve evraklar düzenlendi.</label>
 
-            <!-- FAZ 5: DISABLED KALDIRILDI -->
             <button class="btn btn-primary" id="finishClosingBtn" style="margin-top:25px; transition: var(--transition);" onclick="showSummary()">Vardiyayı Tamamla</button>
             <button class="btn" style="margin-top:10px; background:transparent; color:var(--text-muted);" onclick="closeModal('checklistModal')">İptal Et</button>
         </div>
@@ -458,7 +474,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <script>
-        // GÜVENLİ LOCALSTORAGE
+        // GÜVENLİ LOCALSTORAGE FONKSİYONLARI
         function safeSetLocal(key, val) { try { localStorage.setItem(key, val); } catch(e) {} }
         function safeGetLocal(key) { try { return localStorage.getItem(key); } catch(e) { return null; } }
         function safeRemoveLocal(key) { try { localStorage.removeItem(key); } catch(e) {} }
@@ -482,7 +498,7 @@
             "1923": { name: "Yusuf (Yönetici)", role: "admin", pin: "1923" }
         };
         
-        const dbRoot = 'kd_kordon_pro_v15_fixed';
+        const dbRoot = 'kd_kordon_pro_v17';
         let isAppLaunched = false;
         let appLoadTime = 0;
         let isEditMode = false;
@@ -523,7 +539,22 @@
             initSwipeNavigation();
             
             document.querySelectorAll('.closing-cb').forEach(cb => { cb.addEventListener('change', checkClosingChecklist); });
+            
+            setInterval(updateDateTime, 1000);
+            updateDateTime();
         });
+
+        function updateDateTime() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+            const dateStr = now.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', weekday: 'long' });
+            
+            const clockEl = document.getElementById('clockDisplay');
+            const dateEl = document.getElementById('dateDisplay');
+            
+            if(clockEl) clockEl.innerText = timeStr;
+            if(dateEl) dateEl.innerText = dateStr;
+        }
 
         function initSwipeNavigation() {
             let dragStartX = 0;
@@ -561,12 +592,12 @@
         }
 
         function initDatabase() {
-            // ZIRHLI FALLBACK: 2 saniye içinde Firebase yanıt vermezse Sistemi Yerel Olarak Aç
+            // ZIRHLI FALLBACK
             let dbTimeout = setTimeout(() => {
                 const spinner = document.getElementById('fullScreenSpinner');
                 if(spinner && spinner.style.display !== 'none') {
                     spinner.style.display = 'none';
-                    showToast("Bulut bağlantısı yok. Yerel modda açılıyor.", true);
+                    showToast("Bağlantı zaman aşımı. Çevrimdışı Mod.", true);
                     document.getElementById('offlineBanner').style.display = 'block';
                     showLoginOrApp();
                 }
@@ -597,7 +628,6 @@
                         }
                     });
                 } else {
-                    // Firebase blocklandıysa timeout'u beklemeden aç
                     clearTimeout(dbTimeout);
                     document.getElementById('fullScreenSpinner').style.display = 'none';
                     showToast("Sistem engellendi. Yerel modda açılıyor.", true);
@@ -706,6 +736,21 @@
             {id:"L25", kategori:"Şarküteri, Süt ve Soslar", urun:"Mayonez", raf_omru:1, birim:"Ay"},
             {id:"L26", kategori:"Şarküteri, Süt ve Soslar", urun:"Zeytin Ezmesi", raf_omru:7, birim:"Gün"},
             {id:"L27", kategori:"Şarküteri, Süt ve Soslar", urun:"Turşu", raf_omru:15, birim:"Gün"},
+            {id:"L124", kategori:"Şarküteri, Süt ve Soslar", urun:"Süzme Yoğurt", raf_omru:5, birim:"Gün"},
+            {id:"L121", kategori:"Şarküteri, Süt ve Soslar", urun:"Örgü Peyniri", raf_omru:5, birim:"Gün"},
+            {id:"L122", kategori:"Şarküteri, Süt ve Soslar", urun:"Eski Kaşar", raf_omru:10, birim:"Gün"},
+            {id:"L123", kategori:"Şarküteri, Süt ve Soslar", urun:"Tulum Peyniri", raf_omru:10, birim:"Gün"},
+            
+            // YENİ PAKETLİ ŞARKÜTERİ ÜRÜNLERİ EKLENDİ
+            {id:"L113", kategori:"Paketli Şarküteri", urun:"Dana Kavurma", raf_omru:7, birim:"Gün"},
+            {id:"L114", kategori:"Paketli Şarküteri", urun:"Pastırma", raf_omru:10, birim:"Gün"},
+            {id:"L115", kategori:"Paketli Şarküteri", urun:"Kasap Sucuk", raf_omru:10, birim:"Gün"},
+            {id:"L116", kategori:"Paketli Şarküteri", urun:"Sosis", raf_omru:5, birim:"Gün"},
+            {id:"L117", kategori:"Paketli Şarküteri", urun:"Füme Kaburga", raf_omru:5, birim:"Gün"},
+            {id:"L118", kategori:"Paketli Şarküteri", urun:"Macar Salam", raf_omru:5, birim:"Gün"},
+            {id:"L119", kategori:"Paketli Şarküteri", urun:"Fıstıklı Salam", raf_omru:5, birim:"Gün"},
+            {id:"L120", kategori:"Paketli Şarküteri", urun:"Dilimli Zeytin", raf_omru:7, birim:"Gün"},
+
             {id:"L28", kategori:"Meyve ve Sebze", urun:"Çilek", raf_omru:3, birim:"Gün"},
             {id:"L29", kategori:"Meyve ve Sebze", urun:"Karpuz", raf_omru:3, birim:"Gün"},
             {id:"L30", kategori:"Meyve ve Sebze", urun:"Domates", raf_omru:5, birim:"Gün"},
@@ -795,71 +840,94 @@
 
         let libraryDB = [...defaultLibrary]; 
 
-        function launchApp() {
-            isAppLaunched = true;
-            appLoadTime = Date.now();
-            document.getElementById('appContent').style.display = 'block';
-            document.getElementById('headerUserName').innerText = currentUser.name;
-            
-            if(currentUser.role === 'admin') {
-                document.getElementById('adminBtn').style.display = 'flex';
-                document.getElementById('editModeBtn').style.display = 'block'; 
-                document.getElementById('navOrder').style.display = 'flex';
-                switchTab('tab-order', document.getElementById('navOrder'));
-            } else {
-                document.getElementById('navOrder').style.display = 'none';
-                switchTab('tab-library', document.getElementById('navLibrary'));
-            }
-            
-            showToast(`Hoşgeldin, ${currentUser.name}`);
-            loadOrderTemplate('Manav', document.querySelector('.chip'));
-            
+        function filterLib(cat, el) {
+            document.querySelectorAll('#libChips .chip').forEach(c => c.classList.remove('active'));
+            if(el) el.classList.add('active'); 
+            currentLibFilter = cat; 
             renderLibraryDrumpad();
-            renderActiveList();
-            renderTodos();
-
-            if (db) {
-                db.ref(`${dbRoot}/library`).on('value', snap => {
-                    const data = snap.val();
-                    if(!data) { db.ref(`${dbRoot}/library`).set(libraryDB); } else { libraryDB = Object.values(data); }
-                    renderLibraryDrumpad();
-                });
-
-                db.ref(`${dbRoot}/active`).on('value', snap => {
-                    activeItems = snap.val() ? Object.values(snap.val()) : [];
-                    renderActiveList();
-                });
-                db.ref(`${dbRoot}/todos`).on('value', snap => {
-                    todos = snap.val() ? Object.values(snap.val()) : [];
-                    renderTodos();
-                });
-                db.ref(`${dbRoot}/logs`).on('value', snap => {
-                    allLogs = snap.val() ? Object.values(snap.val()) : [];
-                });
-                
-                db.ref(`${dbRoot}/shiftNote`).on('value', snap => {
-                    document.getElementById('shiftNoteArea').value = snap.val() || "";
-                });
-
-                db.ref(`${dbRoot}/todos`).on('child_added', snap => {
-                    const t = snap.val();
-                    if(t.timestamp && t.timestamp > appLoadTime && t.addedBy !== currentUser.name) {
-                        sendPushNotification("Yeni Görev", `${t.addedBy}: ${t.text}`);
-                    }
-                });
-
-                db.ref(`${dbRoot}/logs`).on('child_added', snap => {
-                    const l = snap.val();
-                    if(l.timestamp && l.timestamp > appLoadTime && l.user !== currentUser.name) {
-                        if(l.action === "Sipariş Verildi") { sendPushNotification("Sipariş", `${l.user} listeyi yolladı.`); }
-                    }
-                });
-            }
-
-            setInterval(renderActiveList, 60000);
         }
 
-        let currentLibFilter = 'Tümü';
+        function handleSearchInput() {
+            const inputVal = document.getElementById('libSearchInput').value;
+            const clearBtn = document.getElementById('clearSearchBtn');
+            if(clearBtn) clearBtn.style.display = inputVal.length > 0 ? 'block' : 'none';
+            renderLibraryDrumpad(); 
+        }
+
+        function clearSearch() {
+            document.getElementById('libSearchInput').value = '';
+            handleSearchInput();
+        }
+
+        let pressTimer;
+        let isLongPress = false;
+
+        function handlePadTouchStart(e, id, name) {
+            if(isEditMode || isBulkMode) return;
+            if(!secretRecipes[name]) return; 
+
+            isLongPress = false;
+            pressTimer = setTimeout(() => {
+                isLongPress = true;
+                if(navigator.vibrate) navigator.vibrate([50, 50]);
+                showSecretRecipe(name);
+            }, 600); 
+        }
+        function handlePadTouchEnd() { clearTimeout(pressTimer); }
+        function handlePadClick(id) {
+            if(isLongPress) return; 
+            startTracking(id);
+        }
+
+        function showSecretRecipe(name) {
+            document.getElementById('recipeTitle').innerHTML = `<i class="fa-solid fa-scroll"></i> ${name}`;
+            let rec = secretRecipes[name];
+            if(!rec) return; 
+            document.getElementById('recipeContent').innerText = rec;
+            openModal('recipeModal');
+        }
+
+        function renderLibraryDrumpad() {
+            const container = document.getElementById('drumpadContainer'); 
+            container.innerHTML = '';
+            
+            if (!libraryDB || libraryDB.length === 0) {
+                container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: var(--text-muted);">Veriler yükleniyor...</div>';
+                return;
+            }
+            
+            const searchInput = document.getElementById('libSearchInput').value;
+            const searchTerm = normalizeTR(searchInput);
+            
+            libraryDB.filter(p => currentLibFilter === 'Tümü' || p.kategori === currentLibFilter)
+                     .filter(p => normalizeTR(p.urun).includes(searchTerm))
+                     .forEach(p => {
+                
+                let omurStr = "";
+                if (p.birim === "Günlük") omurStr = "GÜN SONU";
+                else if (p.birim === "Hemen Kullandır") omurStr = "HEMEN";
+                else if (p.birim === "ORJ SKT") omurStr = "ORJ SKT";
+                else omurStr = `${p.raf_omru} ${p.birim}`;
+                
+                let icon = catIcons[p.kategori] || "fa-box";
+                let topBorderColor = catColors[p.kategori] || "var(--text-muted)";
+                
+                let deleteBtnHtml = (currentUser && currentUser.role === 'admin') ? 
+                    `<div class="pad-delete" onclick="event.stopPropagation(); deleteProduct('${p.id}')"><i class="fa-solid fa-xmark"></i></div>` : '';
+
+                container.innerHTML += `
+                    <div class="pad" 
+                         ontouchstart="handlePadTouchStart(event, '${p.id}', '${p.urun}')" 
+                         ontouchend="handlePadTouchEnd()" 
+                         onclick="handlePadClick('${p.id}')">
+                        <div class="pad-time">${omurStr}</div>
+                        <i class="fa-solid ${icon}" style="color:${topBorderColor}"></i>
+                        <div class="pad-name">${p.urun}</div>
+                        ${deleteBtnHtml}
+                    </div>
+                `;
+            });
+        }
 
         function toggleEditMode() {
             isEditMode = !isEditMode;
@@ -957,101 +1025,6 @@
             toggleBulkMode();
         }
 
-        function filterLib(cat, el) {
-            document.querySelectorAll('#libChips .chip').forEach(c => c.classList.remove('active'));
-            if(el) el.classList.add('active'); 
-            currentLibFilter = cat; 
-            renderLibraryDrumpad();
-        }
-
-        function handleSearchInput() {
-            const inputVal = document.getElementById('libSearchInput').value;
-            const barcodeBtn = document.getElementById('barcodeBtn');
-            const voiceBtn = document.getElementById('voiceBtn');
-            const clearBtn = document.getElementById('clearSearchBtn');
-
-            if(clearBtn) clearBtn.style.display = inputVal.length > 0 ? 'block' : 'none';
-
-            if(barcodeBtn) barcodeBtn.style.display = 'flex';
-            if(voiceBtn) voiceBtn.style.display = 'flex';
-            renderLibraryDrumpad(); 
-        }
-
-        function clearSearch() {
-            document.getElementById('libSearchInput').value = '';
-            handleSearchInput();
-        }
-
-        let pressTimer;
-        let isLongPress = false;
-
-        function handlePadTouchStart(e, id, name) {
-            if(isEditMode || isBulkMode) return;
-            if(!secretRecipes[name]) return; 
-
-            isLongPress = false;
-            pressTimer = setTimeout(() => {
-                isLongPress = true;
-                if(navigator.vibrate) navigator.vibrate([50, 50]);
-                showSecretRecipe(name);
-            }, 600); 
-        }
-        function handlePadTouchEnd() { clearTimeout(pressTimer); }
-        function handlePadClick(id) {
-            if(isLongPress) return; 
-            startTracking(id);
-        }
-
-        function showSecretRecipe(name) {
-            document.getElementById('recipeTitle').innerHTML = `<i class="fa-solid fa-scroll"></i> ${name}`;
-            let rec = secretRecipes[name];
-            if(!rec) return; 
-            document.getElementById('recipeContent').innerText = rec;
-            openModal('recipeModal');
-        }
-
-        function renderLibraryDrumpad() {
-            const container = document.getElementById('drumpadContainer'); 
-            container.innerHTML = '';
-            
-            if (!libraryDB || libraryDB.length === 0) {
-                container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: var(--text-muted);">Veriler yükleniyor...</div>';
-                return;
-            }
-            
-            const searchInput = document.getElementById('libSearchInput').value;
-            const searchTerm = normalizeTR(searchInput);
-            
-            libraryDB.filter(p => currentLibFilter === 'Tümü' || p.kategori === currentLibFilter)
-                     .filter(p => normalizeTR(p.urun).includes(searchTerm))
-                     .forEach(p => {
-                
-                let omurStr = "";
-                if (p.birim === "Günlük") omurStr = "GÜN SONU";
-                else if (p.birim === "Hemen Kullandır") omurStr = "HEMEN";
-                else if (p.birim === "ORJ SKT") omurStr = "ORJ SKT";
-                else omurStr = `${p.raf_omru} ${p.birim}`;
-                
-                let icon = catIcons[p.kategori] || "fa-box";
-                let topBorderColor = catColors[p.kategori] || "var(--text-muted)";
-                
-                let deleteBtnHtml = (currentUser && currentUser.role === 'admin') ? 
-                    `<div class="pad-delete" onclick="event.stopPropagation(); deleteProduct('${p.id}')"><i class="fa-solid fa-xmark"></i></div>` : '';
-
-                container.innerHTML += `
-                    <div class="pad" 
-                         ontouchstart="handlePadTouchStart(event, '${p.id}', '${p.urun}')" 
-                         ontouchend="handlePadTouchEnd()" 
-                         onclick="handlePadClick('${p.id}')">
-                        <div class="pad-time">${omurStr}</div>
-                        <i class="fa-solid ${icon}" style="color:${topBorderColor}"></i>
-                        <div class="pad-name">${p.urun}</div>
-                        ${deleteBtnHtml}
-                    </div>
-                `;
-            });
-        }
-
         function deleteProduct(id) {
             if(!isEditMode) return;
             if(confirm("Bu ürünü silmek istediğinize emin misiniz?")) {
@@ -1132,7 +1105,7 @@
                 const searchInput = document.getElementById('libSearchInput');
                 searchInput.value = transcript.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,""); 
                 
-                document.querySelector('#libChips .chip').click(); // Tümü seç
+                document.querySelector('#libChips .chip').click(); 
                 handleSearchInput(); 
                 showToast(`Sesli Girdi: "${searchInput.value}"`);
             };
