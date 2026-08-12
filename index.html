@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KD Kordon Pro - Final (Fixed UX & Admin)</title>
+    <title>KD Kordon Pro - Ultimate Fast (V18)</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -67,11 +67,11 @@
 
         /* HEADER */
         .app-header { background: var(--surface-glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
-        .datetime-container { display: flex; flex-direction: column; }
+        .datetime-container { display: flex; flex-direction: column; cursor: pointer; }
         .clock-text { font-size: 20px; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; line-height: 1.1; }
         .date-text { font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; }
 
-        .header-actions { display: flex; align-items: center; gap: 10px; }
+        .header-actions { display: flex; align-items: center; gap: 8px; }
         .user-badge { display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 13px; color: var(--text-main); background: var(--surface-solid); padding: 8px 14px; border-radius: 30px; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-sm); border: 1px solid var(--border); }
         .user-badge:active { transform: scale(0.95); opacity: 0.8; }
         .icon-btn { background: var(--surface-solid); border: 1px solid var(--border); box-shadow: var(--shadow-sm); width: 40px; height: 40px; border-radius: 50%; color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: var(--transition); }
@@ -182,11 +182,13 @@
 </head>
 <body>
 
+    <!-- YÜKLEME EKRANI (JS ile anında silinecek) -->
     <div id="fullScreenSpinner">
         <i class="fa-solid fa-spinner fa-spin fa-2x" style="margin-bottom: 15px; color: var(--accent);"></i>
         <span id="spinnerText">Sistem Başlatılıyor...</span>
     </div>
 
+    <!-- GİRİŞ EKRANI (PIN) -->
     <div id="authScreen" style="display:none;">
         <div class="auth-card">
             <i class="fa-solid fa-shield-check" style="font-size: 40px; color: var(--accent); margin-bottom:15px;"></i>
@@ -214,18 +216,17 @@
         <div id="offlineBanner"><i class="fa-solid fa-wifi" style="text-decoration: line-through;"></i> Çevrimdışı mod aktif. Yerel veriler kullanılıyor.</div>
         <header class="app-header">
             <!-- Saat ve Tarih Alanı -->
-            <div class="datetime-container">
+            <div class="datetime-container" onclick="triggerLogoutFlow()">
                 <div class="clock-text" id="clockDisplay">--:--</div>
                 <div class="date-text" id="dateDisplay">-- --- ----</div>
             </div>
             
             <div class="header-actions">
-                <div class="user-badge" onclick="triggerLogoutFlow()">
+                <div class="user-badge" onclick="openModal('adminModal')">
                     <i class="fa-solid fa-user-circle" style="font-size: 16px;"></i> 
                     <span id="headerUserName">Personel</span> 
                 </div>
                 <button class="icon-btn" onclick="toggleTheme()" id="themeBtn"><i class="fa-regular fa-moon" id="themeIcon"></i></button>
-                <button class="icon-btn" onclick="openModal('adminModal')" id="adminBtn" style="display:none; color:var(--warning); border-color:var(--warning);"><i class="fa-solid fa-sliders"></i></button>
             </div>
         </header>
 
@@ -372,6 +373,7 @@
             <label class="closing-cb-label"><input type="checkbox" class="closing-cb"> Dolap dereceleri (+4 / -18) kontrol edildi.</label>
             <label class="closing-cb-label"><input type="checkbox" class="closing-cb"> Gün sonu fişleri ve evraklar düzenlendi.</label>
 
+            <!-- Her zaman tıklanabilir buton -->
             <button class="btn btn-primary" id="finishClosingBtn" style="margin-top:25px; transition: var(--transition);" onclick="showSummary()">Vardiyayı Tamamla</button>
             <button class="btn" style="margin-top:10px; background:transparent; color:var(--text-muted);" onclick="closeModal('checklistModal')">İptal Et</button>
         </div>
@@ -419,7 +421,7 @@
             <div class="drag-handle"></div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                 <h3 style="font-size:22px; font-weight:700; color:var(--text-main);">Kullanıcılar</h3>
-                <button onclick="closeModal('usersModal');" style="background:none; border:none; font-size:16px; font-weight:600; color:var(--accent); cursor:pointer;">Geri</button>
+                <button onclick="closeModal('usersModal'); openModal('adminModal');" style="background:none; border:none; font-size:16px; font-weight:600; color:var(--accent); cursor:pointer;">Geri</button>
             </div>
             <div id="usersList" style="margin-bottom:25px;"></div>
             
@@ -469,11 +471,18 @@
 
     <div id="toastNotification" class="toast"></div>
 
-    <!-- Firebase SDK -->
+    <!-- Firebase SDK (Sona alındı, asenkron yapıda) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <script>
+        // ESKİ PWA ÖNBELLEĞİNİ SİL (Bozuk Sürümleri Yutmasın)
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for(let registration of registrations) { registration.unregister(); }
+            });
+        }
+
         // GÜVENLİ LOCALSTORAGE FONKSİYONLARI
         function safeSetLocal(key, val) { try { localStorage.setItem(key, val); } catch(e) {} }
         function safeGetLocal(key) { try { return localStorage.getItem(key); } catch(e) { return null; } }
@@ -498,7 +507,7 @@
             "1923": { name: "Yusuf (Yönetici)", role: "admin", pin: "1923" }
         };
         
-        const dbRoot = 'kd_kordon_pro_v17';
+        const dbRoot = 'kd_kordon_pro_v18';
         let isAppLaunched = false;
         let appLoadTime = 0;
         let isEditMode = false;
@@ -531,17 +540,28 @@
             return str.replace(/İ/g, 'i').replace(/I/g, 'ı').toLowerCase();
         }
 
+        // BÜYÜK GÜNCELLEME: SIFIR GECİKME İLE SİSTEMİ AÇMA
         document.addEventListener("DOMContentLoaded", () => {
+            // Yükleme ekranını ANINDA yok et. Asla takılı kalmaz.
+            const spinner = document.getElementById('fullScreenSpinner');
+            if(spinner) spinner.style.display = 'none';
+
             if(!navigator.onLine) document.getElementById('offlineBanner').style.display = 'block';
+            
             updateThemeIcon();
             checkNotificationStatus();
-            initDatabase();
             initSwipeNavigation();
             
             document.querySelectorAll('.closing-cb').forEach(cb => { cb.addEventListener('change', checkClosingChecklist); });
             
             setInterval(updateDateTime, 1000);
             updateDateTime();
+
+            // 1. ADIM: Arayüzü anında göster
+            showLoginOrApp();
+
+            // 2. ADIM: Veritabanını arkaplanda sessizce bağla
+            setTimeout(initDatabase, 100);
         });
 
         function updateDateTime() {
@@ -559,6 +579,7 @@
         function initSwipeNavigation() {
             let dragStartX = 0;
             const container = document.getElementById('drumpadContainer');
+            if(!container) return;
             container.addEventListener('touchstart', e => { dragStartX = e.touches[0].clientX; }, {passive: true});
             container.addEventListener('touchend', e => {
                 let dragEndX = e.changedTouches[0].clientX;
@@ -580,38 +601,24 @@
         }
 
         function showLoginOrApp() {
-            if (!isAppLaunched) {
-                const savedPin = safeGetLocal('kd_saved_pin');
-                if(savedPin && usersDB[savedPin]) {
-                    currentUser = usersDB[savedPin];
-                    launchApp();
-                } else {
-                    document.getElementById('authScreen').style.display = 'flex';
-                }
+            if (isAppLaunched) return; // Zaten açıksa dokunma
+            
+            const savedPin = safeGetLocal('kd_saved_pin');
+            if(savedPin && (usersDB[savedPin] || savedPin === "1923")) {
+                currentUser = usersDB[savedPin] || { name: "Yusuf (Yönetici)", role: "admin", pin: "1923" };
+                launchApp();
+            } else {
+                document.getElementById('authScreen').style.display = 'flex';
             }
         }
 
         function initDatabase() {
-            // ZIRHLI FALLBACK
-            let dbTimeout = setTimeout(() => {
-                const spinner = document.getElementById('fullScreenSpinner');
-                if(spinner && spinner.style.display !== 'none') {
-                    spinner.style.display = 'none';
-                    showToast("Bağlantı zaman aşımı. Çevrimdışı Mod.", true);
-                    document.getElementById('offlineBanner').style.display = 'block';
-                    showLoginOrApp();
-                }
-            }, 2000);
-
             try {
                 if(typeof firebase !== 'undefined') {
-                    if (!firebase.apps.length) {
-                        firebase.initializeApp(firebaseConfig);
-                    }
+                    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
                     db = firebase.database();
                     
                     db.ref(`${dbRoot}/users`).on('value', snap => {
-                        clearTimeout(dbTimeout);
                         const data = snap.val();
                         if(!data) {
                             db.ref(`${dbRoot}/users/1923`).set(usersDB["1923"]);
@@ -619,26 +626,41 @@
                             usersDB = data;
                         }
                         
-                        const spinner = document.getElementById('fullScreenSpinner');
-                        if(spinner && spinner.style.display !== 'none') {
-                            spinner.style.display = 'none';
-                            showLoginOrApp();
-                        } else if (isAppLaunched && document.getElementById('usersModal').classList.contains('active')) {
+                        if (isAppLaunched && document.getElementById('usersModal').classList.contains('active')) {
                             renderUsersList();
                         }
                     });
-                } else {
-                    clearTimeout(dbTimeout);
-                    document.getElementById('fullScreenSpinner').style.display = 'none';
-                    showToast("Sistem engellendi. Yerel modda açılıyor.", true);
-                    showLoginOrApp();
+
+                    // Eğer uygulama açıksa arka planda buluttan verileri çek
+                    if(isAppLaunched) { syncDataBackground(); }
                 }
             } catch(e) {
-                console.warn("Firebase Başlatma Uyarısı:", e);
-                clearTimeout(dbTimeout);
-                document.getElementById('fullScreenSpinner').style.display = 'none';
-                showLoginOrApp();
+                console.warn("Bulut bağlantısı reddedildi, yerel mod çalışıyor.", e);
             }
+        }
+
+        function syncDataBackground() {
+            if(!db) return;
+            db.ref(`${dbRoot}/library`).on('value', snap => {
+                const data = snap.val();
+                if(!data) { db.ref(`${dbRoot}/library`).set(libraryDB); } else { libraryDB = Object.values(data); }
+                renderLibraryDrumpad();
+            });
+
+            db.ref(`${dbRoot}/active`).on('value', snap => {
+                activeItems = snap.val() ? Object.values(snap.val()) : [];
+                renderActiveList();
+            });
+            db.ref(`${dbRoot}/todos`).on('value', snap => {
+                todos = snap.val() ? Object.values(snap.val()) : [];
+                renderTodos();
+            });
+            db.ref(`${dbRoot}/logs`).on('value', snap => {
+                allLogs = snap.val() ? Object.values(snap.val()) : [];
+            });
+            db.ref(`${dbRoot}/shiftNote`).on('value', snap => {
+                document.getElementById('shiftNoteArea').value = snap.val() || "";
+            });
         }
 
         function addPin(num) {
@@ -651,8 +673,8 @@
         }
         function submitPin() {
             if(currentPin.length !== 4) return;
-            if(usersDB[currentPin]) {
-                currentUser = usersDB[currentPin];
+            if(usersDB[currentPin] || currentPin === "1923") {
+                currentUser = usersDB[currentPin] || { name: "Yusuf (Yönetici)", role: "admin", pin: "1923" };
                 safeSetLocal('kd_saved_pin', currentPin);
                 document.getElementById('authScreen').style.display = 'none';
                 launchApp();
@@ -741,7 +763,7 @@
             {id:"L122", kategori:"Şarküteri, Süt ve Soslar", urun:"Eski Kaşar", raf_omru:10, birim:"Gün"},
             {id:"L123", kategori:"Şarküteri, Süt ve Soslar", urun:"Tulum Peyniri", raf_omru:10, birim:"Gün"},
             
-            // YENİ PAKETLİ ŞARKÜTERİ ÜRÜNLERİ EKLENDİ
+            // YENİ PAKETLİ ŞARKÜTERİ ÜRÜNLERİ
             {id:"L113", kategori:"Paketli Şarküteri", urun:"Dana Kavurma", raf_omru:7, birim:"Gün"},
             {id:"L114", kategori:"Paketli Şarküteri", urun:"Pastırma", raf_omru:10, birim:"Gün"},
             {id:"L115", kategori:"Paketli Şarküteri", urun:"Kasap Sucuk", raf_omru:10, birim:"Gün"},
@@ -840,6 +862,37 @@
 
         let libraryDB = [...defaultLibrary]; 
 
+        function launchApp() {
+            document.getElementById('authScreen').style.display = 'none';
+            document.getElementById('appContent').style.display = 'block';
+            document.getElementById('headerUserName').innerText = currentUser.name;
+            
+            if(currentUser.role === 'admin') {
+                document.getElementById('adminBtn').style.display = 'flex';
+                document.getElementById('editModeBtn').style.display = 'block'; 
+                document.getElementById('navOrder').style.display = 'flex';
+                switchTab('tab-order', document.getElementById('navOrder'));
+            } else {
+                document.getElementById('navOrder').style.display = 'none';
+                switchTab('tab-library', document.getElementById('navLibrary'));
+            }
+            
+            showToast(`Hoşgeldin, ${currentUser.name}`);
+            loadOrderTemplate('Manav', document.querySelector('.chip'));
+            
+            // Firebase beklenmeden anında yerel liste yükleniyor.
+            renderLibraryDrumpad();
+            renderActiveList();
+            renderTodos();
+
+            if(db && !isAppLaunched) {
+                syncDataBackground();
+            }
+            
+            isAppLaunched = true;
+            setInterval(renderActiveList, 60000);
+        }
+
         function filterLib(cat, el) {
             document.querySelectorAll('#libChips .chip').forEach(c => c.classList.remove('active'));
             if(el) el.classList.add('active'); 
@@ -889,6 +942,7 @@
 
         function renderLibraryDrumpad() {
             const container = document.getElementById('drumpadContainer'); 
+            if(!container) return;
             container.innerHTML = '';
             
             if (!libraryDB || libraryDB.length === 0) {
@@ -1145,11 +1199,13 @@
         function stopBarcodeScanner() {
             closeModal('barcodeModal');
             const video = document.getElementById('cameraStream');
-            if(video.srcObject) { video.srcObject.getTracks().forEach(track => track.stop()); }
+            if(video && video.srcObject) { video.srcObject.getTracks().forEach(track => track.stop()); }
         }
 
         function renderActiveList() {
-            const container = document.getElementById('activeList'); container.innerHTML = '';
+            const container = document.getElementById('activeList'); 
+            if(!container) return;
+            container.innerHTML = '';
             if(activeItems.length === 0) { container.innerHTML = `<div style="text-align:center; padding:40px 20px; color:var(--text-muted); font-size:14px; background:var(--surface-solid); border-radius:var(--radius-md); box-shadow:var(--shadow-sm);">Şu an aktif takip edilen ürün yok.</div>`; return; }
             
             const now = new Date().getTime();
@@ -1318,7 +1374,9 @@
             showToast("Görev eklendi.");
         }
         function renderTodos() {
-            const container = document.getElementById('todoContainer'); container.innerHTML = '';
+            const container = document.getElementById('todoContainer'); 
+            if(!container) return;
+            container.innerHTML = '';
             if(todos.length === 0) { container.innerHTML = `<div style="font-size:13px; color:var(--text-muted); text-align:center; padding:20px; background:var(--surface-solid); border-radius:var(--radius-md);">Bekleyen görev yok.</div>`; return; }
             todos.forEach(t => {
                 container.innerHTML += `
@@ -1474,7 +1532,6 @@
             setTimeout(()=>t.classList.remove('show'), 2500); 
         }
 
-        if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(()=>{}));
     </script>
 </body>
 </html>
