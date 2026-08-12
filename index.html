@@ -191,7 +191,7 @@
 
     <div id="fullScreenSpinner">
         <i class="fa-solid fa-spinner fa-spin fa-2x" style="margin-bottom: 15px; color: var(--accent);"></i>
-        <span id="spinnerText">Sistem Yükleniyor...</span>
+        <span id="spinnerText">Sistem Başlatılıyor...</span>
     </div>
 
     <div id="authScreen" style="display:none;">
@@ -491,7 +491,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <script>
-        // GÜVENLİ LOCALSTORAGE FONKSİYONLARI (iOS Private Mode Koruması)
+        // GÜVENLİ LOCALSTORAGE
         function safeSetLocal(key, val) { try { localStorage.setItem(key, val); } catch(e) {} }
         function safeGetLocal(key) { try { return localStorage.getItem(key); } catch(e) { return null; } }
         function safeRemoveLocal(key) { try { localStorage.removeItem(key); } catch(e) {} }
@@ -613,29 +613,35 @@
             });
         }
 
+        function showLoginOrApp() {
+            if (!isAppLaunched) {
+                const savedPin = safeGetLocal('kd_saved_pin');
+                if(savedPin && usersDB[savedPin]) {
+                    currentUser = usersDB[savedPin];
+                    launchApp();
+                } else {
+                    document.getElementById('authScreen').style.display = 'flex';
+                }
+            }
+        }
+
         function initDatabase() {
             // ZIRHLI FALLBACK: 2 saniye içinde Firebase yanıt vermezse Sistemi Yerel Olarak Aç
             let dbTimeout = setTimeout(() => {
                 const spinner = document.getElementById('fullScreenSpinner');
                 if(spinner && spinner.style.display !== 'none') {
                     spinner.style.display = 'none';
-                    if (!isAppLaunched) {
-                        const savedPin = safeGetLocal('kd_saved_pin');
-                        if(savedPin && usersDB[savedPin]) {
-                            currentUser = usersDB[savedPin];
-                            launchApp();
-                        } else {
-                            document.getElementById('authScreen').style.display = 'flex';
-                        }
-                    }
-                    showToast("Bağlantı sağlanamadı. Çevrimdışı Mod.", true);
+                    showToast("Bulut bağlantısı yok. Çevrimdışı Mod.", true);
                     document.getElementById('offlineBanner').style.display = 'block';
+                    showLoginOrApp();
                 }
             }, 2000);
 
             try {
                 if(typeof firebase !== 'undefined') {
-                    firebase.initializeApp(firebaseConfig);
+                    if (!firebase.apps.length) {
+                        firebase.initializeApp(firebaseConfig);
+                    }
                     db = firebase.database();
                     
                     db.ref(`${dbRoot}/users`).on('value', snap => {
@@ -648,24 +654,25 @@
                         }
                         
                         const spinner = document.getElementById('fullScreenSpinner');
-                        if(spinner) spinner.style.display = 'none';
-                        
-                        if(!isAppLaunched) {
-                            const savedPin = safeGetLocal('kd_saved_pin');
-                            if(savedPin && usersDB[savedPin]) {
-                                currentUser = usersDB[savedPin];
-                                launchApp();
-                            } else {
-                                document.getElementById('authScreen').style.display = 'flex';
-                            }
-                        } else {
-                            if(document.getElementById('usersModal').classList.contains('active')) renderUsersList();
+                        if(spinner && spinner.style.display !== 'none') {
+                            spinner.style.display = 'none';
+                            showLoginOrApp();
+                        } else if (isAppLaunched && document.getElementById('usersModal').classList.contains('active')) {
+                            renderUsersList();
                         }
                     });
+                } else {
+                    // Firebase blocklandıysa timeout'u beklemeden aç
+                    clearTimeout(dbTimeout);
+                    document.getElementById('fullScreenSpinner').style.display = 'none';
+                    showToast("Sistem engellendi. Yerel modda açılıyor.", true);
+                    showLoginOrApp();
                 }
             } catch(e) {
-                console.error("Firebase Hatası:", e);
-                // Catch block already falls back to setTimeout mechanism
+                console.warn("Firebase Başlatma Uyarısı:", e);
+                clearTimeout(dbTimeout);
+                document.getElementById('fullScreenSpinner').style.display = 'none';
+                showLoginOrApp();
             }
         }
 
@@ -851,7 +858,7 @@
             {id:"L112", kategori:"Paketli & Kuru Gıdalar", urun:"Kavanoz Vişne Sos", raf_omru:3, birim:"Gün"}
         ];
 
-        let libraryDB = [...defaultLibrary]; // LOCAL FALLBACK BAŞLANGICI
+        let libraryDB = [...defaultLibrary]; 
 
         function launchApp() {
             isAppLaunched = true;
@@ -872,7 +879,6 @@
             showToast(`Hoşgeldin, ${currentUser.name}`);
             loadOrderTemplate('Manav', document.querySelector('.chip'));
             
-            // LOCAL RENDERING İLK BAŞTA
             renderLibraryDrumpad();
             renderActiveList();
             renderTodos();
