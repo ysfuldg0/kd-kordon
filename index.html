@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KD Kordon Pro - Ultimate Fast (V18)</title>
+    <title>KD Kordon Pro - Final Stable</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -161,8 +161,7 @@
         .toast { position: fixed; top: 30px; left: 50%; transform: translateX(-50%) translateY(-100px); background: var(--surface-solid); color: var(--text-main); box-shadow: var(--shadow-md); padding: 14px 24px; border-radius: 40px; font-size: 14px; font-weight: 600; z-index: 9999; transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); opacity: 0; white-space: nowrap; display:flex; align-items:center; border: 1px solid var(--border);}
         .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
         
-        #fullScreenSpinner { position: fixed; inset:0; background:var(--bg-color); z-index:999999; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--text-muted); font-weight:500; font-size:15px; text-align: center; padding: 20px;}
-        #offlineBanner { display: none; background: var(--warning); color: white; text-align: center; padding: 8px; font-size: 12px; font-weight: 700; position: sticky; top: 0; z-index: 51; }
+        #fullScreenSpinner { position: fixed; inset:0; background:var(--surface-solid); z-index:999999; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--text-main); font-weight:700; font-size:18px; text-align: center; padding: 20px;}
 
         .dashboard-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
         .stat-card { background: var(--bg-color); padding: 15px; border-radius: var(--radius-md); text-align: center; border: 1px solid var(--border); }
@@ -182,10 +181,10 @@
 </head>
 <body>
 
-    <!-- YÜKLEME EKRANI (JS ile anında silinecek) -->
+    <!-- YÜKLEME EKRANI -->
     <div id="fullScreenSpinner">
-        <i class="fa-solid fa-spinner fa-spin fa-2x" style="margin-bottom: 15px; color: var(--accent);"></i>
-        <span id="spinnerText">Sistem Başlatılıyor...</span>
+        <i class="fa-solid fa-mug-hot fa-bounce fa-2x" style="margin-bottom: 15px; color: var(--accent);"></i>
+        <span id="spinnerText">Başlatılıyor...</span>
     </div>
 
     <!-- GİRİŞ EKRANI (PIN) -->
@@ -213,7 +212,6 @@
 
     <!-- ANA UYGULAMA -->
     <div id="appContent">
-        <div id="offlineBanner"><i class="fa-solid fa-wifi" style="text-decoration: line-through;"></i> Çevrimdışı mod aktif. Yerel veriler kullanılıyor.</div>
         <header class="app-header">
             <!-- Saat ve Tarih Alanı -->
             <div class="datetime-container" onclick="triggerLogoutFlow()">
@@ -471,18 +469,11 @@
 
     <div id="toastNotification" class="toast"></div>
 
-    <!-- Firebase SDK (Sona alındı, asenkron yapıda) -->
+    <!-- Firebase SDK (Asenkron yükleme ve başlatma hatası engellendi) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <script>
-        // ESKİ PWA ÖNBELLEĞİNİ SİL (Bozuk Sürümleri Yutmasın)
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                for(let registration of registrations) { registration.unregister(); }
-            });
-        }
-
         // GÜVENLİ LOCALSTORAGE FONKSİYONLARI
         function safeSetLocal(key, val) { try { localStorage.setItem(key, val); } catch(e) {} }
         function safeGetLocal(key) { try { return localStorage.getItem(key); } catch(e) { return null; } }
@@ -507,7 +498,7 @@
             "1923": { name: "Yusuf (Yönetici)", role: "admin", pin: "1923" }
         };
         
-        const dbRoot = 'kd_kordon_pro_v18';
+        const dbRoot = 'kd_kordon_pro_v19'; // Versiyon atladı temiz kurulum için
         let isAppLaunched = false;
         let appLoadTime = 0;
         let isEditMode = false;
@@ -515,9 +506,6 @@
         let selectedBulkItems = [];
         let lastActionData = null;
         let undoTimeout = null;
-
-        window.addEventListener('offline', () => { document.getElementById('offlineBanner').style.display = 'block'; });
-        window.addEventListener('online', () => { document.getElementById('offlineBanner').style.display = 'none'; showToast("Bağlantı sağlandı."); });
 
         const catColors = {
             "Şarküteri, Süt ve Soslar": "#007AFF", 
@@ -545,8 +533,6 @@
             // Yükleme ekranını ANINDA yok et. Asla takılı kalmaz.
             const spinner = document.getElementById('fullScreenSpinner');
             if(spinner) spinner.style.display = 'none';
-
-            if(!navigator.onLine) document.getElementById('offlineBanner').style.display = 'block';
             
             updateThemeIcon();
             checkNotificationStatus();
@@ -560,8 +546,8 @@
             // 1. ADIM: Arayüzü anında göster
             showLoginOrApp();
 
-            // 2. ADIM: Veritabanını arkaplanda sessizce bağla
-            setTimeout(initDatabase, 100);
+            // 2. ADIM: Veritabanını hemen bağla
+            initDatabase();
         });
 
         function updateDateTime() {
@@ -631,11 +617,11 @@
                         }
                     });
 
-                    // Eğer uygulama açıksa arka planda buluttan verileri çek
-                    if(isAppLaunched) { syncDataBackground(); }
+                    // Verileri buluttan canlı dinlemeye başla
+                    syncDataBackground();
                 }
             } catch(e) {
-                console.warn("Bulut bağlantısı reddedildi, yerel mod çalışıyor.", e);
+                console.warn("Veritabanı bağlantısı başlatılamadı.", e);
             }
         }
 
@@ -728,9 +714,7 @@
             location.reload();
         }
 
-        let activeItems = [], todos = [], allLogs = [];
-        
-        const defaultLibrary = [
+        let libraryDB = [
             {id:"L1", kategori:"Şarküteri, Süt ve Soslar", urun:"Süzme Beyaz Peynir", raf_omru:3, birim:"Gün"},
             {id:"L2", kategori:"Şarküteri, Süt ve Soslar", urun:"Krem Peynir", raf_omru:3, birim:"Gün"},
             {id:"L3", kategori:"Şarküteri, Süt ve Soslar", urun:"Kaşar Peyniri", raf_omru:5, birim:"Gün"},
@@ -860,10 +844,9 @@
             {id:"L112", kategori:"Paketli & Kuru Gıdalar", urun:"Kavanoz Vişne Sos", raf_omru:3, birim:"Gün"}
         ];
 
-        let libraryDB = [...defaultLibrary]; 
-
         function launchApp() {
-            document.getElementById('authScreen').style.display = 'none';
+            isAppLaunched = true;
+            appLoadTime = Date.now();
             document.getElementById('appContent').style.display = 'block';
             document.getElementById('headerUserName').innerText = currentUser.name;
             
@@ -880,108 +863,14 @@
             showToast(`Hoşgeldin, ${currentUser.name}`);
             loadOrderTemplate('Manav', document.querySelector('.chip'));
             
-            // Firebase beklenmeden anında yerel liste yükleniyor.
             renderLibraryDrumpad();
             renderActiveList();
             renderTodos();
 
-            if(db && !isAppLaunched) {
-                syncDataBackground();
-            }
-            
-            isAppLaunched = true;
             setInterval(renderActiveList, 60000);
         }
 
-        function filterLib(cat, el) {
-            document.querySelectorAll('#libChips .chip').forEach(c => c.classList.remove('active'));
-            if(el) el.classList.add('active'); 
-            currentLibFilter = cat; 
-            renderLibraryDrumpad();
-        }
-
-        function handleSearchInput() {
-            const inputVal = document.getElementById('libSearchInput').value;
-            const clearBtn = document.getElementById('clearSearchBtn');
-            if(clearBtn) clearBtn.style.display = inputVal.length > 0 ? 'block' : 'none';
-            renderLibraryDrumpad(); 
-        }
-
-        function clearSearch() {
-            document.getElementById('libSearchInput').value = '';
-            handleSearchInput();
-        }
-
-        let pressTimer;
-        let isLongPress = false;
-
-        function handlePadTouchStart(e, id, name) {
-            if(isEditMode || isBulkMode) return;
-            if(!secretRecipes[name]) return; 
-
-            isLongPress = false;
-            pressTimer = setTimeout(() => {
-                isLongPress = true;
-                if(navigator.vibrate) navigator.vibrate([50, 50]);
-                showSecretRecipe(name);
-            }, 600); 
-        }
-        function handlePadTouchEnd() { clearTimeout(pressTimer); }
-        function handlePadClick(id) {
-            if(isLongPress) return; 
-            startTracking(id);
-        }
-
-        function showSecretRecipe(name) {
-            document.getElementById('recipeTitle').innerHTML = `<i class="fa-solid fa-scroll"></i> ${name}`;
-            let rec = secretRecipes[name];
-            if(!rec) return; 
-            document.getElementById('recipeContent').innerText = rec;
-            openModal('recipeModal');
-        }
-
-        function renderLibraryDrumpad() {
-            const container = document.getElementById('drumpadContainer'); 
-            if(!container) return;
-            container.innerHTML = '';
-            
-            if (!libraryDB || libraryDB.length === 0) {
-                container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: var(--text-muted);">Veriler yükleniyor...</div>';
-                return;
-            }
-            
-            const searchInput = document.getElementById('libSearchInput').value;
-            const searchTerm = normalizeTR(searchInput);
-            
-            libraryDB.filter(p => currentLibFilter === 'Tümü' || p.kategori === currentLibFilter)
-                     .filter(p => normalizeTR(p.urun).includes(searchTerm))
-                     .forEach(p => {
-                
-                let omurStr = "";
-                if (p.birim === "Günlük") omurStr = "GÜN SONU";
-                else if (p.birim === "Hemen Kullandır") omurStr = "HEMEN";
-                else if (p.birim === "ORJ SKT") omurStr = "ORJ SKT";
-                else omurStr = `${p.raf_omru} ${p.birim}`;
-                
-                let icon = catIcons[p.kategori] || "fa-box";
-                let topBorderColor = catColors[p.kategori] || "var(--text-muted)";
-                
-                let deleteBtnHtml = (currentUser && currentUser.role === 'admin') ? 
-                    `<div class="pad-delete" onclick="event.stopPropagation(); deleteProduct('${p.id}')"><i class="fa-solid fa-xmark"></i></div>` : '';
-
-                container.innerHTML += `
-                    <div class="pad" 
-                         ontouchstart="handlePadTouchStart(event, '${p.id}', '${p.urun}')" 
-                         ontouchend="handlePadTouchEnd()" 
-                         onclick="handlePadClick('${p.id}')">
-                        <div class="pad-time">${omurStr}</div>
-                        <i class="fa-solid ${icon}" style="color:${topBorderColor}"></i>
-                        <div class="pad-name">${p.urun}</div>
-                        ${deleteBtnHtml}
-                    </div>
-                `;
-            });
-        }
+        let currentLibFilter = 'Tümü';
 
         function toggleEditMode() {
             isEditMode = !isEditMode;
@@ -1077,6 +966,96 @@
             }, 5000);
             
             toggleBulkMode();
+        }
+
+        function filterLib(cat, el) {
+            document.querySelectorAll('#libChips .chip').forEach(c => c.classList.remove('active'));
+            if(el) el.classList.add('active'); 
+            currentLibFilter = cat; 
+            renderLibraryDrumpad();
+        }
+
+        function handleSearchInput() {
+            const inputVal = document.getElementById('libSearchInput').value;
+            const clearBtn = document.getElementById('clearSearchBtn');
+            if(clearBtn) clearBtn.style.display = inputVal.length > 0 ? 'block' : 'none';
+            renderLibraryDrumpad(); 
+        }
+
+        function clearSearch() {
+            document.getElementById('libSearchInput').value = '';
+            handleSearchInput();
+        }
+
+        let pressTimer;
+        let isLongPress = false;
+
+        function handlePadTouchStart(e, id, name) {
+            if(isEditMode || isBulkMode) return;
+            if(!secretRecipes[name]) return; 
+
+            isLongPress = false;
+            pressTimer = setTimeout(() => {
+                isLongPress = true;
+                if(navigator.vibrate) navigator.vibrate([50, 50]);
+                showSecretRecipe(name);
+            }, 600); 
+        }
+        function handlePadTouchEnd() { clearTimeout(pressTimer); }
+        function handlePadClick(id) {
+            if(isLongPress) return; 
+            startTracking(id);
+        }
+
+        function showSecretRecipe(name) {
+            document.getElementById('recipeTitle').innerHTML = `<i class="fa-solid fa-scroll"></i> ${name}`;
+            let rec = secretRecipes[name];
+            if(!rec) return; 
+            document.getElementById('recipeContent').innerText = rec;
+            openModal('recipeModal');
+        }
+
+        function renderLibraryDrumpad() {
+            const container = document.getElementById('drumpadContainer'); 
+            if(!container) return;
+            container.innerHTML = '';
+            
+            if (!libraryDB || libraryDB.length === 0) {
+                container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: var(--text-muted);">Veriler yükleniyor...</div>';
+                return;
+            }
+            
+            const searchInput = document.getElementById('libSearchInput').value;
+            const searchTerm = normalizeTR(searchInput);
+            
+            libraryDB.filter(p => currentLibFilter === 'Tümü' || p.kategori === currentLibFilter)
+                     .filter(p => normalizeTR(p.urun).includes(searchTerm))
+                     .forEach(p => {
+                
+                let omurStr = "";
+                if (p.birim === "Günlük") omurStr = "GÜN SONU";
+                else if (p.birim === "Hemen Kullandır") omurStr = "HEMEN";
+                else if (p.birim === "ORJ SKT") omurStr = "ORJ SKT";
+                else omurStr = `${p.raf_omru} ${p.birim}`;
+                
+                let icon = catIcons[p.kategori] || "fa-box";
+                let topBorderColor = catColors[p.kategori] || "var(--text-muted)";
+                
+                let deleteBtnHtml = (currentUser && currentUser.role === 'admin') ? 
+                    `<div class="pad-delete" onclick="event.stopPropagation(); deleteProduct('${p.id}')"><i class="fa-solid fa-xmark"></i></div>` : '';
+
+                container.innerHTML += `
+                    <div class="pad" 
+                         ontouchstart="handlePadTouchStart(event, '${p.id}', '${p.urun}')" 
+                         ontouchend="handlePadTouchEnd()" 
+                         onclick="handlePadClick('${p.id}')">
+                        <div class="pad-time">${omurStr}</div>
+                        <i class="fa-solid ${icon}" style="color:${topBorderColor}"></i>
+                        <div class="pad-name">${p.urun}</div>
+                        ${deleteBtnHtml}
+                    </div>
+                `;
+            });
         }
 
         function deleteProduct(id) {
