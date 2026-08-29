@@ -1,10 +1,11 @@
 {
-  "name": "KD Kordon Pro",
+  "name": "KD Kordon Pro Dashboard",
   "short_name": "Kordon Pro",
+  "description": "Kahve Dünyası Vardiya ve Üretim Takip Sistemi",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#F8F9FA",
-  "theme_color": "#2A1A14",
+  "background_color": "#F2F4F7",
+  "theme_color": "#0F172A",
   "icons": [
     {
       "src": "https://cdn-icons-png.flaticon.com/512/3003/3003984.png",
