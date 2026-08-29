@@ -67,16 +67,13 @@
 
         /* HEADER */
         .app-header { background: var(--surface-glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
-        .datetime-container { display: flex; flex-direction: column; }
+        .datetime-container { display: flex; flex-direction: column; cursor: pointer; }
         .clock-text { font-size: 20px; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; line-height: 1.1; }
         .date-text { font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; }
 
         .header-actions { display: flex; align-items: center; gap: 8px; }
-        
-        /* ŞIK PROFİL BUTONU (Yusuf Yönetici orantısızlığı düzeltildi) */
         .profile-btn { width: 40px; height: 40px; border-radius: 50%; background: var(--accent-light); color: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; cursor: pointer; border: 1px solid var(--border); box-shadow: var(--shadow-sm); transition: var(--transition); }
         .profile-btn:active { transform: scale(0.9); }
-        
         .icon-btn { background: var(--surface-solid); border: 1px solid var(--border); box-shadow: var(--shadow-sm); width: 40px; height: 40px; border-radius: 50%; color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: var(--transition); }
         .icon-btn:active { transform: scale(0.9); }
 
@@ -95,7 +92,6 @@
         .btn { border: none; border-radius: var(--radius-md); font-family: inherit; font-weight: 700; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: var(--transition); padding: 16px 20px; width: 100%; }
         .btn:active { transform: scale(0.97); opacity: 0.9; }
         .btn-primary { background: var(--accent); color: white; box-shadow: var(--shadow-sm); }
-        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
 
         /* CHIPS */
         .chips-container { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; scrollbar-width: none; scroll-behavior: smooth; }
@@ -106,20 +102,13 @@
         .form-input { width: 100%; padding: 16px 20px; background: var(--surface-solid); border: 1px solid var(--border); border-radius: var(--radius-md); font-family: inherit; font-size: 15px; font-weight: 500; color: var(--text-main); margin-bottom: 15px; transition: var(--transition); box-shadow: var(--shadow-sm); outline: none;}
         .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-light); }
 
-        /* DASHBOARD GRID (ANA SAYFA) */
+        /* DASHBOARD GRID */
         .dashboard-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
         .dash-card { background: var(--surface-solid); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 20px 15px; text-align: center; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-sm); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
         .dash-card:active { transform: scale(0.95); }
         .dash-card i { font-size: 28px; color: var(--accent); }
         .dash-card .title { font-weight: 700; font-size: 14px; color: var(--text-main); }
         .dash-card .desc { font-weight: 600; font-size: 11px; color: var(--text-muted); }
-
-        /* Sipariş Satırları */
-        .order-row { background: var(--surface-solid); border-radius: var(--radius-md); padding: 16px; box-shadow: var(--shadow-sm); display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); margin-bottom:12px; transition: var(--transition);}
-        .order-row.active-row { border-color: var(--success); background: var(--success-light); }
-        .counter { display: flex; align-items: center; gap: 12px; background: var(--bg-color); padding: 6px; border-radius: 30px; }
-        .btn-count { background: var(--surface-solid); border: none; width: 34px; height: 34px; border-radius: 50%; font-size: 18px; font-weight: 500; color: var(--text-main); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); cursor: pointer; transition: var(--transition); }
-        .btn-count:active { transform: scale(0.9); }
 
         /* SKT Drumpad */
         .drumpad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; min-height: 50vh; align-content: start; }
@@ -159,7 +148,7 @@
         .modal-overlay.active { opacity: 1; visibility: visible; }
         .modal-content { background: var(--surface-solid); width: 100%; max-width: 600px; border-radius: 30px 30px 0 0; padding: 30px 25px 50px; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); max-height: 90vh; overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.1); overscroll-behavior-y: contain; display:flex; flex-direction:column; }
         .modal-overlay.active .modal-content { transform: translateY(0); }
-        .drag-handle { width: 40px; height: 5px; background: var(--border); border-radius: 10px; margin: 0 auto 25px; flex-shrink:0; }
+        .drag-handle { width: 40px; height: 5px; background: var(--border); border-radius: 10px; margin: 0 auto 25px; flex-shrink:0; cursor: ns-resize; }
         
         .closing-cb-label { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; font-size: 14px; font-weight: 500; color: var(--text-main); cursor: pointer; background: var(--bg-color); padding: 15px; border-radius: var(--radius-md); transition: var(--transition); border:1px solid transparent; }
         .closing-cb-label input[type="checkbox"] { width: 22px; height: 22px; accent-color: var(--success); cursor: pointer; }
@@ -194,8 +183,7 @@
         .gallery-item img { width:100%; height:150px; object-fit:cover; display:block; }
         .gallery-item .overlay { position:absolute; bottom:0; left:0; width:100%; background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); padding:8px; color:white; font-size:10px; font-weight:600; }
         
-        /* Orijinal Liste Scroll Yeri */
-        .modal-body { overflow-y: auto; padding-right: 5px; }
+        .modal-body { overflow-y: auto; padding-right: 5px; flex:1; }
     </style>
 </head>
 <body>
@@ -226,7 +214,6 @@
     <!-- ANA UYGULAMA -->
     <div id="appContent">
         <header class="app-header">
-            <!-- Dinamik Saat ve Tarih -->
             <div class="datetime-container">
                 <div class="clock-text" id="clockDisplay">00:00</div>
                 <div class="date-text" id="dateDisplay">-- --- ----</div>
@@ -234,14 +221,13 @@
             
             <div class="header-actions">
                 <button class="icon-btn" onclick="toggleTheme()" id="themeBtn"><i class="fa-regular fa-moon" id="themeIcon"></i></button>
-                <!-- Düzeltilmiş Şık Profil Butonu (Baş Harf) -->
-                <div class="profile-btn" id="headerUserBadge" onclick="openModal('profileModal')">Y</div>
+                <div class="profile-btn" id="headerUserBadge" onclick="openModal('profileModal')">U</div>
             </div>
         </header>
 
         <div class="app-container">
 
-            <!-- YENİ: ANA SAYFA (DASHBOARD) -->
+            <!-- 1. ANA SAYFA (DASHBOARD) -->
             <div id="tab-home" class="tab-pane active">
                 <h3 style="font-size: 24px; font-weight: 800; color: var(--text-main); margin-bottom:5px;">Kontrol Merkezi</h3>
                 <p style="color:var(--text-muted); font-size:13px; margin-bottom: 20px;">Hoşgeldin <span id="welcomeName" style="font-weight:700;">Personel</span>, işte menülerin.</p>
@@ -254,37 +240,23 @@
                     </div>
                 </div>
 
-                <div class="dashboard-grid" id="mainDashboardGrid">
-                    <!-- Dinamik JS ile Doldurulacak (Yetkiye Göre) -->
-                </div>
-            </div>
-            
-            <!-- 1. SİPARİŞ (SADECE YÖNETİCİ GÖREBİLİR) -->
-            <div id="tab-order" class="tab-pane">
-                <div class="chips-container" id="categoryChips">
-                    <div class="chip active" onclick="loadOrderTemplate('Manav', this)">🥦 Manav</div>
-                    <div class="chip" onclick="loadOrderTemplate('Süt', this)">🥛 Süt</div>
-                    <div class="chip" onclick="loadOrderTemplate('Su', this)">💧 Su</div>
-                    <div class="chip" onclick="loadOrderTemplate('Soda', this)">🥤 Soda</div>
-                </div>
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                    <h3 id="currentTemplateTitle" style="font-size: 22px; font-weight: 700; color: var(--text-main);">Manav Listesi</h3>
-                    <button onclick="resetCounters()" style="background:none; border:none; color:var(--accent); font-size:14px; font-weight: 600; cursor:pointer;">Sıfırla</button>
-                </div>
-                <div id="orderTemplateList" class="list-grid mb-4"></div>
-                <button class="btn btn-primary" style="margin-top:20px; background: #25D366;" onclick="sendOrderViaWhatsApp()"><i class="fa-brands fa-whatsapp" style="font-size: 18px;"></i> WhatsApp'a Gönder</button>
+                <div class="dashboard-grid" id="mainDashboardGrid"></div>
             </div>
 
             <!-- 2. ÜRETİM (DRUMPAD) -->
             <div id="tab-library" class="tab-pane">
 
-                <!-- Arama Motoru, Sesli Komut -->
+                <!-- Arama Motoru, Kamera Notu ve Sesli Komut -->
                 <div style="display:flex; gap:10px; margin-bottom: 20px; align-items:center;">
                     <div style="position: relative; flex: 1;">
                         <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 18px; top: 16px; color: var(--text-muted);"></i>
                         <input type="text" id="libSearchInput" class="form-input" style="padding-left: 45px; padding-right:40px; margin-bottom: 0; border-radius: 30px;" placeholder="Ürün ara..." onkeyup="handleSearchInput()">
                         <i class="fa-solid fa-xmark" id="clearSearchBtn" style="position: absolute; right: 18px; top: 16px; color: var(--text-muted); cursor: pointer; display: none;" onclick="clearSearch()"></i>
                     </div>
+                    <button class="icon-btn" style="width: 50px; height: 50px; border-radius: 50%; flex-shrink:0; background: var(--surface-solid);" onclick="triggerFreeCamera()"><i class="fa-solid fa-camera"></i></button>
+                    <!-- Gizli Input -->
+                    <input type="file" accept="image/*" capture="environment" id="cameraInput" style="display:none;" onchange="handleCameraUpload(event)">
+                    
                     <button class="icon-btn" id="voiceBtn" style="width: 50px; height: 50px; border-radius: 50%; flex-shrink:0; background: var(--accent); color: white; border: none;" onclick="startVoiceSearch()"><i class="fa-solid fa-microphone"></i></button>
                 </div>
 
@@ -326,7 +298,6 @@
                 <div class="floating-bulk-bar" id="bulkActionBar">
                     <button class="btn" style="flex:1; background:var(--accent); color:white;" onclick="processBulkItems('Tüketildi')"><i class="fa-solid fa-box-open"></i> Tüketildi</button>
                     <button class="btn" style="flex:1; background:var(--danger); color:white;" onclick="processBulkItems('İmha Edildi')"><i class="fa-solid fa-trash"></i> İmha Et</button>
-                    <!-- YENİ TIPTAL BUTONU (Çoğul Seçimi Kapatmak İçin) -->
                     <button class="btn" style="width:50px; background:var(--surface-solid); color:var(--text-main); flex-shrink:0; border:1px solid var(--border);" onclick="toggleBulkMode()"><i class="fa-solid fa-xmark"></i></button>
                 </div>
             </div>
@@ -373,30 +344,31 @@
         </nav>
     </div>
 
-    <!-- PROFİL (ÇIKIŞ) MODALI -->
+    <!-- PROFİL MODALI -->
     <div class="modal-overlay" id="profileModal">
         <div class="modal-content" style="text-align: center;">
             <div class="drag-handle"></div>
-            <div style="width:70px; height:70px; background:var(--accent-light); color:var(--accent); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:30px; font-weight:800; margin:0 auto 15px;" id="profileModalAvatar">Y</div>
-            <h3 style="font-size:22px; font-weight:700; color:var(--text-main); margin-bottom:5px;" id="profileModalName">Personel Adı</h3>
+            <div style="width:70px; height:70px; background:var(--accent-light); color:var(--accent); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:30px; font-weight:800; margin:0 auto 15px;" id="profileModalAvatar">U</div>
+            <h3 style="font-size:22px; font-weight:700; color:var(--text-main); margin-bottom:5px;" id="profileModalName">Personel</h3>
             <p style="color:var(--text-muted); font-size:13px; font-weight:600; text-transform:uppercase; margin-bottom:30px;" id="profileModalRole">Role</p>
             
             <button class="btn" style="background:var(--danger-light); color:var(--danger); width:100%;" onclick="triggerLogoutFlow()"><i class="fa-solid fa-person-walking-arrow-right"></i> Vardiyayı Bitir / Çıkış Yap</button>
         </div>
     </div>
 
-    <!-- FOTOĞRAF ÇEKİM MODALI (GÖREV İÇİN) -->
+    <!-- FOTOĞRAF ÇEKİM MODALI -->
     <div class="modal-overlay" id="cameraNoteModal">
         <div class="modal-content" style="text-align: center;">
             <div class="drag-handle"></div>
-            <h3 style="font-size:20px; font-weight:700; margin-bottom:15px; color:var(--text-main);">Fotoğraf Çekildi</h3>
+            <h3 style="font-size:20px; font-weight:700; margin-bottom:15px; color:var(--text-main);">Fotoğraflı Kayıt</h3>
             <img id="cameraPreviewImg" src="" style="width:100%; max-height: 250px; object-fit:cover; border-radius:var(--radius-md); margin-bottom:15px; border:1px solid var(--border); box-shadow:var(--shadow-sm);">
             
             <input type="text" id="cameraNoteTextInput" class="form-input" placeholder="Fotoğrafla ilgili açıklama yazın..." style="margin-bottom:10px;">
             <input type="hidden" id="cameraTargetTaskId" value="">
             
             <div style="display:flex; gap:10px; flex-direction:column; margin-top:10px;">
-                <button class="btn btn-primary" id="saveTaskPhotoBtn" onclick="saveCameraNote()">Görevi Tamamla (Fotoğrafı Ekle)</button>
+                <button class="btn btn-primary" id="saveTaskPhotoBtn" onclick="saveCameraNote()">Görev Panosuna Ekle</button>
+                <button class="btn" id="saveLogPhotoBtn" style="background:var(--success-light); color:var(--success);" onclick="saveCameraAsLog()">Sadece Log/Not Olarak Kaydet</button>
                 <button class="btn" style="background:transparent; color:var(--text-muted); border:1px solid var(--border);" onclick="closeModal('cameraNoteModal')">İptal</button>
             </div>
         </div>
@@ -416,7 +388,7 @@
         </div>
     </div>
 
-    <!-- SİSTEM LOGLARI MODALI (ADMİN) -->
+    <!-- SİSTEM LOGLARI MODALI -->
     <div class="modal-overlay" id="logsModal">
         <div class="modal-content">
             <div class="drag-handle"></div>
@@ -428,7 +400,7 @@
         </div>
     </div>
 
-    <!-- ZORUNLU KAPANIŞ KONTROL LİSTESİ MODALI -->
+    <!-- VARDİYA ÇIKIŞ KONTROL LİSTESİ -->
     <div class="modal-overlay" id="checklistModal">
         <div class="modal-content">
             <div class="drag-handle"></div>
@@ -509,21 +481,29 @@
         </div>
     </div>
 
+    <!-- GİZLİ REÇETE MODALI -->
+    <div class="modal-overlay" id="recipeModal">
+        <div class="modal-content">
+            <div class="drag-handle"></div>
+            <h3 id="recipeTitle" style="font-size:20px; font-weight:800; color:var(--text-main); margin-bottom:15px; display:flex; align-items:center; gap:8px;"></h3>
+            <div id="recipeContent" style="color:var(--text-main); font-size:15px; font-weight:500; line-height:1.6; white-space: pre-wrap; background: var(--bg-color); padding: 20px; border-radius: var(--radius-md); border:1px solid var(--border);"></div>
+            <button class="btn" style="margin-top:25px; background:var(--surface-solid); color:var(--text-main); border:1px solid var(--border);" onclick="closeModal('recipeModal')">Kapat</button>
+        </div>
+    </div>
+
     <div id="toastNotification" class="toast"></div>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <script>
-        // KÜTÜPHANE VE DEĞİŞKENLER GLOBALDE TANIMLANDI (JS ÇÖKMESİNİ ÖNLER)
+        // GLOBALS
         let db = null;
         let currentUser = null; 
         let currentPin = "";
-        let usersDB = {
-            "1923": { name: "Yusuf (Yönetici)", role: "admin", pin: "1923" }
-        };
+        let usersDB = { "1923": { name: "Yusuf (Yönetici)", role: "admin", pin: "1923" } };
         
-        const dbRoot = 'kd_kordon_pro_v22'; // Dashboard Versiyonu
+        const dbRoot = 'kd_kordon_pro_v23'; 
         let isAppLaunched = false;
         let isBulkMode = false;
         let isEditMode = false;
@@ -543,6 +523,12 @@
         };
 
         const catIcons = { "Şarküteri, Süt ve Soslar": "fa-cheese", "Paketli & Kuru Gıdalar": "fa-box", "Meyve ve Sebze": "fa-apple-whole", "Çözündürülen / Dökme / Teşhir": "fa-ice-cream", "Kahveler, İçecekler ve Ön Hazırlık": "fa-mug-hot", "Paketli Şarküteri": "fa-bacon" };
+
+        const secretRecipes = {
+            "Cold Brew": "1. 1/10 oranında kalın öğütülmüş kahve tart.\n2. Bez veya kağıt filtreye yerleştir.\n3. Soğuk suyu yavaşça dök, tüm kahvenin ıslandığına emin ol.\n4. Ağzı kapalı şekilde +4°C dolapta 16-20 saat arası demlenmeye bırak.\n5. Süre bitiminde filtreyi al ve ürünü DRAFT fıçısına aktar.",
+            "Limonata": "1. 1 LT Taze Sıkılmış Limon Suyu\n2. 1 LT Şeker Şurubu\n3. 3 LT İçme Suyu ekle.\n4. İyice karıştır ve +4°C dolaba al. (Toplam 5 LT ürün elde edilir).",
+            "Mğz.da Çekilen Türk Kahvesi": "1. Türk kahvesi değirmenini en ince ayara al.\n2. Sadece günlük tüketilecek kadar (max 1-2 kg) taze çekim yap.\n3. Hava almayan opak kaplarda muhafaza et.\nNot: Kesinlikle ertesi güne çekilmiş kahve devretme."
+        };
 
         const defaultLibrary = [
             {id:"L1", kategori:"Şarküteri, Süt ve Soslar", urun:"Süzme Beyaz Peynir", raf_omru:3, birim:"Gün"},
@@ -675,13 +661,18 @@
             {id:"L111", kategori:"Paketli & Kuru Gıdalar", urun:"Fıstık Tane", raf_omru:1, birim:"Ay"},
             {id:"L112", kategori:"Paketli & Kuru Gıdalar", urun:"Kavanoz Vişne Sos", raf_omru:3, birim:"Gün"}
         ];
+        let libraryDB = [...defaultLibrary];
 
-        // GÜVENLİ LOCALSTORAGE FONKSİYONLARI
+        function normalizeTR(str) {
+            return str.replace(/İ/g, 'i').replace(/I/g, 'ı').toLowerCase();
+        }
+
+        // GÜVENLİ LOCALSTORAGE
         function safeSetLocal(key, val) { try { localStorage.setItem(key, val); } catch(e) {} }
         function safeGetLocal(key) { try { return localStorage.getItem(key); } catch(e) { return null; } }
         function safeRemoveLocal(key) { try { localStorage.removeItem(key); } catch(e) {} }
 
-        // SIFIR GECİKME İLE SİSTEMİ AÇMA
+        // SIFIR GECİKME İLE BAŞLAT
         document.addEventListener("DOMContentLoaded", () => {
             const spinner = document.getElementById('fullScreenSpinner');
             if(spinner) spinner.style.display = 'none';
@@ -692,11 +683,12 @@
             updateThemeIcon();
 
             initModalDragging();
+            initSwipeNavigation();
+            
+            setInterval(updateDateTime, 1000);
+            updateDateTime();
 
-            // 1. ADIM: Arayüzü anında göster
             showLoginOrApp();
-
-            // 2. ADIM: Veritabanını arkaplanda sessizce bağla
             setTimeout(initDatabase, 50);
         });
 
@@ -707,12 +699,10 @@
             
             const clockEl = document.getElementById('clockDisplay');
             const dateEl = document.getElementById('dateDisplay');
-            
             if(clockEl) clockEl.innerText = timeStr;
             if(dateEl) dateEl.innerText = dateStr;
         }
 
-        // MENÜLERİ AŞAĞI KAYDIRARAK KAPATMA (DRAG HANDLE)
         function initModalDragging() {
             let modalStartY = 0;
             let currentModal = null;
@@ -729,7 +719,7 @@
                     }, {passive: true});
                     handle.addEventListener('touchend', e => {
                         let dy = e.changedTouches[0].clientY - modalStartY;
-                        if(dy > 100) { closeModal(currentModal.id); } 
+                        if(dy > 100 && currentModal) { closeModal(currentModal.id); } 
                         else { mc.style.transform = ''; }
                     });
                 }
@@ -738,13 +728,13 @@
 
         function showLoginOrApp() {
             if (isAppLaunched) return; 
-            
             const savedPin = safeGetLocal('kd_saved_pin');
             if(savedPin && (usersDB[savedPin] || savedPin === "1923")) {
                 currentUser = usersDB[savedPin] || { name: "Yusuf (Yönetici)", role: "admin", pin: "1923" };
                 launchApp();
             } else {
-                document.getElementById('authScreen').style.display = 'flex';
+                const authScr = document.getElementById('authScreen');
+                if(authScr) authScr.style.display = 'flex';
             }
         }
 
@@ -771,20 +761,23 @@
                         }
                         
                         if (isAppLaunched) {
-                            if(currentUser.role === 'admin') {
-                                document.getElementById('todoAssignee').style.display = 'block';
-                                document.getElementById('todoPhotoReqLabel').style.display = 'flex';
+                            if(currentUser && currentUser.role === 'admin') {
+                                const ta = document.getElementById('todoAssignee');
+                                const tq = document.getElementById('todoPhotoReqLabel');
+                                if(ta) ta.style.display = 'block';
+                                if(tq) tq.style.display = 'flex';
                             }
-                            if(document.getElementById('usersModal').classList.contains('active')) {
+                            const um = document.getElementById('usersModal');
+                            if(um && um.classList.contains('active')) {
                                 renderUsersList();
                             }
                         }
                     });
 
-                    // Canlı Mesai Takibi Listesi
                     db.ref(`${dbRoot}/active_shifts`).on('value', snap => {
                         activeShifts = snap.val() || {};
-                        if(document.getElementById('adminModal').classList.contains('active')) {
+                        const am = document.getElementById('adminModal');
+                        if(am && am.classList.contains('active')) {
                             renderAdminDashboard();
                         }
                     });
@@ -792,7 +785,7 @@
                     syncDataBackground();
                 }
             } catch(e) {
-                console.warn("Bulut bağlantısı reddedildi, yerel mod çalışıyor.", e);
+                console.warn("Bulut bağlantısı reddedildi, yerel mod çalışıyor.");
             }
         }
 
@@ -813,16 +806,22 @@
 
             db.ref(`${dbRoot}/active`).on('value', snap => {
                 activeItems = snap.val() ? Object.values(snap.val()) : [];
-                if(document.getElementById('tab-active').classList.contains('active')) renderActiveList();
+                const ta = document.getElementById('tab-active');
+                if(ta && ta.classList.contains('active')) renderActiveList();
             });
             db.ref(`${dbRoot}/todos`).on('value', snap => {
                 todos = snap.val() ? Object.values(snap.val()) : [];
-                if(document.getElementById('tab-todos').classList.contains('active')) renderTodos();
+                const tt = document.getElementById('tab-todos');
+                if(tt && tt.classList.contains('active')) renderTodos();
             });
             db.ref(`${dbRoot}/logs`).on('value', snap => {
                 allLogs = snap.val() ? Object.values(snap.val()) : [];
-                if(document.getElementById('adminModal').classList.contains('active')) renderAdminDashboard();
-                if(document.getElementById('logsModal').classList.contains('active')) renderLogsList();
+                const am = document.getElementById('adminModal');
+                const lm = document.getElementById('logsModal');
+                const gm = document.getElementById('galleryModal');
+                if(am && am.classList.contains('active')) renderAdminDashboard();
+                if(lm && lm.classList.contains('active')) renderLogsList();
+                if(gm && gm.classList.contains('active')) renderGallery();
             });
         }
 
@@ -832,7 +831,10 @@
         }
         function clearPin() { currentPin = ""; updatePinDisplay(); }
         function updatePinDisplay() {
-            for(let i=1; i<=4; i++) { document.getElementById(`dot${i}`).className = `pin-dot ${i <= currentPin.length ? 'filled' : ''}`; }
+            for(let i=1; i<=4; i++) { 
+                const d = document.getElementById(`dot${i}`);
+                if(d) d.className = `pin-dot ${i <= currentPin.length ? 'filled' : ''}`; 
+            }
         }
         function submitPin() {
             if(currentPin.length !== 4) return;
@@ -847,7 +849,8 @@
                     });
                 }
 
-                document.getElementById('authScreen').style.display = 'none';
+                const authScr = document.getElementById('authScreen');
+                if(authScr) authScr.style.display = 'none';
                 launchApp();
             } else {
                 showToast("Hatalı PIN kodu.", true);
@@ -856,13 +859,12 @@
             }
         }
         
-        // ÇIKIŞ VE DİNAMİK GÖREV ONAYI
         function triggerLogoutFlow() {
             closeModal('profileModal');
             const container = document.getElementById('dynamicChecklistContainer');
+            if(!container) return;
             container.innerHTML = '';
             
-            // Standart Görevler
             const standards = [
                 "Kasa sayımı eksiksiz tamamlandı.",
                 "Çöpler atıldı, bar temizlendi.",
@@ -873,14 +875,12 @@
                 container.innerHTML += `<label class="closing-cb-label"><input type="checkbox" class="closing-cb"> <span>${text}</span></label>`;
             });
 
-            // Kişiye Atanmış Aktif (Tamamlanmamış) Görevler
             const myTasks = todos.filter(t => !t.done && (t.assignedTo === currentUser.pin));
             if(myTasks.length > 0) {
                 container.innerHTML += `<hr style="border:0; border-top:1px dashed var(--border); margin:15px 0;">`;
                 container.innerHTML += `<h5 style="color:var(--danger); font-size:12px; font-weight:800; margin-bottom:10px;">SİZE ATANAN ÖZEL GÖREVLER</h5>`;
                 myTasks.forEach(t => {
                     let photoReqHtml = t.requiresPhoto ? `<span style="background:var(--warning-light); color:var(--warning); padding:2px 6px; border-radius:10px; font-size:9px; font-weight:800; margin-left:6px;"><i class="fa-solid fa-camera"></i> FOTO ZORUNLU</span>` : '';
-                    // Fotoğraf zorunluysa, buradan basitçe tik atılamaz.
                     if(t.requiresPhoto) {
                         container.innerHTML += `<label class="closing-cb-label" style="opacity:0.6;"><input type="checkbox" disabled> <span style="color:var(--danger); font-weight:700;">${t.text} ${photoReqHtml} (Görevler panosundan foto ekleyiniz)</span></label>`;
                     } else {
@@ -889,14 +889,12 @@
                 });
             }
 
-            document.querySelectorAll('.closing-cb').forEach(cb => { cb.addEventListener('change', checkClosingChecklist); });
             openModal('checklistModal');
         }
 
         function showSummary() {
             closeModal('checklistModal');
             
-            // Eğer atanmış görevler işaretlendiyse veritabanında "yapıldı" olarak güncelle
             document.querySelectorAll('.dynamic-task').forEach(cb => {
                 if(cb.checked) {
                     const tid = cb.getAttribute('data-id');
@@ -926,7 +924,8 @@
             <div style="font-weight:700; color:${scoreColor}; margin-bottom:20px; font-size:14px;">VARDİYA PUANI (${scoreText})</div>
             Günün yorgunluğunu atma vakti geldi, iyi dinlenmeler!`;
             
-            document.getElementById('summaryText').innerHTML = summaryHtml;
+            const sumText = document.getElementById('summaryText');
+            if(sumText) sumText.innerHTML = summaryHtml;
             openModal('summaryModal');
             
             logAction("Vardiya Kapanışı", `Puan: %${score}`);
@@ -942,20 +941,30 @@
             if(isAppLaunched) return;
             isAppLaunched = true;
             
-            // Baş Harf Profil Butonu
             let firstLetter = currentUser.name.charAt(0).toUpperCase();
-            document.getElementById('headerUserBadge').innerText = firstLetter;
+            const badge = document.getElementById('headerUserBadge');
+            if(badge) badge.innerText = firstLetter;
             
-            // Profile Modal Info
-            document.getElementById('profileModalAvatar').innerText = firstLetter;
-            document.getElementById('profileModalName').innerText = currentUser.name;
-            document.getElementById('profileModalRole').innerText = currentUser.role === 'admin' ? "Yönetici" : "Personel";
+            const pAv = document.getElementById('profileModalAvatar');
+            const pNm = document.getElementById('profileModalName');
+            const pRl = document.getElementById('profileModalRole');
+            if(pAv) pAv.innerText = firstLetter;
+            if(pNm) pNm.innerText = currentUser.name;
+            if(pRl) pRl.innerText = currentUser.role === 'admin' ? "Yönetici" : "Personel";
 
-            document.getElementById('appContent').style.display = 'block';
+            const appC = document.getElementById('appContent');
+            if(appC) appC.style.display = 'block';
             
+            const welcome = document.getElementById('welcomeName');
+            if(welcome) welcome.innerText = currentUser.name.split(' ')[0];
+
             if(currentUser.role === 'admin') {
-                document.getElementById('todoAssignee').style.display = 'block';
-                document.getElementById('todoPhotoReqLabel').style.display = 'flex';
+                const adminBtn = document.getElementById('adminBtn');
+                const ta = document.getElementById('todoAssignee');
+                const tq = document.getElementById('todoPhotoReqLabel');
+                if(adminBtn) adminBtn.style.display = 'flex';
+                if(ta) ta.style.display = 'block';
+                if(tq) tq.style.display = 'flex';
                 renderAdminDashboardTiles();
             } else {
                 renderStaffDashboardTiles();
@@ -963,47 +972,82 @@
             
             showToast(`Hoşgeldin, ${currentUser.name}`);
             
-            setInterval(updateDateTime, 1000);
-            updateDateTime();
+            renderLibraryDrumpad();
+            renderActiveList();
+            renderTodos();
+            setInterval(renderActiveList, 60000);
         }
 
-        // ANA SAYFA (DASHBOARD) KARTLARI
         function renderAdminDashboardTiles() {
             const grid = document.getElementById('mainDashboardGrid');
-            document.getElementById('adminStatsArea').style.display = 'block';
-            grid.innerHTML = `
-                <div class="dash-card" onclick="switchTab('tab-library', document.getElementById('navLibrary'))">
-                    <i class="fa-solid fa-layer-group"></i><div class="title">Üretim Yap</div><div class="desc">Yeni tarih etiketi bas</div>
-                </div>
-                <div class="dash-card" onclick="openModal('adminModal')">
-                    <i class="fa-solid fa-chart-pie"></i><div class="title">Canlı Radar</div><div class="desc">Personel ve istatistik</div>
-                </div>
-                <div class="dash-card" onclick="switchTab('tab-order', document.getElementById('navOrder'))">
-                    <i class="fa-solid fa-cart-shopping"></i><div class="title">Sipariş Oluştur</div><div class="desc">Manav, süt ve depo</div>
-                </div>
-                <div class="dash-card" onclick="openModal('galleryModal'); renderGallery();">
-                    <i class="fa-solid fa-images"></i><div class="title">Foto Galeri</div><div class="desc">Kanıtlar ve notlar</div>
-                </div>
-            `;
+            const statArea = document.getElementById('adminStatsArea');
+            if(statArea) statArea.style.display = 'block';
+            if(grid) {
+                grid.innerHTML = `
+                    <div class="dash-card" onclick="switchTab('tab-library', document.getElementById('navLibrary'))">
+                        <i class="fa-solid fa-layer-group"></i><div class="title">Üretim Yap</div><div class="desc">Yeni tarih etiketi bas</div>
+                    </div>
+                    <div class="dash-card" onclick="openModal('adminModal')">
+                        <i class="fa-solid fa-chart-pie"></i><div class="title">Canlı Radar</div><div class="desc">Personel ve istatistik</div>
+                    </div>
+                    <div class="dash-card" onclick="switchTab('tab-order', document.getElementById('navOrder'))">
+                        <i class="fa-solid fa-cart-shopping"></i><div class="title">Sipariş Oluştur</div><div class="desc">Manav, süt ve depo</div>
+                    </div>
+                    <div class="dash-card" onclick="openModal('galleryModal'); renderGallery();">
+                        <i class="fa-solid fa-images"></i><div class="title">Foto Galeri</div><div class="desc">Kanıtlar ve notlar</div>
+                    </div>
+                `;
+            }
         }
 
         function renderStaffDashboardTiles() {
             const grid = document.getElementById('mainDashboardGrid');
-            grid.innerHTML = `
-                <div class="dash-card" onclick="switchTab('tab-library', document.getElementById('navLibrary'))">
-                    <i class="fa-solid fa-layer-group"></i><div class="title">Üretim Yap</div><div class="desc">Yeni tarih etiketi bas</div>
-                </div>
-                <div class="dash-card" onclick="switchTab('tab-active', document.getElementById('navActive'))">
-                    <i class="fa-solid fa-clock-rotate-left"></i><div class="title">Aktif Takip</div><div class="desc">Süresi dolanlar ve imha</div>
-                </div>
-                <div class="dash-card" onclick="switchTab('tab-todos', document.getElementById('navTodos'))">
-                    <i class="fa-solid fa-clipboard-check"></i><div class="title">Görevler</div><div class="desc">Vardiya notları ve işler</div>
-                </div>
-                <div class="dash-card" onclick="document.getElementById('cameraInput').click()">
-                    <i class="fa-solid fa-camera"></i><div class="title">Hızlı Fotoğraf</div><div class="desc">Anlık durum bildir</div>
-                </div>
-            `;
+            if(grid) {
+                grid.innerHTML = `
+                    <div class="dash-card" onclick="switchTab('tab-library', document.getElementById('navLibrary'))">
+                        <i class="fa-solid fa-layer-group"></i><div class="title">Üretim Yap</div><div class="desc">Yeni tarih etiketi bas</div>
+                    </div>
+                    <div class="dash-card" onclick="switchTab('tab-active', document.getElementById('navActive'))">
+                        <i class="fa-solid fa-clock-rotate-left"></i><div class="title">Aktif Takip</div><div class="desc">Süresi dolanlar ve imha</div>
+                    </div>
+                    <div class="dash-card" onclick="switchTab('tab-todos', document.getElementById('navTodos'))">
+                        <i class="fa-solid fa-clipboard-check"></i><div class="title">Görevler</div><div class="desc">Vardiya notları ve işler</div>
+                    </div>
+                    <div class="dash-card" onclick="triggerFreeCamera()">
+                        <i class="fa-solid fa-camera"></i><div class="title">Hızlı Fotoğraf</div><div class="desc">Anlık durum bildir</div>
+                    </div>
+                `;
+            }
         }
+
+        function initSwipeNavigation() {
+            let dragStartX = 0;
+            const container = document.getElementById('drumpadContainer');
+            if(!container) return;
+            container.addEventListener('touchstart', e => { dragStartX = e.touches[0].clientX; }, {passive: true});
+            container.addEventListener('touchend', e => {
+                let dragEndX = e.changedTouches[0].clientX;
+                let diff = dragStartX - dragEndX;
+                
+                if (Math.abs(diff) > 70) {
+                    let chips = Array.from(document.querySelectorAll('#libChips .chip'));
+                    let idx = chips.findIndex(c => c.classList.contains('active'));
+                    
+                    if (diff > 0 && idx < chips.length - 1) {
+                        chips[idx + 1].click();
+                    } else if (diff < 0 && idx > 0) {
+                        chips[idx - 1].click();
+                    }
+                    
+                    setTimeout(() => {
+                        let activeChip = document.querySelector('#libChips .chip.active');
+                        if(activeChip) activeChip.scrollIntoView({behavior: "smooth", inline: "center", block: "nearest"});
+                    }, 50);
+                }
+            });
+        }
+
+        let currentLibFilter = 'Tümü';
 
         function filterLib(cat, el) {
             document.querySelectorAll('#libChips .chip').forEach(c => c.classList.remove('active'));
@@ -1020,7 +1064,8 @@
         }
 
         function clearSearch() {
-            document.getElementById('libSearchInput').value = '';
+            const sInp = document.getElementById('libSearchInput');
+            if(sInp) sInp.value = '';
             handleSearchInput();
         }
 
@@ -1029,13 +1074,18 @@
             if(!container) return;
             container.innerHTML = '';
             
-            const searchInput = document.getElementById('libSearchInput').value;
-            const searchTerm = normalizeTR(searchInput);
+            const sInp = document.getElementById('libSearchInput');
+            const searchTerm = sInp ? normalizeTR(sInp.value) : "";
             
-            libraryDB.filter(p => currentLibFilter === 'Tümü' || p.kategori === currentLibFilter)
-                     .filter(p => normalizeTR(p.urun).includes(searchTerm))
-                     .forEach(p => {
-                
+            const filtered = libraryDB.filter(p => currentLibFilter === 'Tümü' || p.kategori === currentLibFilter)
+                                      .filter(p => normalizeTR(p.urun).includes(searchTerm));
+            
+            if(filtered.length === 0) {
+                container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: var(--text-muted);">Ürün bulunamadı.</div>`;
+                return;
+            }
+
+            filtered.forEach(p => {
                 let omurStr = "";
                 if (p.birim === "Günlük") omurStr = "GÜN SONU";
                 else if (p.birim === "Hemen Kullandır") omurStr = "HEMEN";
@@ -1066,17 +1116,13 @@
             const container = document.getElementById('drumpadContainer');
 
             if(isEditMode) {
-                btn.style.background = 'var(--text-main)';
-                btn.style.color = 'var(--surface-solid)';
-                btn.innerHTML = 'Tamam';
-                addBtn.style.display = 'block'; 
-                container.classList.add('edit-mode');
+                if(btn) { btn.style.background = 'var(--text-main)'; btn.style.color = 'var(--surface-solid)'; btn.innerHTML = 'Tamam'; }
+                if(addBtn) addBtn.style.display = 'block'; 
+                if(container) container.classList.add('edit-mode');
             } else {
-                btn.style.background = 'var(--accent-light)';
-                btn.style.color = 'var(--accent)';
-                btn.innerHTML = 'Düzenle';
-                addBtn.style.display = 'none';
-                container.classList.remove('edit-mode');
+                if(btn) { btn.style.background = 'var(--accent-light)'; btn.style.color = 'var(--accent)'; btn.innerHTML = 'Düzenle'; }
+                if(addBtn) addBtn.style.display = 'none';
+                if(container) container.classList.remove('edit-mode');
             }
             renderLibraryDrumpad();
         }
@@ -1084,18 +1130,17 @@
         function toggleBulkMode() {
             isBulkMode = !isBulkMode;
             selectedBulkItems = [];
-            document.getElementById('activeList').classList.toggle('bulk-mode', isBulkMode);
-            document.getElementById('bulkActionBar').style.display = isBulkMode ? 'flex' : 'none';
+            const al = document.getElementById('activeList');
+            const bab = document.getElementById('bulkActionBar');
+            const bmb = document.getElementById('bulkModeBtn');
+
+            if(al) al.classList.toggle('bulk-mode', isBulkMode);
+            if(bab) bab.style.display = isBulkMode ? 'flex' : 'none';
             
-            const btn = document.getElementById('bulkModeBtn');
             if(isBulkMode) {
-                btn.style.background = 'var(--text-main)';
-                btn.style.color = 'var(--bg-color)';
-                btn.innerHTML = 'İptal Et';
+                if(bmb) { bmb.style.background = 'var(--text-main)'; bmb.style.color = 'var(--bg-color)'; bmb.innerHTML = 'İptal Et'; }
             } else {
-                btn.style.background = 'var(--surface-solid)';
-                btn.style.color = 'var(--text-main)';
-                btn.innerHTML = 'Toplu Seç';
+                if(bmb) { bmb.style.background = 'var(--surface-solid)'; bmb.style.color = 'var(--text-main)'; bmb.innerHTML = 'Toplu Seç'; }
             }
             renderActiveList();
         }
@@ -1127,7 +1172,8 @@
             });
 
             toggleBulkMode();
-            if(document.getElementById('adminModal').classList.contains('active')) renderAdminDashboard();
+            const am = document.getElementById('adminModal');
+            if(am && am.classList.contains('active')) renderAdminDashboard();
         }
 
         function deleteProduct(id) {
@@ -1161,6 +1207,8 @@
         function startTracking(id) {
             if(isEditMode) return; 
             const prod = libraryDB.find(p => p.id === id);
+            if(!prod) return;
+
             const now = new Date();
             let target = new Date(now.getTime());
 
@@ -1199,16 +1247,17 @@
             recognition.onstart = () => {
                 showToast("🎙️ Dinleniyor...");
                 if(navigator.vibrate) navigator.vibrate(50);
-                document.getElementById('libSearchInput').placeholder = "Dinleniyor...";
+                const sInp = document.getElementById('libSearchInput');
+                if(sInp) sInp.placeholder = "Dinleniyor...";
                 
-                // 4 saniye sonra konuşma algılanmazsa kapat
                 voiceSearchTimeout = setTimeout(() => {
-                    recognition.stop();
+                    try { recognition.stop(); } catch(e){}
                 }, 4000);
             };
             
             recognition.onend = () => {
-                document.getElementById('libSearchInput').placeholder = "Ürün ara...";
+                const sInp = document.getElementById('libSearchInput');
+                if(sInp) sInp.placeholder = "Ürün ara...";
                 clearTimeout(voiceSearchTimeout);
             };
             
@@ -1229,23 +1278,39 @@
                                        .replace(/makiyato/g, 'macchiato');
 
                 const searchInput = document.getElementById('libSearchInput');
-                searchInput.value = transcript.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,""); 
+                if(searchInput) searchInput.value = transcript.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,""); 
                 
-                document.querySelector('#libChips .chip').click(); 
+                const chipAll = document.querySelector('#libChips .chip');
+                if(chipAll) chipAll.click(); 
                 handleSearchInput(); 
                 showToast(`Sesli Girdi: "${searchInput.value}"`);
             };
             
             recognition.onerror = (event) => { 
                 showToast("Ses algılanamadı.", true); 
-                document.getElementById('libSearchInput').placeholder = "Ürün ara...";
+                const sInp = document.getElementById('libSearchInput');
+                if(sInp) sInp.placeholder = "Ürün ara...";
                 clearTimeout(voiceSearchTimeout);
             };
             
-            recognition.start();
+            try { recognition.start(); } catch(e){}
         }
 
-        // FOTOĞRAF ÇEKİMİ
+        // FOTOĞRAF MODU (GÖREV / LOG)
+        function triggerFreeCamera() {
+            const camInp = document.getElementById('cameraInput');
+            const targetInp = document.getElementById('cameraTargetTaskId');
+            if(targetInp) targetInp.value = ""; // Görev ID'sini sıfırla, serbest mod
+            if(camInp) camInp.click();
+        }
+
+        function triggerTaskCamera(taskId) {
+            const camInp = document.getElementById('cameraInput');
+            const targetInp = document.getElementById('cameraTargetTaskId');
+            if(targetInp) targetInp.value = taskId;
+            if(camInp) camInp.click();
+        }
+
         function handleCameraUpload(event) {
             const file = event.target.files[0];
             if(!file) return;
@@ -1263,19 +1328,28 @@
                     ctx.drawImage(img, 0, 0, w, h);
                     
                     const dataURL = canvas.toDataURL('image/jpeg', 0.6); 
+                    const prevImg = document.getElementById('cameraPreviewImg');
+                    if(prevImg) prevImg.src = dataURL;
                     
-                    // Görev için mi çekildi yoksa serbest mi?
-                    const targetTaskId = document.getElementById('cameraTargetTaskId').value;
+                    const targetTaskId = document.getElementById('cameraTargetTaskId') ? document.getElementById('cameraTargetTaskId').value : "";
+                    const noteInp = document.getElementById('cameraNoteTextInput');
+                    const taskBtn = document.getElementById('saveTaskPhotoBtn');
+                    const logBtn = document.getElementById('saveLogPhotoBtn');
+
                     if (targetTaskId) {
-                        document.getElementById('cameraPreviewImg').src = dataURL;
-                        document.getElementById('cameraNoteTextInput').style.display = 'none'; // Görevin notu var zaten
-                        document.getElementById('saveTaskPhotoBtn').innerText = "Görevi Tamamla (Fotoğrafı Ekle)";
-                        document.getElementById('saveTaskPhotoBtn').onclick = () => savePhotoToTask(targetTaskId, dataURL);
+                        if(noteInp) noteInp.style.display = 'none'; 
+                        if(taskBtn) {
+                            taskBtn.innerText = "Görevi Tamamla (Fotoğrafı Ekle)";
+                            taskBtn.onclick = () => savePhotoToTask(targetTaskId, dataURL);
+                        }
+                        if(logBtn) logBtn.style.display = 'none'; 
                     } else {
-                        document.getElementById('cameraPreviewImg').src = dataURL;
-                        document.getElementById('cameraNoteTextInput').style.display = 'block';
-                        document.getElementById('saveTaskPhotoBtn').innerText = "Görev Panosuna Ekle";
-                        document.getElementById('saveTaskPhotoBtn').onclick = saveCameraNote;
+                        if(noteInp) noteInp.style.display = 'block';
+                        if(taskBtn) {
+                            taskBtn.innerText = "Görev Panosuna Ekle";
+                            taskBtn.onclick = saveCameraNote;
+                        }
+                        if(logBtn) logBtn.style.display = 'block'; 
                     }
 
                     openModal('cameraNoteModal');
@@ -1283,11 +1357,6 @@
                 img.src = e.target.result;
             };
             reader.readAsDataURL(file);
-        }
-
-        function triggerTaskCamera(taskId) {
-            document.getElementById('cameraTargetTaskId').value = taskId;
-            document.getElementById('cameraInput').click();
         }
 
         function savePhotoToTask(taskId, imgData) {
@@ -1299,13 +1368,16 @@
                 if(db) db.ref(`${dbRoot}/todos/${taskId}`).update({ done: true, imgData: imgData });
                 showToast("Görev fotoğrafla tamamlandı.");
             }
-            document.getElementById('cameraTargetTaskId').value = "";
+            const targetInp = document.getElementById('cameraTargetTaskId');
+            if(targetInp) targetInp.value = "";
             closeModal('cameraNoteModal');
         }
 
         function saveCameraNote() {
-            const imgData = document.getElementById('cameraPreviewImg').src;
-            const noteText = document.getElementById('cameraNoteTextInput').value.trim();
+            const prevImg = document.getElementById('cameraPreviewImg');
+            const noteInp = document.getElementById('cameraNoteTextInput');
+            const imgData = prevImg ? prevImg.src : "";
+            const noteText = noteInp ? noteInp.value.trim() : "";
             
             const newTodo = { 
                 id: Date.now().toString(), 
@@ -1322,29 +1394,29 @@
             renderTodos();
             if(db) db.ref(`${dbRoot}/todos/${newTodo.id}`).set(newTodo);
             
-            document.getElementById('cameraNoteTextInput').value = "";
+            if(noteInp) noteInp.value = "";
             closeModal('cameraNoteModal');
             showToast("Fotoğraflı görev eklendi.");
         }
 
         function saveCameraAsLog() {
-            const imgData = document.getElementById('cameraPreviewImg').src;
-            const noteText = document.getElementById('cameraNoteTextInput').value.trim();
+            const prevImg = document.getElementById('cameraPreviewImg');
+            const noteInp = document.getElementById('cameraNoteTextInput');
+            const imgData = prevImg ? prevImg.src : "";
+            const noteText = noteInp ? noteInp.value.trim() : "";
             
-            logAction("Fotoğraflı Not Eklendi", (noteText || "Açıklama girilmedi."), imgData);
+            logAction("Fotoğraflı Kayıt (Log)", (noteText || "Açıklama girilmedi."), imgData);
             
-            document.getElementById('cameraNoteTextInput').value = "";
+            if(noteInp) noteInp.value = "";
             closeModal('cameraNoteModal');
             showToast("Sadece log kayıtlarına eklendi.");
         }
 
-        // GALERİ RENDER
         function renderGallery() {
             const container = document.getElementById('galleryGridArea');
             if(!container) return;
             container.innerHTML = '';
             
-            // Loglardan ve görevlerden fotoğraf içerenleri topla
             let allPhotos = [];
             allLogs.forEach(l => { if(l.imgData) allPhotos.push({ img: l.imgData, text: l.detail, user: l.user, date: l.date }); });
             todos.forEach(t => { if(t.imgData) allPhotos.push({ img: t.imgData, text: t.text, user: t.addedBy, date: new Date(t.timestamp).toLocaleDateString('tr-TR') }); });
@@ -1355,10 +1427,12 @@
             }
 
             allPhotos.forEach(p => {
+                const uName = p.user ? p.user.split(' ')[0] : "Bilinmiyor";
+                const dStr = p.date ? p.date.split(' ')[0] : "";
                 container.innerHTML += `
                     <div class="gallery-item">
                         <img src="${p.img}">
-                        <div class="overlay">${p.text}<br><span style="color:var(--warning); font-size:9px;">${p.user.split(' ')[0]} - ${p.date.split(' ')[0]}</span></div>
+                        <div class="overlay">${p.text}<br><span style="color:var(--warning); font-size:9px;">${uName} - ${dStr}</span></div>
                     </div>
                 `;
             });
@@ -1405,7 +1479,7 @@
                             <div class="bg-right"><i class="fa-solid fa-trash"></i></div>
                         </div>` : ''}
                         
-                        <div class="active-card" id="card-${item.id}" ${touchEvents} style="border-left-color:${color}; transform: ${cardTransformState[item.id] || 'translateX(0)'}">
+                        <div class="active-card" id="card-${item.id}" ${touchEvents} style="border-left-color:${color};">
                             <div class="bulk-checkbox"><i class="fa-solid fa-check"></i></div>
                             <div style="flex:1;">
                                 <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -1425,30 +1499,17 @@
             });
         }
 
-        let cardTransformState = {};
         let tsx = 0, tcx = 0;
         function handleTS(e, id) { if(isBulkMode) return; tsx = e.touches[0].clientX; tcx = tsx; }
-        function handleTM(e, id) { 
-            if(isBulkMode) return; 
-            tcx = e.touches[0].clientX; 
-            const diff = tcx - tsx; 
-            if(Math.abs(diff)>20) {
-                const card = document.getElementById(`card-${id}`);
-                card.style.transform = `translateX(${diff}px)`;
-                card.style.transition = 'none';
-            }
-        }
+        function handleTM(e, id) { if(isBulkMode) return; tcx = e.touches[0].clientX; const diff = tcx - tsx; if(Math.abs(diff)>20) { const c = document.getElementById(`card-${id}`); if(c) c.style.transform = `translateX(${diff}px)`; } }
         function handleTE(e, id) {
             if(isBulkMode) return;
             const diff = tcx - tsx; 
             const card = document.getElementById(`card-${id}`);
-            card.style.transition = 'transform 0.2s ease-out';
+            if(!card) return;
             if(diff > 90) processItem(id, "Tüketildi");
             else if(diff < -90) processItem(id, "İmha Edildi");
-            else {
-                card.style.transform = `translateX(0)`;
-                delete cardTransformState[id];
-            }
+            else card.style.transform = `translateX(0)`;
         }
 
         function processItem(id, result) {
@@ -1457,14 +1518,14 @@
             const item = activeItems[itemIndex];
             
             activeItems.splice(itemIndex, 1);
-            delete cardTransformState[id];
             renderActiveList();
             if(db) db.ref(`${dbRoot}/active/${id}`).remove();
             
             if(navigator.vibrate) navigator.vibrate([50, 50]);
             showToast(`${item.name} ${result.toLowerCase()} olarak işaretlendi.`);
             logAction(`SKT ${result}`, `${item.name} sistemden düştü.`);
-            if(document.getElementById('adminModal').classList.contains('active')) renderAdminDashboard();
+            const am = document.getElementById('adminModal');
+            if(am && am.classList.contains('active')) renderAdminDashboard();
         }
 
         function populateAssignees(selectEl) {
@@ -1479,7 +1540,9 @@
         }
 
         function addTodo() {
-            const txt = document.getElementById('todoInput').value.trim(); if(!txt) return;
+            const txtInp = document.getElementById('todoInput');
+            if(!txtInp) return;
+            const txt = txtInp.value.trim(); if(!txt) return;
             const assigneeSelect = document.getElementById('todoAssignee');
             const photoReqCheck = document.getElementById('todoRequiresPhoto');
             
@@ -1502,7 +1565,7 @@
             renderTodos();
             if(db) db.ref(`${dbRoot}/todos/${newTodo.id}`).set(newTodo);
             
-            document.getElementById('todoInput').value = "";
+            txtInp.value = "";
             if(photoReqCheck) photoReqCheck.checked = false;
             showToast("Görev atandı.");
         }
@@ -1522,7 +1585,6 @@
                 
                 let imgHtml = t.imgData ? `<img src="${t.imgData}" style="width:100%; max-height:150px; object-fit:cover; border-radius:8px; margin-top:10px; border:1px solid var(--border);" onclick="openModal('galleryModal'); renderGallery();">` : '';
 
-                // Fotoğraf Zorunluluğu Varsa Normal Tik İşlemez
                 let checkBtnHtml = '';
                 if(t.done) {
                     checkBtnHtml = `<div style="width:28px; height:28px; border-radius:50%; border:2px solid var(--success); display:flex; align-items:center; justify-content:center; color:white; background:var(--success); transition:var(--transition); margin-top:2px; flex-shrink:0;"><i class="fa-solid fa-check" style="font-size:12px;"></i></div>`;
@@ -1551,10 +1613,9 @@
                 `;
             });
         }
-
         function toggleTodo(id, currentStatus) { 
             const t = todos.find(x=>x.id === id); 
-            if(t && !t.requiresPhoto) { // Fotoğraflı görevler buradan işaretlenemez
+            if(t && !t.requiresPhoto) { 
                 t.done = !currentStatus; 
                 renderTodos();
                 if(db) db.ref(`${dbRoot}/todos/${id}`).update({ done: !currentStatus }); 
@@ -1580,12 +1641,13 @@
         }
 
         function openModal(id) { 
-            document.getElementById(id).classList.add('active'); 
+            const md = document.getElementById(id);
+            if(md) {
+                md.classList.add('active'); 
+                const mc = md.querySelector('.modal-content');
+                if(mc) mc.style.transform = '';
+            }
             document.body.classList.add('no-scroll'); 
-            
-            // Modallara girerken content transform'unu sıfırla
-            const mc = document.getElementById(id).querySelector('.modal-content');
-            if(mc) mc.style.transform = '';
 
             if(id==='usersModal') renderUsersList(); 
             if(id==='adminModal') renderAdminDashboard();
@@ -1593,11 +1655,12 @@
             if(id==='galleryModal') renderGallery();
         }
         function closeModal(id) { 
-            document.getElementById(id).classList.remove('active'); 
+            const md = document.getElementById(id);
+            if(md) md.classList.remove('active'); 
             document.body.classList.remove('no-scroll'); 
             
-            // Eğer profil vs kapandıysa tekrar normal sekmeye dönülecekse
-            document.getElementById('cameraTargetTaskId').value = ""; // Her ihtimale karşı reset
+            const tgt = document.getElementById('cameraTargetTaskId');
+            if(tgt) tgt.value = ""; 
         }
         function closeOnOutsideClick(e, id) { if(e.target.id === id) closeModal(id); }
 
@@ -1612,7 +1675,6 @@
             
             const dashContainer = document.getElementById('adminStatsArea');
             if(dashContainer) {
-                // Sadece Dashboard'daki istatistikleri güncelle (Admin tabında)
                 const dashGrid = document.getElementById('dashboardStatsContainer');
                 if(dashGrid) {
                     dashGrid.innerHTML = `
@@ -1672,7 +1734,9 @@
         }
 
         function renderUsersList() {
-            const container = document.getElementById('usersList'); container.innerHTML = '';
+            const container = document.getElementById('usersList'); 
+            if(!container) return;
+            container.innerHTML = '';
             for(const [pin, u] of Object.entries(usersDB)) {
                 const roleClass = u.role === 'admin' ? 'role-admin' : 'role-staff';
                 const roleText = u.role === 'admin' ? 'Yönetici' : 'Personel';
@@ -1692,16 +1756,21 @@
         }
 
         function addUser() {
-            const name = document.getElementById('newUserName').value.trim();
-            const pin = document.getElementById('newUserPin').value.trim();
-            const role = document.getElementById('newUserRole').value;
+            const nInp = document.getElementById('newUserName');
+            const pInp = document.getElementById('newUserPin');
+            const rInp = document.getElementById('newUserRole');
+            if(!nInp || !pInp || !rInp) return;
+
+            const name = nInp.value.trim();
+            const pin = pInp.value.trim();
+            const role = rInp.value;
             
             if(!name || pin.length !== 4) return alert("Lütfen eksiksiz ve 4 haneli PIN girin.");
             if(usersDB[pin]) return alert("Bu PIN kullanımda.");
 
             usersDB[pin] = { name: name, role: role, pin: pin };
             if(db) db.ref(`${dbRoot}/users/${pin}`).set({ name: name, role: role, pin: pin });
-            document.getElementById('newUserName').value = ""; document.getElementById('newUserPin').value = "";
+            nInp.value = ""; pInp.value = "";
             showToast("Personel başarıyla eklendi.");
             renderUsersList();
         }
@@ -1714,25 +1783,52 @@
             }
         }
 
-        function checkNotificationStatus() { if("Notification" in window && Notification.permission === "granted") document.getElementById('bellBtn').style.display = 'none'; }
-        
-        function toggleTheme() { isDark = !isDark; safeSetLocal('kd_theme', isDark ? 'dark' : 'light'); document.body.classList.toggle('dark-mode', isDark); updateThemeIcon(); renderLibraryDrumpad(); }
-        function updateThemeIcon() { const i = document.getElementById('themeIcon'); if(i) i.className = isDark ? "fa-solid fa-sun" : "fa-solid fa-moon"; }
-        
+        function checkNotificationStatus() { 
+            const btn = document.getElementById('bellBtn');
+            if(btn && "Notification" in window && Notification.permission === "granted") btn.style.display = 'none'; 
+        }
+        function requestNotificationPermission() {
+            if(!("Notification" in window)) return alert("Tarayıcınız bildirimleri desteklemiyor.");
+            Notification.requestPermission().then(p => { 
+                const btn = document.getElementById('bellBtn');
+                if(p === "granted") { if(btn) btn.style.display = 'none'; showToast("Bildirimler açıldı."); } 
+            });
+        }
+        function sendPushNotification(title, body) {
+            if ("Notification" in window && Notification.permission === "granted") {
+                if(navigator.serviceWorker) { 
+                    navigator.serviceWorker.ready.then(reg => { 
+                        reg.showNotification(title, { body: body, icon: "https://cdn-icons-png.flaticon.com/512/3003/3003984.png", vibrate: [200, 100, 200] }); 
+                    }).catch(e=>{}); 
+                } else { 
+                    try { new Notification(title, { body: body }); } catch(e){}
+                }
+            }
+        }
+        function toggleTheme() { 
+            isDark = !isDark; 
+            safeSetLocal('kd_theme', isDark ? 'dark' : 'light'); 
+            document.body.classList.toggle('dark-mode', isDark); 
+            updateThemeIcon(); 
+            renderLibraryDrumpad(); 
+        }
+        function updateThemeIcon() { 
+            const i = document.getElementById('themeIcon'); 
+            if(i) i.className = isDark ? "fa-solid fa-sun" : "fa-solid fa-moon"; 
+        }
         function switchTab(tId, el) { 
-            // Aktif Tabı Değiştir
             document.querySelectorAll('.tab-pane').forEach(e => e.classList.remove('active')); 
             document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active')); 
-            document.getElementById(tId).classList.add('active'); 
-            el.classList.add('active'); 
+            const tb = document.getElementById(tId);
+            if(tb) tb.classList.add('active'); 
+            if(el) el.classList.add('active'); 
             
-            // Navigasyondan gelindiyse modalları kapat
             document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
             document.body.classList.remove('no-scroll');
         }
-
         function showToast(msg, isErr=false) { 
             const t = document.getElementById('toastNotification'); 
+            if(!t) return;
             t.innerHTML = `<span style="font-weight:600;">${msg}</span>`; 
             t.style.background = isErr ? 'var(--danger)' : 'var(--surface-solid)'; 
             t.style.color = isErr ? '#FFF' : 'var(--text-main)'; 
