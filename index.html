@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KD Kordon Pro - Final Stable</title>
+    <title>KD Kordon Pro - Ultimate Dashboard</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -67,13 +67,16 @@
 
         /* HEADER */
         .app-header { background: var(--surface-glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
-        .datetime-container { display: flex; flex-direction: column; cursor: pointer; }
+        .datetime-container { display: flex; flex-direction: column; }
         .clock-text { font-size: 20px; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; line-height: 1.1; }
         .date-text { font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; }
 
         .header-actions { display: flex; align-items: center; gap: 8px; }
-        .user-badge { display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 13px; color: var(--text-main); background: var(--surface-solid); padding: 8px 14px; border-radius: 30px; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-sm); border: 1px solid var(--border); }
-        .user-badge:active { transform: scale(0.95); opacity: 0.8; }
+        
+        /* ŞIK PROFİL BUTONU (Yusuf Yönetici orantısızlığı düzeltildi) */
+        .profile-btn { width: 40px; height: 40px; border-radius: 50%; background: var(--accent-light); color: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; cursor: pointer; border: 1px solid var(--border); box-shadow: var(--shadow-sm); transition: var(--transition); }
+        .profile-btn:active { transform: scale(0.9); }
+        
         .icon-btn { background: var(--surface-solid); border: 1px solid var(--border); box-shadow: var(--shadow-sm); width: 40px; height: 40px; border-radius: 50%; color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: var(--transition); }
         .icon-btn:active { transform: scale(0.9); }
 
@@ -92,6 +95,7 @@
         .btn { border: none; border-radius: var(--radius-md); font-family: inherit; font-weight: 700; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: var(--transition); padding: 16px 20px; width: 100%; }
         .btn:active { transform: scale(0.97); opacity: 0.9; }
         .btn-primary { background: var(--accent); color: white; box-shadow: var(--shadow-sm); }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
 
         /* CHIPS */
         .chips-container { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; scrollbar-width: none; scroll-behavior: smooth; }
@@ -101,6 +105,14 @@
         
         .form-input { width: 100%; padding: 16px 20px; background: var(--surface-solid); border: 1px solid var(--border); border-radius: var(--radius-md); font-family: inherit; font-size: 15px; font-weight: 500; color: var(--text-main); margin-bottom: 15px; transition: var(--transition); box-shadow: var(--shadow-sm); outline: none;}
         .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-light); }
+
+        /* DASHBOARD GRID (ANA SAYFA) */
+        .dashboard-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
+        .dash-card { background: var(--surface-solid); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 20px 15px; text-align: center; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-sm); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
+        .dash-card:active { transform: scale(0.95); }
+        .dash-card i { font-size: 28px; color: var(--accent); }
+        .dash-card .title { font-weight: 700; font-size: 14px; color: var(--text-main); }
+        .dash-card .desc { font-weight: 600; font-size: 11px; color: var(--text-muted); }
 
         /* Sipariş Satırları */
         .order-row { background: var(--surface-solid); border-radius: var(--radius-md); padding: 16px; box-shadow: var(--shadow-sm); display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); margin-bottom:12px; transition: var(--transition);}
@@ -145,9 +157,9 @@
         /* Modals */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 1000; display: flex; align-items: flex-end; justify-content: center; opacity: 0; visibility: hidden; transition: var(--transition); overscroll-behavior: none; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal-content { background: var(--surface-solid); width: 100%; max-width: 600px; border-radius: 30px 30px 0 0; padding: 30px 25px 50px; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); max-height: 90vh; overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.1); overscroll-behavior-y: contain; }
+        .modal-content { background: var(--surface-solid); width: 100%; max-width: 600px; border-radius: 30px 30px 0 0; padding: 30px 25px 50px; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); max-height: 90vh; overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.1); overscroll-behavior-y: contain; display:flex; flex-direction:column; }
         .modal-overlay.active .modal-content { transform: translateY(0); }
-        .drag-handle { width: 40px; height: 5px; background: var(--border); border-radius: 10px; margin: 0 auto 25px; }
+        .drag-handle { width: 40px; height: 5px; background: var(--border); border-radius: 10px; margin: 0 auto 25px; flex-shrink:0; }
         
         .closing-cb-label { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; font-size: 14px; font-weight: 500; color: var(--text-main); cursor: pointer; background: var(--bg-color); padding: 15px; border-radius: var(--radius-md); transition: var(--transition); border:1px solid transparent; }
         .closing-cb-label input[type="checkbox"] { width: 22px; height: 22px; accent-color: var(--success); cursor: pointer; }
@@ -161,6 +173,7 @@
         .toast { position: fixed; top: 30px; left: 50%; transform: translateX(-50%) translateY(-100px); background: var(--surface-solid); color: var(--text-main); box-shadow: var(--shadow-md); padding: 14px 24px; border-radius: 40px; font-size: 14px; font-weight: 600; z-index: 9999; transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); opacity: 0; white-space: nowrap; display:flex; align-items:center; border: 1px solid var(--border);}
         .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
         
+        /* Dashboard Stats */
         .dashboard-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
         .stat-card { background: var(--bg-color); padding: 15px; border-radius: var(--radius-md); text-align: center; border: 1px solid var(--border); }
         .stat-card .value { font-size: 24px; font-weight: 800; color: var(--text-main); margin-bottom: 5px; }
@@ -170,17 +183,25 @@
         .stat-card.success { background: var(--success-light); border-color: var(--success-light); }
         .stat-card.success .value { color: var(--success); }
 
-        /* CAMERA / BARCODE MODAL */
-        #cameraStream { width: 100%; border-radius: var(--radius-md); background: #000; min-height: 250px; object-fit: cover; }
-        .scan-line { position: absolute; width: 100%; height: 2px; background: var(--success); top: 50%; box-shadow: 0 0 10px var(--success); animation: scan 2s infinite linear; }
-        @keyframes scan { 0% { top: 10%; } 50% { top: 90%; } 100% { top: 10%; } }
+        /* Status Badges */
+        .status-badge { font-size:10px; padding:4px 8px; border-radius:12px; font-weight:800; text-transform:uppercase; margin-bottom:4px; display:inline-block; }
+        .status-pending { background: var(--warning-light); color: var(--warning); }
+        .status-completed { background: var(--success-light); color: var(--success); }
 
+        /* Masonry Gallery */
+        .gallery-grid { display:grid; grid-template-columns: repeat(2, 1fr); gap:10px; margin-top:15px; }
+        .gallery-item { border-radius: var(--radius-md); overflow:hidden; border:1px solid var(--border); background:var(--bg-color); position:relative; }
+        .gallery-item img { width:100%; height:150px; object-fit:cover; display:block; }
+        .gallery-item .overlay { position:absolute; bottom:0; left:0; width:100%; background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); padding:8px; color:white; font-size:10px; font-weight:600; }
+        
+        /* Orijinal Liste Scroll Yeri */
+        .modal-body { overflow-y: auto; padding-right: 5px; }
     </style>
 </head>
 <body>
 
     <!-- GİRİŞ EKRANI (PIN) -->
-    <div id="authScreen" style="display:flex;">
+    <div id="authScreen" style="display:none;">
         <div class="auth-card">
             <i class="fa-solid fa-shield-check" style="font-size: 40px; color: var(--accent); margin-bottom:15px;"></i>
             <h2 style="color:var(--text-main); font-weight:700; font-size:22px;">Personel Girişi</h2>
@@ -212,18 +233,33 @@
             </div>
             
             <div class="header-actions">
-                <div class="user-badge" onclick="triggerLogoutFlow()">
-                    <i class="fa-solid fa-power-off"></i> 
-                    <span id="headerUserName">Personel</span>
-                </div>
                 <button class="icon-btn" onclick="toggleTheme()" id="themeBtn"><i class="fa-regular fa-moon" id="themeIcon"></i></button>
-                <button class="icon-btn" onclick="openModal('adminModal')" id="adminBtn" style="display:none; color:var(--warning); border-color:var(--warning);"><i class="fa-solid fa-sliders"></i></button>
+                <!-- Düzeltilmiş Şık Profil Butonu (Baş Harf) -->
+                <div class="profile-btn" id="headerUserBadge" onclick="openModal('profileModal')">Y</div>
             </div>
         </header>
 
         <div class="app-container">
+
+            <!-- YENİ: ANA SAYFA (DASHBOARD) -->
+            <div id="tab-home" class="tab-pane active">
+                <h3 style="font-size: 24px; font-weight: 800; color: var(--text-main); margin-bottom:5px;">Kontrol Merkezi</h3>
+                <p style="color:var(--text-muted); font-size:13px; margin-bottom: 20px;">Hoşgeldin <span id="welcomeName" style="font-weight:700;">Personel</span>, işte menülerin.</p>
+
+                <!-- Admin Özel İstatistikleri -->
+                <div id="adminStatsArea" style="display:none;">
+                    <div class="dashboard-stats" id="dashboardStatsContainer">
+                        <div class="stat-card success"><div class="value">0</div><div class="label">BAŞARILI TÜKETİM</div></div>
+                        <div class="stat-card danger"><div class="value">0</div><div class="label">FİRE (İMHA)</div></div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid" id="mainDashboardGrid">
+                    <!-- Dinamik JS ile Doldurulacak (Yetkiye Göre) -->
+                </div>
+            </div>
             
-            <!-- 1. SİPARİŞ -->
+            <!-- 1. SİPARİŞ (SADECE YÖNETİCİ GÖREBİLİR) -->
             <div id="tab-order" class="tab-pane">
                 <div class="chips-container" id="categoryChips">
                     <div class="chip active" onclick="loadOrderTemplate('Manav', this)">🥦 Manav</div>
@@ -240,21 +276,16 @@
             </div>
 
             <!-- 2. ÜRETİM (DRUMPAD) -->
-            <div id="tab-library" class="tab-pane active">
+            <div id="tab-library" class="tab-pane">
 
-                <!-- ŞİMŞEK ARAMA, KAMERA VE SESLİ ASİSTAN -->
+                <!-- Arama Motoru, Sesli Komut -->
                 <div style="display:flex; gap:10px; margin-bottom: 20px; align-items:center;">
                     <div style="position: relative; flex: 1;">
                         <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 18px; top: 16px; color: var(--text-muted);"></i>
                         <input type="text" id="libSearchInput" class="form-input" style="padding-left: 45px; padding-right:40px; margin-bottom: 0; border-radius: 30px;" placeholder="Ürün ara..." onkeyup="handleSearchInput()">
                         <i class="fa-solid fa-xmark" id="clearSearchBtn" style="position: absolute; right: 18px; top: 16px; color: var(--text-muted); cursor: pointer; display: none;" onclick="clearSearch()"></i>
                     </div>
-                    <!-- Kamera Not İkonu -->
-                    <button class="icon-btn" style="width: 50px; height: 50px; border-radius: 50%; flex-shrink:0; background: var(--surface-solid);" onclick="document.getElementById('cameraInput').click()"><i class="fa-solid fa-camera"></i></button>
-                    <!-- Görünmez Dosya Yükleme Inputu -->
-                    <input type="file" accept="image/*" capture="environment" id="cameraInput" style="display:none;" onchange="handleCameraUpload(event)">
-                    
-                    <button class="icon-btn" style="width: 50px; height: 50px; border-radius: 50%; flex-shrink:0; background: var(--accent); color: white; border: none;" onclick="startVoiceSearch()"><i class="fa-solid fa-microphone"></i></button>
+                    <button class="icon-btn" id="voiceBtn" style="width: 50px; height: 50px; border-radius: 50%; flex-shrink:0; background: var(--accent); color: white; border: none;" onclick="startVoiceSearch()"><i class="fa-solid fa-microphone"></i></button>
                 </div>
 
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
@@ -263,7 +294,7 @@
                         <p style="font-size:12px; color:var(--text-muted);">Tarih takibini başlatmak için dokunun.</p>
                     </div>
                     <div style="display:flex; gap:10px;">
-                        <button id="editModeBtn" onclick="toggleEditMode()" style="background:var(--accent-light); color:var(--accent); border:none; border-radius:20px; padding:8px 16px; font-weight:600; font-size:13px; cursor:pointer; transition:var(--transition);">Düzenle</button>
+                        <button id="editModeBtn" style="display:none; background:var(--accent-light); color:var(--accent); border:none; border-radius:20px; padding:8px 16px; font-weight:600; font-size:13px; cursor:pointer; transition:var(--transition);" onclick="toggleEditMode()">Düzenle</button>
                         <button id="addProdBtn" onclick="openModal('addProdModal')" style="display:none; background:var(--text-main); color:var(--surface-solid); border:none; border-radius:20px; padding:8px 16px; font-weight:600; font-size:13px; cursor:pointer; transition:var(--transition);"><i class="fa-solid fa-plus"></i> Ekle</button>
                     </div>
                 </div>
@@ -295,6 +326,8 @@
                 <div class="floating-bulk-bar" id="bulkActionBar">
                     <button class="btn" style="flex:1; background:var(--accent); color:white;" onclick="processBulkItems('Tüketildi')"><i class="fa-solid fa-box-open"></i> Tüketildi</button>
                     <button class="btn" style="flex:1; background:var(--danger); color:white;" onclick="processBulkItems('İmha Edildi')"><i class="fa-solid fa-trash"></i> İmha Et</button>
+                    <!-- YENİ TIPTAL BUTONU (Çoğul Seçimi Kapatmak İçin) -->
+                    <button class="btn" style="width:50px; background:var(--surface-solid); color:var(--text-main); flex-shrink:0; border:1px solid var(--border);" onclick="toggleBulkMode()"><i class="fa-solid fa-xmark"></i></button>
                 </div>
             </div>
 
@@ -312,14 +345,18 @@
                 </div>
 
                 <!-- Görev Ekleme Alanı & Kişiye Atama -->
-                <div style="display:flex; gap:10px; margin-bottom:20px; align-items:center;">
-                    <input type="text" id="todoInput" class="form-input" style="margin-bottom:0; border-radius:30px; flex:1;" placeholder="Yeni görev yazın...">
+                <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px; align-items:center; background:var(--surface-solid); padding:15px; border-radius:var(--radius-md); border:1px solid var(--border); box-shadow:var(--shadow-sm);">
+                    <input type="text" id="todoInput" class="form-input" style="margin-bottom:0; flex:1; min-width: 150px;" placeholder="Yeni görev yazın...">
                     
-                    <select id="todoAssignee" class="form-input" style="width:110px; margin-bottom:0; border-radius:30px; padding: 10px; font-size: 13px; display:none;" onmousedown="populateAssignees(this)">
+                    <select id="todoAssignee" class="form-input" style="width:120px; margin-bottom:0; padding: 10px; font-size: 13px; display:none;" onmousedown="populateAssignees(this)">
                         <option value="ALL">Herkese</option>
                     </select>
 
-                    <button class="btn btn-primary" style="width:50px; height:50px; border-radius:50%; padding:0; flex-shrink:0;" onclick="addTodo()"><i class="fa-solid fa-plus" style="font-size:18px;"></i></button>
+                    <label id="todoPhotoReqLabel" style="display:none; font-size:11px; font-weight:700; color:var(--text-muted); cursor:pointer; align-items:center; gap:4px;">
+                        <input type="checkbox" id="todoRequiresPhoto"> <i class="fa-solid fa-camera"></i> Fotoğraf İste
+                    </label>
+
+                    <button class="btn btn-primary" style="width:100%; max-width:120px; padding:12px;" onclick="addTodo()"><i class="fa-solid fa-plus"></i> Ekle</button>
                 </div>
 
                 <div id="todoContainer"></div>
@@ -329,52 +366,79 @@
 
         <!-- BOTTOM NAV -->
         <nav class="bottom-nav">
-            <div class="nav-item active" id="navLibrary" onclick="switchTab('tab-library', this)"><i class="fa-solid fa-layer-group"></i><span>Üretim</span></div>
+            <div class="nav-item active" id="navHome" onclick="switchTab('tab-home', this)"><i class="fa-solid fa-house"></i><span>Ana Sayfa</span></div>
+            <div class="nav-item" id="navLibrary" onclick="switchTab('tab-library', this)"><i class="fa-solid fa-layer-group"></i><span>Üretim</span></div>
             <div class="nav-item" id="navActive" onclick="switchTab('tab-active', this)"><i class="fa-solid fa-clock-rotate-left"></i><span>Takip</span></div>
             <div class="nav-item" id="navTodos" onclick="switchTab('tab-todos', this)"><i class="fa-solid fa-clipboard-check"></i><span>Görevler</span></div>
         </nav>
     </div>
 
-    <!-- KAMERA İLE FOTOĞRAFLI NOT MODALI -->
-    <div class="modal-overlay" id="cameraNoteModal" onclick="closeOnOutsideClick(event, 'cameraNoteModal')">
+    <!-- PROFİL (ÇIKIŞ) MODALI -->
+    <div class="modal-overlay" id="profileModal">
         <div class="modal-content" style="text-align: center;">
             <div class="drag-handle"></div>
-            <h3 style="font-size:20px; font-weight:700; margin-bottom:15px; color:var(--text-main);">Fotoğraflı Kayıt</h3>
+            <div style="width:70px; height:70px; background:var(--accent-light); color:var(--accent); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:30px; font-weight:800; margin:0 auto 15px;" id="profileModalAvatar">Y</div>
+            <h3 style="font-size:22px; font-weight:700; color:var(--text-main); margin-bottom:5px;" id="profileModalName">Personel Adı</h3>
+            <p style="color:var(--text-muted); font-size:13px; font-weight:600; text-transform:uppercase; margin-bottom:30px;" id="profileModalRole">Role</p>
+            
+            <button class="btn" style="background:var(--danger-light); color:var(--danger); width:100%;" onclick="triggerLogoutFlow()"><i class="fa-solid fa-person-walking-arrow-right"></i> Vardiyayı Bitir / Çıkış Yap</button>
+        </div>
+    </div>
+
+    <!-- FOTOĞRAF ÇEKİM MODALI (GÖREV İÇİN) -->
+    <div class="modal-overlay" id="cameraNoteModal">
+        <div class="modal-content" style="text-align: center;">
+            <div class="drag-handle"></div>
+            <h3 style="font-size:20px; font-weight:700; margin-bottom:15px; color:var(--text-main);">Fotoğraf Çekildi</h3>
             <img id="cameraPreviewImg" src="" style="width:100%; max-height: 250px; object-fit:cover; border-radius:var(--radius-md); margin-bottom:15px; border:1px solid var(--border); box-shadow:var(--shadow-sm);">
             
             <input type="text" id="cameraNoteTextInput" class="form-input" placeholder="Fotoğrafla ilgili açıklama yazın..." style="margin-bottom:10px;">
+            <input type="hidden" id="cameraTargetTaskId" value="">
             
             <div style="display:flex; gap:10px; flex-direction:column; margin-top:10px;">
-                <button class="btn btn-primary" onclick="saveCameraNote()">Görev Panosuna Ekle</button>
-                <button class="btn" style="background:var(--success-light); color:var(--success);" onclick="saveCameraAsLog()">Sadece Log/Not Olarak Kaydet</button>
+                <button class="btn btn-primary" id="saveTaskPhotoBtn" onclick="saveCameraNote()">Görevi Tamamla (Fotoğrafı Ekle)</button>
                 <button class="btn" style="background:transparent; color:var(--text-muted); border:1px solid var(--border);" onclick="closeModal('cameraNoteModal')">İptal</button>
             </div>
         </div>
     </div>
 
+    <!-- FOTOĞRAF GALERİSİ MODALI -->
+    <div class="modal-overlay" id="galleryModal">
+        <div class="modal-content">
+            <div class="drag-handle"></div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <h3 style="font-size:22px; font-weight:700; color:var(--text-main);">Fotoğraf Geçmişi</h3>
+                <button onclick="closeModal('galleryModal');" style="background:none; border:none; font-size:16px; font-weight:600; color:var(--accent); cursor:pointer;">Kapat</button>
+            </div>
+            <div class="modal-body" id="galleryList">
+                <div class="gallery-grid" id="galleryGridArea"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- SİSTEM LOGLARI MODALI (ADMİN) -->
-    <div class="modal-overlay" id="logsModal" onclick="closeOnOutsideClick(event, 'logsModal')">
+    <div class="modal-overlay" id="logsModal">
         <div class="modal-content">
             <div class="drag-handle"></div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                 <h3 style="font-size:22px; font-weight:700; color:var(--text-main);">Sistem Logları</h3>
-                <button onclick="closeModal('logsModal'); openModal('adminModal');" style="background:none; border:none; font-size:16px; font-weight:600; color:var(--accent); cursor:pointer;">Geri</button>
+                <button onclick="closeModal('logsModal');" style="background:none; border:none; font-size:16px; font-weight:600; color:var(--accent); cursor:pointer;">Kapat</button>
             </div>
-            <div id="logsList" style="max-height: 65vh; overflow-y: auto;"></div>
+            <div class="modal-body" id="logsList" style="max-height: 60vh;"></div>
         </div>
     </div>
 
     <!-- ZORUNLU KAPANIŞ KONTROL LİSTESİ MODALI -->
-    <div class="modal-overlay" id="checklistModal" onclick="closeOnOutsideClick(event, 'checklistModal')">
+    <div class="modal-overlay" id="checklistModal">
         <div class="modal-content">
             <div class="drag-handle"></div>
             <h3 style="font-size:24px; font-weight:800; color:var(--text-main); margin-bottom:10px;">Vardiya Çıkışı</h3>
             <p style="color:var(--text-muted); font-size:14px; margin-bottom: 20px; line-height:1.5;">Çıkış yapmadan önce tamamladığınız işleri işaretleyin. Vardiya puanınız buna göre hesaplanacaktır.</p>
             
-            <div id="dynamicChecklistContainer"></div>
+            <div class="modal-body" id="dynamicChecklistContainer" style="max-height: 50vh;"></div>
 
-            <button class="btn btn-primary" style="margin-top:25px; transition: var(--transition);" onclick="showSummary()">Vardiyayı Tamamla ve Çık</button>
-            <button class="btn" style="margin-top:10px; background:transparent; color:var(--text-muted);" onclick="closeModal('checklistModal')">Geri Dön</button>
+            <button class="btn btn-primary" style="margin-top:25px; transition: var(--transition); flex-shrink:0;" onclick="showSummary()">Vardiyayı Tamamla ve Çık</button>
+            <button class="btn" style="margin-top:10px; background:transparent; color:var(--text-muted); flex-shrink:0;" onclick="closeModal('checklistModal')">Geri Dön</button>
         </div>
     </div>
 
@@ -391,52 +455,17 @@
         </div>
     </div>
 
-    <!-- YÖNETİCİ MENÜSÜ MODALI -->
-    <div class="modal-overlay" id="adminModal" onclick="closeOnOutsideClick(event, 'adminModal')">
-        <div class="modal-content">
-            <div class="drag-handle"></div>
-            <h3 style="font-size:22px; font-weight:700; margin-bottom:20px; color:var(--text-main);">Yönetici Paneli</h3>
-            
-            <div id="adminDashboardSection">
-                <h4 style="font-size:14px; font-weight:700; color:var(--text-main); margin-bottom:10px;">Haftalık Operasyon Özeti</h4>
-                <div class="dashboard-stats" id="dashboardStatsContainer">
-                    <div class="stat-card success"><div class="value">0</div><div class="label">BAŞARILI</div></div>
-                    <div class="stat-card danger"><div class="value">0</div><div class="label">FİRE</div></div>
-                </div>
-            </div>
-
-            <!-- CANLI MESAİ RADARI EKLENDİ -->
-            <div id="adminActiveShiftsSection" style="margin-top:20px; margin-bottom:15px;">
-                <h4 style="font-size:14px; font-weight:700; color:var(--text-main); margin-bottom:10px;"><i class="fa-solid fa-satellite-dish" style="color:var(--accent);"></i> Aktif Mesaidekiler</h4>
-                <div id="activeShiftsContainer"></div>
-            </div>
-
-            <div class="admin-grid" style="margin-top:15px; display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                <div class="admin-card" onclick="closeModal('adminModal'); openModal('usersModal');" style="background:var(--bg-color); border:none; padding:15px; border-radius:var(--radius-md); text-align:center; cursor:pointer;">
-                    <i class="fa-solid fa-users" style="color:var(--accent); font-size:24px; margin-bottom:8px;"></i>
-                    <div style="font-weight:600; font-size:13px; color:var(--text-main);">Personel Yönetimi</div>
-                </div>
-                <div class="admin-card" onclick="closeModal('adminModal'); openModal('logsModal'); renderLogsList();" style="background:var(--bg-color); border:none; padding:15px; border-radius:var(--radius-md); text-align:center; cursor:pointer;">
-                    <i class="fa-solid fa-clipboard-list" style="color:var(--warning); font-size:24px; margin-bottom:8px;"></i>
-                    <div style="font-weight:600; font-size:13px; color:var(--text-main);">Sistem Logları</div>
-                </div>
-            </div>
-            
-            <button class="btn" style="margin-top:25px; background:var(--danger-light); color:var(--danger);" onclick="executeLogout()">Sistemden Komple Çıkış Yap</button>
-        </div>
-    </div>
-
     <!-- PERSONEL YÖNETİMİ MODALI -->
-    <div class="modal-overlay" id="usersModal" onclick="closeOnOutsideClick(event, 'usersModal')">
+    <div class="modal-overlay" id="usersModal">
         <div class="modal-content">
             <div class="drag-handle"></div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                 <h3 style="font-size:22px; font-weight:700; color:var(--text-main);">Kullanıcılar</h3>
-                <button onclick="closeModal('usersModal'); openModal('adminModal');" style="background:none; border:none; font-size:16px; font-weight:600; color:var(--accent); cursor:pointer;">Geri</button>
+                <button onclick="closeModal('usersModal');" style="background:none; border:none; font-size:16px; font-weight:600; color:var(--accent); cursor:pointer;">Kapat</button>
             </div>
-            <div id="usersList" style="margin-bottom:25px;"></div>
+            <div class="modal-body" id="usersList" style="max-height: 40vh; margin-bottom:15px;"></div>
             
-            <div style="background:var(--bg-color); padding:20px; border-radius:var(--radius-md);">
+            <div style="background:var(--bg-color); padding:20px; border-radius:var(--radius-md); flex-shrink:0;">
                 <h4 style="font-size:14px; font-weight:700; margin-bottom:15px; color:var(--text-main);">Yeni Personel Ekle</h4>
                 <input type="text" id="newUserName" class="form-input" style="background:var(--surface-solid);" placeholder="Ad Soyad">
                 <div style="display:flex; gap:10px; margin-bottom:15px;">
@@ -452,7 +481,7 @@
     </div>
 
     <!-- YENİ ÜRÜN EKLE MODALI -->
-    <div class="modal-overlay" id="addProdModal" onclick="closeOnOutsideClick(event, 'addProdModal')">
+    <div class="modal-overlay" id="addProdModal">
         <div class="modal-content">
             <div class="drag-handle"></div>
             <h3 style="font-size:22px; font-weight:700; margin-bottom:20px; color:var(--text-main);">Yeni Ürün</h3>
@@ -486,29 +515,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <script>
-        // ESKİ PWA ÖNBELLEĞİNİ SİL (Bozuk Sürümleri Yutmasın)
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                for(let registration of registrations) { registration.unregister(); }
-            });
-        }
-
-        function safeSetLocal(key, val) { try { localStorage.setItem(key, val); } catch(e) {} }
-        function safeGetLocal(key) { try { return localStorage.getItem(key); } catch(e) { return null; } }
-        function safeRemoveLocal(key) { try { localStorage.removeItem(key); } catch(e) {} }
-
-        let isDark = false;
-        try { isDark = localStorage.getItem('kd_theme') === 'dark'; } catch(e){}
-        if(isDark) document.body.classList.add('dark-mode');
-
-        const firebaseConfig = {
-          apiKey: "AIzaSyDxxGeAcvJfEtMUmDl_wMPBSGYqbaYUbRY",
-          authDomain: "raf-omru-takip-uygulamasi.firebaseapp.com",
-          databaseURL: "https://raf-omru-takip-uygulamasi-default-rtdb.firebaseio.com",
-          projectId: "raf-omru-takip-uygulamasi",
-          storageBucket: "raf-omru-takip-uygulamasi.firebasestorage.app"
-        };
-        
         // KÜTÜPHANE VE DEĞİŞKENLER GLOBALDE TANIMLANDI (JS ÇÖKMESİNİ ÖNLER)
         let db = null;
         let currentUser = null; 
@@ -517,7 +523,7 @@
             "1923": { name: "Yusuf (Yönetici)", role: "admin", pin: "1923" }
         };
         
-        const dbRoot = 'kd_kordon_pro_v21'; // Temiz ve stabil son veritabanı alanı
+        const dbRoot = 'kd_kordon_pro_v22'; // Dashboard Versiyonu
         let isAppLaunched = false;
         let isBulkMode = false;
         let isEditMode = false;
@@ -525,6 +531,7 @@
         let activeShifts = {};
 
         let activeItems = [], todos = [], allLogs = [];
+        let voiceSearchTimeout = null;
 
         const catColors = {
             "Şarküteri, Süt ve Soslar": "#007AFF", 
@@ -669,25 +676,27 @@
             {id:"L112", kategori:"Paketli & Kuru Gıdalar", urun:"Kavanoz Vişne Sos", raf_omru:3, birim:"Gün"}
         ];
 
-        let libraryDB = [...defaultLibrary];
+        // GÜVENLİ LOCALSTORAGE FONKSİYONLARI
+        function safeSetLocal(key, val) { try { localStorage.setItem(key, val); } catch(e) {} }
+        function safeGetLocal(key) { try { return localStorage.getItem(key); } catch(e) { return null; } }
+        function safeRemoveLocal(key) { try { localStorage.removeItem(key); } catch(e) {} }
 
-        function normalizeTR(str) {
-            return str.replace(/İ/g, 'i').replace(/I/g, 'ı').toLowerCase();
-        }
-
-        // BÜYÜK GÜNCELLEME: SIFIR GECİKME İLE SİSTEMİ AÇMA
+        // SIFIR GECİKME İLE SİSTEMİ AÇMA
         document.addEventListener("DOMContentLoaded", () => {
             const spinner = document.getElementById('fullScreenSpinner');
             if(spinner) spinner.style.display = 'none';
-            
-            updateThemeIcon();
-            checkNotificationStatus();
-            initSwipeNavigation();
-            
-            setInterval(updateDateTime, 1000);
-            updateDateTime();
 
+            let isDark = false;
+            try { isDark = localStorage.getItem('kd_theme') === 'dark'; } catch(e){}
+            if(isDark) document.body.classList.add('dark-mode');
+            updateThemeIcon();
+
+            initModalDragging();
+
+            // 1. ADIM: Arayüzü anında göster
             showLoginOrApp();
+
+            // 2. ADIM: Veritabanını arkaplanda sessizce bağla
             setTimeout(initDatabase, 50);
         });
 
@@ -698,36 +707,38 @@
             
             const clockEl = document.getElementById('clockDisplay');
             const dateEl = document.getElementById('dateDisplay');
+            
             if(clockEl) clockEl.innerText = timeStr;
             if(dateEl) dateEl.innerText = dateStr;
         }
 
-        function initSwipeNavigation() {
-            let dragStartX = 0;
-            const container = document.getElementById('drumpadContainer');
-            if(!container) return;
-            container.addEventListener('touchstart', e => { dragStartX = e.touches[0].clientX; }, {passive: true});
-            container.addEventListener('touchend', e => {
-                let dragEndX = e.changedTouches[0].clientX;
-                let diff = dragStartX - dragEndX;
-                
-                if (Math.abs(diff) > 70) {
-                    let chips = Array.from(document.querySelectorAll('#libChips .chip'));
-                    let idx = chips.findIndex(c => c.classList.contains('active'));
-                    
-                    if (diff > 0 && idx < chips.length - 1) chips[idx + 1].click();
-                    else if (diff < 0 && idx > 0) chips[idx - 1].click();
-                    
-                    setTimeout(() => {
-                        let activeChip = document.querySelector('#libChips .chip.active');
-                        if(activeChip) activeChip.scrollIntoView({behavior: "smooth", inline: "center", block: "nearest"});
-                    }, 50);
+        // MENÜLERİ AŞAĞI KAYDIRARAK KAPATMA (DRAG HANDLE)
+        function initModalDragging() {
+            let modalStartY = 0;
+            let currentModal = null;
+            document.querySelectorAll('.modal-content').forEach(mc => {
+                const handle = mc.querySelector('.drag-handle');
+                if(handle) {
+                    handle.addEventListener('touchstart', e => {
+                        modalStartY = e.touches[0].clientY;
+                        currentModal = mc.parentElement;
+                    }, {passive: true});
+                    handle.addEventListener('touchmove', e => {
+                        let dy = e.touches[0].clientY - modalStartY;
+                        if(dy > 0) { mc.style.transform = `translateY(${dy}px)`; }
+                    }, {passive: true});
+                    handle.addEventListener('touchend', e => {
+                        let dy = e.changedTouches[0].clientY - modalStartY;
+                        if(dy > 100) { closeModal(currentModal.id); } 
+                        else { mc.style.transform = ''; }
+                    });
                 }
             });
         }
 
         function showLoginOrApp() {
             if (isAppLaunched) return; 
+            
             const savedPin = safeGetLocal('kd_saved_pin');
             if(savedPin && (usersDB[savedPin] || savedPin === "1923")) {
                 currentUser = usersDB[savedPin] || { name: "Yusuf (Yönetici)", role: "admin", pin: "1923" };
@@ -736,6 +747,14 @@
                 document.getElementById('authScreen').style.display = 'flex';
             }
         }
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyDxxGeAcvJfEtMUmDl_wMPBSGYqbaYUbRY",
+          authDomain: "raf-omru-takip-uygulamasi.firebaseapp.com",
+          databaseURL: "https://raf-omru-takip-uygulamasi-default-rtdb.firebaseio.com",
+          projectId: "raf-omru-takip-uygulamasi",
+          storageBucket: "raf-omru-takip-uygulamasi.firebasestorage.app"
+        };
 
         function initDatabase() {
             try {
@@ -751,24 +770,18 @@
                             usersDB = data;
                         }
                         
-                        const savedPin = safeGetLocal('kd_saved_pin');
-                        if(savedPin && usersDB[savedPin]) {
-                            currentUser = usersDB[savedPin];
-                            if (isAppLaunched) {
-                                document.getElementById('headerUserName').innerText = currentUser.name;
-                                if(currentUser.role === 'admin') {
-                                    document.getElementById('adminBtn').style.display = 'flex';
-                                    document.getElementById('editModeBtn').style.display = 'block'; 
-                                    document.getElementById('todoAssignee').style.display = 'block';
-                                }
+                        if (isAppLaunched) {
+                            if(currentUser.role === 'admin') {
+                                document.getElementById('todoAssignee').style.display = 'block';
+                                document.getElementById('todoPhotoReqLabel').style.display = 'flex';
                             }
-                        }
-                        
-                        if (isAppLaunched && document.getElementById('usersModal').classList.contains('active')) {
-                            renderUsersList();
+                            if(document.getElementById('usersModal').classList.contains('active')) {
+                                renderUsersList();
+                            }
                         }
                     });
 
+                    // Canlı Mesai Takibi Listesi
                     db.ref(`${dbRoot}/active_shifts`).on('value', snap => {
                         activeShifts = snap.val() || {};
                         if(document.getElementById('adminModal').classList.contains('active')) {
@@ -779,7 +792,7 @@
                     syncDataBackground();
                 }
             } catch(e) {
-                console.warn("Veritabanı uyarısı (Offline çalışılabilir):", e);
+                console.warn("Bulut bağlantısı reddedildi, yerel mod çalışıyor.", e);
             }
         }
 
@@ -795,17 +808,16 @@
 
             db.ref(`${dbRoot}/library`).on('value', snap => {
                 const data = snap.val();
-                if(data) { libraryDB = Object.values(data); renderLibraryDrumpad(); } 
-                else { db.ref(`${dbRoot}/library`).set(libraryDB); }
+                if(data) { libraryDB = Object.values(data); }
             });
 
             db.ref(`${dbRoot}/active`).on('value', snap => {
                 activeItems = snap.val() ? Object.values(snap.val()) : [];
-                renderActiveList();
+                if(document.getElementById('tab-active').classList.contains('active')) renderActiveList();
             });
             db.ref(`${dbRoot}/todos`).on('value', snap => {
                 todos = snap.val() ? Object.values(snap.val()) : [];
-                renderTodos();
+                if(document.getElementById('tab-todos').classList.contains('active')) renderTodos();
             });
             db.ref(`${dbRoot}/logs`).on('value', snap => {
                 allLogs = snap.val() ? Object.values(snap.val()) : [];
@@ -846,7 +858,7 @@
         
         // ÇIKIŞ VE DİNAMİK GÖREV ONAYI
         function triggerLogoutFlow() {
-            closeModal('adminModal');
+            closeModal('profileModal');
             const container = document.getElementById('dynamicChecklistContainer');
             container.innerHTML = '';
             
@@ -867,7 +879,13 @@
                 container.innerHTML += `<hr style="border:0; border-top:1px dashed var(--border); margin:15px 0;">`;
                 container.innerHTML += `<h5 style="color:var(--danger); font-size:12px; font-weight:800; margin-bottom:10px;">SİZE ATANAN ÖZEL GÖREVLER</h5>`;
                 myTasks.forEach(t => {
-                    container.innerHTML += `<label class="closing-cb-label"><input type="checkbox" class="closing-cb dynamic-task" data-id="${t.id}"> <span style="color:var(--danger); font-weight:700;">${t.text}</span></label>`;
+                    let photoReqHtml = t.requiresPhoto ? `<span style="background:var(--warning-light); color:var(--warning); padding:2px 6px; border-radius:10px; font-size:9px; font-weight:800; margin-left:6px;"><i class="fa-solid fa-camera"></i> FOTO ZORUNLU</span>` : '';
+                    // Fotoğraf zorunluysa, buradan basitçe tik atılamaz.
+                    if(t.requiresPhoto) {
+                        container.innerHTML += `<label class="closing-cb-label" style="opacity:0.6;"><input type="checkbox" disabled> <span style="color:var(--danger); font-weight:700;">${t.text} ${photoReqHtml} (Görevler panosundan foto ekleyiniz)</span></label>`;
+                    } else {
+                        container.innerHTML += `<label class="closing-cb-label"><input type="checkbox" class="closing-cb dynamic-task" data-id="${t.id}"> <span style="color:var(--danger); font-weight:700;">${t.text}</span></label>`;
+                    }
                 });
             }
 
@@ -878,11 +896,12 @@
         function showSummary() {
             closeModal('checklistModal');
             
+            // Eğer atanmış görevler işaretlendiyse veritabanında "yapıldı" olarak güncelle
             document.querySelectorAll('.dynamic-task').forEach(cb => {
                 if(cb.checked) {
                     const tid = cb.getAttribute('data-id');
                     const t = todos.find(x => x.id === tid);
-                    if(t) {
+                    if(t && !t.requiresPhoto) {
                         t.done = true;
                         if(db) db.ref(`${dbRoot}/todos/${tid}`).update({done: true});
                     }
@@ -922,23 +941,69 @@
         function launchApp() {
             if(isAppLaunched) return;
             isAppLaunched = true;
+            
+            // Baş Harf Profil Butonu
+            let firstLetter = currentUser.name.charAt(0).toUpperCase();
+            document.getElementById('headerUserBadge').innerText = firstLetter;
+            
+            // Profile Modal Info
+            document.getElementById('profileModalAvatar').innerText = firstLetter;
+            document.getElementById('profileModalName').innerText = currentUser.name;
+            document.getElementById('profileModalRole').innerText = currentUser.role === 'admin' ? "Yönetici" : "Personel";
+
             document.getElementById('appContent').style.display = 'block';
-            document.getElementById('headerUserName').innerText = currentUser.name;
             
             if(currentUser.role === 'admin') {
-                document.getElementById('adminBtn').style.display = 'flex';
-                document.getElementById('editModeBtn').style.display = 'block'; 
-                document.getElementById('todoAssignee').style.display = 'block'; 
+                document.getElementById('todoAssignee').style.display = 'block';
+                document.getElementById('todoPhotoReqLabel').style.display = 'flex';
+                renderAdminDashboardTiles();
+            } else {
+                renderStaffDashboardTiles();
             }
             
             showToast(`Hoşgeldin, ${currentUser.name}`);
-            renderLibraryDrumpad();
-            renderActiveList();
-            renderTodos();
-            setInterval(renderActiveList, 60000);
+            
+            setInterval(updateDateTime, 1000);
+            updateDateTime();
         }
 
-        let currentLibFilter = 'Tümü';
+        // ANA SAYFA (DASHBOARD) KARTLARI
+        function renderAdminDashboardTiles() {
+            const grid = document.getElementById('mainDashboardGrid');
+            document.getElementById('adminStatsArea').style.display = 'block';
+            grid.innerHTML = `
+                <div class="dash-card" onclick="switchTab('tab-library', document.getElementById('navLibrary'))">
+                    <i class="fa-solid fa-layer-group"></i><div class="title">Üretim Yap</div><div class="desc">Yeni tarih etiketi bas</div>
+                </div>
+                <div class="dash-card" onclick="openModal('adminModal')">
+                    <i class="fa-solid fa-chart-pie"></i><div class="title">Canlı Radar</div><div class="desc">Personel ve istatistik</div>
+                </div>
+                <div class="dash-card" onclick="switchTab('tab-order', document.getElementById('navOrder'))">
+                    <i class="fa-solid fa-cart-shopping"></i><div class="title">Sipariş Oluştur</div><div class="desc">Manav, süt ve depo</div>
+                </div>
+                <div class="dash-card" onclick="openModal('galleryModal'); renderGallery();">
+                    <i class="fa-solid fa-images"></i><div class="title">Foto Galeri</div><div class="desc">Kanıtlar ve notlar</div>
+                </div>
+            `;
+        }
+
+        function renderStaffDashboardTiles() {
+            const grid = document.getElementById('mainDashboardGrid');
+            grid.innerHTML = `
+                <div class="dash-card" onclick="switchTab('tab-library', document.getElementById('navLibrary'))">
+                    <i class="fa-solid fa-layer-group"></i><div class="title">Üretim Yap</div><div class="desc">Yeni tarih etiketi bas</div>
+                </div>
+                <div class="dash-card" onclick="switchTab('tab-active', document.getElementById('navActive'))">
+                    <i class="fa-solid fa-clock-rotate-left"></i><div class="title">Aktif Takip</div><div class="desc">Süresi dolanlar ve imha</div>
+                </div>
+                <div class="dash-card" onclick="switchTab('tab-todos', document.getElementById('navTodos'))">
+                    <i class="fa-solid fa-clipboard-check"></i><div class="title">Görevler</div><div class="desc">Vardiya notları ve işler</div>
+                </div>
+                <div class="dash-card" onclick="document.getElementById('cameraInput').click()">
+                    <i class="fa-solid fa-camera"></i><div class="title">Hızlı Fotoğraf</div><div class="desc">Anlık durum bildir</div>
+                </div>
+            `;
+        }
 
         function filterLib(cat, el) {
             document.querySelectorAll('#libChips .chip').forEach(c => c.classList.remove('active'));
@@ -1056,7 +1121,13 @@
             
             if(navigator.vibrate) navigator.vibrate([50, 50]);
             showToast(`${itemsToProcess.length} ürün işlendi.`);
+            
+            itemsToProcess.forEach(item => {
+                logAction(`SKT ${resultType}`, `${item.name} toplu işlemle düştü.`);
+            });
+
             toggleBulkMode();
+            if(document.getElementById('adminModal').classList.contains('active')) renderAdminDashboard();
         }
 
         function deleteProduct(id) {
@@ -1129,11 +1200,20 @@
                 showToast("🎙️ Dinleniyor...");
                 if(navigator.vibrate) navigator.vibrate(50);
                 document.getElementById('libSearchInput').placeholder = "Dinleniyor...";
+                
+                // 4 saniye sonra konuşma algılanmazsa kapat
+                voiceSearchTimeout = setTimeout(() => {
+                    recognition.stop();
+                }, 4000);
             };
             
-            recognition.onspeechend = () => { recognition.stop(); };
+            recognition.onend = () => {
+                document.getElementById('libSearchInput').placeholder = "Ürün ara...";
+                clearTimeout(voiceSearchTimeout);
+            };
             
             recognition.onresult = (event) => {
+                clearTimeout(voiceSearchTimeout);
                 let transcript = event.results[0][0].transcript.toLowerCase().trim();
                 
                 transcript = transcript.replace(/kold bru/g, 'cold brew')
@@ -1157,13 +1237,15 @@
             };
             
             recognition.onerror = (event) => { 
-                showToast("Ses algılanamadı, tekrar deneyin.", true); 
+                showToast("Ses algılanamadı.", true); 
                 document.getElementById('libSearchInput').placeholder = "Ürün ara...";
+                clearTimeout(voiceSearchTimeout);
             };
             
             recognition.start();
         }
 
+        // FOTOĞRAF ÇEKİMİ
         function handleCameraUpload(event) {
             const file = event.target.files[0];
             if(!file) return;
@@ -1182,12 +1264,43 @@
                     
                     const dataURL = canvas.toDataURL('image/jpeg', 0.6); 
                     
-                    document.getElementById('cameraPreviewImg').src = dataURL;
+                    // Görev için mi çekildi yoksa serbest mi?
+                    const targetTaskId = document.getElementById('cameraTargetTaskId').value;
+                    if (targetTaskId) {
+                        document.getElementById('cameraPreviewImg').src = dataURL;
+                        document.getElementById('cameraNoteTextInput').style.display = 'none'; // Görevin notu var zaten
+                        document.getElementById('saveTaskPhotoBtn').innerText = "Görevi Tamamla (Fotoğrafı Ekle)";
+                        document.getElementById('saveTaskPhotoBtn').onclick = () => savePhotoToTask(targetTaskId, dataURL);
+                    } else {
+                        document.getElementById('cameraPreviewImg').src = dataURL;
+                        document.getElementById('cameraNoteTextInput').style.display = 'block';
+                        document.getElementById('saveTaskPhotoBtn').innerText = "Görev Panosuna Ekle";
+                        document.getElementById('saveTaskPhotoBtn').onclick = saveCameraNote;
+                    }
+
                     openModal('cameraNoteModal');
                 };
                 img.src = e.target.result;
             };
             reader.readAsDataURL(file);
+        }
+
+        function triggerTaskCamera(taskId) {
+            document.getElementById('cameraTargetTaskId').value = taskId;
+            document.getElementById('cameraInput').click();
+        }
+
+        function savePhotoToTask(taskId, imgData) {
+            const t = todos.find(x => x.id === taskId);
+            if(t) {
+                t.done = true;
+                t.imgData = imgData;
+                renderTodos();
+                if(db) db.ref(`${dbRoot}/todos/${taskId}`).update({ done: true, imgData: imgData });
+                showToast("Görev fotoğrafla tamamlandı.");
+            }
+            document.getElementById('cameraTargetTaskId').value = "";
+            closeModal('cameraNoteModal');
         }
 
         function saveCameraNote() {
@@ -1202,6 +1315,7 @@
                 addedBy: currentUser.name, 
                 assignedTo: 'ALL',
                 assignedName: 'Herkese',
+                requiresPhoto: false,
                 timestamp: Date.now() 
             };
             todos.unshift(newTodo);
@@ -1222,6 +1336,32 @@
             document.getElementById('cameraNoteTextInput').value = "";
             closeModal('cameraNoteModal');
             showToast("Sadece log kayıtlarına eklendi.");
+        }
+
+        // GALERİ RENDER
+        function renderGallery() {
+            const container = document.getElementById('galleryGridArea');
+            if(!container) return;
+            container.innerHTML = '';
+            
+            // Loglardan ve görevlerden fotoğraf içerenleri topla
+            let allPhotos = [];
+            allLogs.forEach(l => { if(l.imgData) allPhotos.push({ img: l.imgData, text: l.detail, user: l.user, date: l.date }); });
+            todos.forEach(t => { if(t.imgData) allPhotos.push({ img: t.imgData, text: t.text, user: t.addedBy, date: new Date(t.timestamp).toLocaleDateString('tr-TR') }); });
+
+            if(allPhotos.length === 0) {
+                container.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:20px; color:var(--text-muted);">Henüz çekilmiş bir fotoğraf yok.</div>`;
+                return;
+            }
+
+            allPhotos.forEach(p => {
+                container.innerHTML += `
+                    <div class="gallery-item">
+                        <img src="${p.img}">
+                        <div class="overlay">${p.text}<br><span style="color:var(--warning); font-size:9px;">${p.user.split(' ')[0]} - ${p.date.split(' ')[0]}</span></div>
+                    </div>
+                `;
+            });
         }
 
         function renderActiveList() {
@@ -1265,7 +1405,7 @@
                             <div class="bg-right"><i class="fa-solid fa-trash"></i></div>
                         </div>` : ''}
                         
-                        <div class="active-card" id="card-${item.id}" ${touchEvents} style="border-left-color:${color};">
+                        <div class="active-card" id="card-${item.id}" ${touchEvents} style="border-left-color:${color}; transform: ${cardTransformState[item.id] || 'translateX(0)'}">
                             <div class="bulk-checkbox"><i class="fa-solid fa-check"></i></div>
                             <div style="flex:1;">
                                 <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -1285,15 +1425,30 @@
             });
         }
 
+        let cardTransformState = {};
         let tsx = 0, tcx = 0;
         function handleTS(e, id) { if(isBulkMode) return; tsx = e.touches[0].clientX; tcx = tsx; }
-        function handleTM(e, id) { if(isBulkMode) return; tcx = e.touches[0].clientX; const diff = tcx - tsx; if(Math.abs(diff)>20) document.getElementById(`card-${id}`).style.transform = `translateX(${diff}px)`; }
+        function handleTM(e, id) { 
+            if(isBulkMode) return; 
+            tcx = e.touches[0].clientX; 
+            const diff = tcx - tsx; 
+            if(Math.abs(diff)>20) {
+                const card = document.getElementById(`card-${id}`);
+                card.style.transform = `translateX(${diff}px)`;
+                card.style.transition = 'none';
+            }
+        }
         function handleTE(e, id) {
             if(isBulkMode) return;
-            const diff = tcx - tsx; const card = document.getElementById(`card-${id}`);
+            const diff = tcx - tsx; 
+            const card = document.getElementById(`card-${id}`);
+            card.style.transition = 'transform 0.2s ease-out';
             if(diff > 90) processItem(id, "Tüketildi");
             else if(diff < -90) processItem(id, "İmha Edildi");
-            else card.style.transform = `translateX(0)`;
+            else {
+                card.style.transform = `translateX(0)`;
+                delete cardTransformState[id];
+            }
         }
 
         function processItem(id, result) {
@@ -1302,6 +1457,7 @@
             const item = activeItems[itemIndex];
             
             activeItems.splice(itemIndex, 1);
+            delete cardTransformState[id];
             renderActiveList();
             if(db) db.ref(`${dbRoot}/active/${id}`).remove();
             
@@ -1325,8 +1481,11 @@
         function addTodo() {
             const txt = document.getElementById('todoInput').value.trim(); if(!txt) return;
             const assigneeSelect = document.getElementById('todoAssignee');
+            const photoReqCheck = document.getElementById('todoRequiresPhoto');
+            
             const assignedTo = assigneeSelect ? assigneeSelect.value : 'ALL';
             const assignedName = assignedTo === 'ALL' ? 'Herkese' : (usersDB[assignedTo] ? usersDB[assignedTo].name.split(' ')[0] : 'Bilinmiyor');
+            const requiresPhoto = photoReqCheck ? photoReqCheck.checked : false;
 
             const newTodo = { 
                 id: Date.now().toString(), 
@@ -1334,13 +1493,17 @@
                 done: false, 
                 addedBy: currentUser.name, 
                 assignedTo: assignedTo, 
-                assignedName: assignedName, 
+                assignedName: assignedName,
+                requiresPhoto: requiresPhoto,
+                imgData: null,
                 timestamp: Date.now() 
             };
             todos.unshift(newTodo);
             renderTodos();
             if(db) db.ref(`${dbRoot}/todos/${newTodo.id}`).set(newTodo);
+            
             document.getElementById('todoInput').value = "";
+            if(photoReqCheck) photoReqCheck.checked = false;
             showToast("Görev atandı.");
         }
 
@@ -1355,29 +1518,47 @@
             
             myTodos.forEach(t => {
                 let badgeHtml = t.assignedTo !== 'ALL' ? `<span style="background:var(--danger-light); color:var(--danger); padding:2px 6px; border-radius:10px; font-size:9px; margin-left:6px; font-weight:800;">@${t.assignedName}</span>` : '';
-                let imgHtml = t.imgData ? `<img src="${t.imgData}" style="width:100%; max-height:200px; object-fit:cover; border-radius:8px; margin-top:10px; border:1px solid var(--border);">` : '';
+                let statusBadge = t.done ? `<span class="status-badge status-completed">Tamamlandı</span>` : `<span class="status-badge status-pending">Bekliyor</span>`;
+                
+                let imgHtml = t.imgData ? `<img src="${t.imgData}" style="width:100%; max-height:150px; object-fit:cover; border-radius:8px; margin-top:10px; border:1px solid var(--border);" onclick="openModal('galleryModal'); renderGallery();">` : '';
+
+                // Fotoğraf Zorunluluğu Varsa Normal Tik İşlemez
+                let checkBtnHtml = '';
+                if(t.done) {
+                    checkBtnHtml = `<div style="width:28px; height:28px; border-radius:50%; border:2px solid var(--success); display:flex; align-items:center; justify-content:center; color:white; background:var(--success); transition:var(--transition); margin-top:2px; flex-shrink:0;"><i class="fa-solid fa-check" style="font-size:12px;"></i></div>`;
+                } else if(t.requiresPhoto) {
+                    checkBtnHtml = `<div style="width:28px; height:28px; border-radius:50%; border:2px solid var(--warning); display:flex; align-items:center; justify-content:center; color:var(--warning); background:var(--warning-light); transition:var(--transition); margin-top:2px; flex-shrink:0; cursor:pointer;" onclick="triggerTaskCamera('${t.id}')"><i class="fa-solid fa-camera" style="font-size:12px;"></i></div>`;
+                } else {
+                    checkBtnHtml = `<div style="width:28px; height:28px; border-radius:50%; border:2px solid var(--border); display:flex; align-items:center; justify-content:center; color:transparent; background:transparent; transition:var(--transition); margin-top:2px; flex-shrink:0; cursor:pointer;" onclick="toggleTodo('${t.id}', ${t.done})"><i class="fa-solid fa-check" style="font-size:12px;"></i></div>`;
+                }
 
                 container.innerHTML += `
                     <div style="display:flex; justify-content:space-between; align-items:flex-start; padding:16px; background:var(--surface-solid); border-radius:var(--radius-md); box-shadow:var(--shadow-sm); margin-bottom:10px; border:1px solid var(--border);">
-                        <div style="display:flex; align-items:flex-start; gap:12px; cursor:pointer; flex:1;" onclick="toggleTodo('${t.id}', ${t.done})">
-                            <div style="width:24px; height:24px; border-radius:50%; border:2px solid ${t.done ? 'var(--success)' : 'var(--border)'}; display:flex; align-items:center; justify-content:center; color:white; background:${t.done ? 'var(--success)' : 'transparent'}; transition:var(--transition); margin-top:2px;"><i class="fa-solid fa-check" style="font-size:12px; opacity:${t.done ? '1' : '0'};"></i></div>
+                        <div style="display:flex; align-items:flex-start; gap:12px; flex:1;">
+                            ${checkBtnHtml}
                             <div style="flex:1;">
+                                <div>${statusBadge}</div>
                                 <div style="font-size:14px; font-weight:600; text-decoration:${t.done ? 'line-through' : 'none'}; color:${t.done ? 'var(--text-muted)' : 'var(--text-main)'};">${t.text} ${badgeHtml}</div>
                                 ${imgHtml}
                                 <div style="font-size:11px; color:var(--text-muted); margin-top:6px;">Ekleyen: ${t.addedBy.split(' ')[0]}</div>
                             </div>
                         </div>
                         ${(currentUser.role === 'admin' || t.addedBy === currentUser.name) ? `
-                        <button style="background:var(--danger-light); border:none; color:var(--danger); width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:var(--transition); margin-left:10px;" onclick="deleteTodo('${t.id}')">
+                        <button style="background:var(--danger-light); border:none; color:var(--danger); width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:var(--transition); margin-left:10px; flex-shrink:0;" onclick="deleteTodo('${t.id}')">
                             <i class="fa-solid fa-xmark"></i>
                         </button>` : ''}
                     </div>
                 `;
             });
         }
+
         function toggleTodo(id, currentStatus) { 
-            const t = todos.find(x=>x.id === id); if(t) t.done = !currentStatus; renderTodos();
-            if(db) db.ref(`${dbRoot}/todos/${id}`).update({ done: !currentStatus }); 
+            const t = todos.find(x=>x.id === id); 
+            if(t && !t.requiresPhoto) { // Fotoğraflı görevler buradan işaretlenemez
+                t.done = !currentStatus; 
+                renderTodos();
+                if(db) db.ref(`${dbRoot}/todos/${id}`).update({ done: !currentStatus }); 
+            }
         }
         function deleteTodo(id) { 
             todos = todos.filter(x=>x.id !== id); renderTodos();
@@ -1396,6 +1577,70 @@
             };
             allLogs.push(logItem);
             if(db) db.ref(`${dbRoot}/logs/${logItem.id}`).set(logItem);
+        }
+
+        function openModal(id) { 
+            document.getElementById(id).classList.add('active'); 
+            document.body.classList.add('no-scroll'); 
+            
+            // Modallara girerken content transform'unu sıfırla
+            const mc = document.getElementById(id).querySelector('.modal-content');
+            if(mc) mc.style.transform = '';
+
+            if(id==='usersModal') renderUsersList(); 
+            if(id==='adminModal') renderAdminDashboard();
+            if(id==='logsModal') renderLogsList();
+            if(id==='galleryModal') renderGallery();
+        }
+        function closeModal(id) { 
+            document.getElementById(id).classList.remove('active'); 
+            document.body.classList.remove('no-scroll'); 
+            
+            // Eğer profil vs kapandıysa tekrar normal sekmeye dönülecekse
+            document.getElementById('cameraTargetTaskId').value = ""; // Her ihtimale karşı reset
+        }
+        function closeOnOutsideClick(e, id) { if(e.target.id === id) closeModal(id); }
+
+        function renderAdminDashboard() {
+            const now = Date.now();
+            const sevenDaysAgo = now - (7 * 24 * 60 * 60 * 1000);
+            
+            const logsArray = Array.isArray(allLogs) ? allLogs : Object.values(allLogs || {});
+            const recentLogs = logsArray.filter(l => l.timestamp >= sevenDaysAgo);
+            const consumedCount = recentLogs.filter(l => l.action === 'Tüketildi' || l.action.includes('Tüketildi')).length;
+            const destroyedCount = recentLogs.filter(l => l.action === 'İmha Edildi' || l.action.includes('İmha')).length;
+            
+            const dashContainer = document.getElementById('adminStatsArea');
+            if(dashContainer) {
+                // Sadece Dashboard'daki istatistikleri güncelle (Admin tabında)
+                const dashGrid = document.getElementById('dashboardStatsContainer');
+                if(dashGrid) {
+                    dashGrid.innerHTML = `
+                        <div class="stat-card success"><div class="value">${consumedCount}</div><div class="label">BAŞARILI TÜKETİM</div></div>
+                        <div class="stat-card danger"><div class="value">${destroyedCount}</div><div class="label">FİRE (İMHA)</div></div>
+                    `;
+                }
+            }
+
+            const shiftContainer = document.getElementById('activeShiftsContainer');
+            if(shiftContainer) {
+                shiftContainer.innerHTML = '';
+                const pins = Object.keys(activeShifts);
+                if(pins.length === 0) {
+                    shiftContainer.innerHTML = `<div style="font-size:12px; color:var(--text-muted); padding:15px; border:1px dashed var(--border); border-radius:var(--radius-sm); text-align:center;">Şu an aktif mesaide personel yok.</div>`;
+                } else {
+                    pins.forEach(p => {
+                        const s = activeShifts[p];
+                        const timeString = new Date(s.loginTime).toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'});
+                        shiftContainer.innerHTML += `
+                            <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; background:var(--surface-solid); border:1px solid var(--border); border-left:4px solid var(--success); border-radius:var(--radius-md); margin-bottom:8px; box-shadow:var(--shadow-sm);">
+                                <div style="font-weight:700; font-size:14px; color:var(--text-main);"><i class="fa-solid fa-user-circle" style="color:var(--text-muted); margin-right:4px;"></i> ${s.name}</div>
+                                <div style="font-size:11px; color:var(--text-muted); font-weight:600;"><i class="fa-regular fa-clock"></i> Giriş: ${timeString}</div>
+                            </div>
+                        `;
+                    });
+                }
+            }
         }
 
         function renderLogsList() {
@@ -1424,73 +1669,6 @@
                     </div>
                 `;
             });
-        }
-
-        function openModal(id) { 
-            document.getElementById(id).classList.add('active'); 
-            document.body.classList.add('no-scroll'); 
-            if(id==='usersModal') renderUsersList(); 
-            if(id==='adminModal') renderAdminDashboard();
-            if(id==='logsModal') renderLogsList();
-        }
-        function closeModal(id) { 
-            document.getElementById(id).classList.remove('active'); 
-            document.body.classList.remove('no-scroll'); 
-        }
-        function closeOnOutsideClick(e, id) { if(e.target.id === id) closeModal(id); }
-
-        function renderAdminDashboard() {
-            const now = Date.now();
-            const sevenDaysAgo = now - (7 * 24 * 60 * 60 * 1000);
-            
-            const logsArray = Array.isArray(allLogs) ? allLogs : Object.values(allLogs || {});
-            const recentLogs = logsArray.filter(l => l.timestamp >= sevenDaysAgo);
-            const consumedCount = recentLogs.filter(l => l.action === 'Tüketildi' || l.action.includes('Tüketildi')).length;
-            const destroyedCount = recentLogs.filter(l => l.action === 'İmha Edildi' || l.action.includes('İmha')).length;
-            const totalProcesses = consumedCount + destroyedCount;
-            
-            let successRate = 100;
-            if (totalProcesses > 0) {
-                successRate = Math.round((consumedCount / totalProcesses) * 100);
-            }
-
-            const container = document.getElementById('dashboardStatsContainer');
-            if(container) {
-                container.innerHTML = `
-                    <div class="stat-card success">
-                        <div class="value">%${successRate}</div>
-                        <div class="label">BAŞARILI TÜKETİM</div>
-                    </div>
-                    <div class="stat-card danger">
-                        <div class="value">${destroyedCount}</div>
-                        <div class="label">İMHA EDİLEN (FİRE)</div>
-                    </div>
-                    <div class="stat-card" style="grid-column: 1 / -1;">
-                        <div class="value">${totalProcesses}</div>
-                        <div class="label">TOPLAM İŞLEM (SON 7 GÜN)</div>
-                    </div>
-                `;
-            }
-
-            const shiftContainer = document.getElementById('activeShiftsContainer');
-            if(shiftContainer) {
-                shiftContainer.innerHTML = '';
-                const pins = Object.keys(activeShifts);
-                if(pins.length === 0) {
-                    shiftContainer.innerHTML = `<div style="font-size:12px; color:var(--text-muted); padding:15px; border:1px dashed var(--border); border-radius:var(--radius-sm); text-align:center;">Şu an aktif mesaide personel yok.</div>`;
-                } else {
-                    pins.forEach(p => {
-                        const s = activeShifts[p];
-                        const timeString = new Date(s.loginTime).toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'});
-                        shiftContainer.innerHTML += `
-                            <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; background:var(--surface-solid); border:1px solid var(--border); border-left:4px solid var(--success); border-radius:var(--radius-md); margin-bottom:8px; box-shadow:var(--shadow-sm);">
-                                <div style="font-weight:700; font-size:14px; color:var(--text-main);"><i class="fa-solid fa-user-circle" style="color:var(--text-muted); margin-right:4px;"></i> ${s.name}</div>
-                                <div style="font-size:11px; color:var(--text-muted); font-weight:600;"><i class="fa-regular fa-clock"></i> Giriş: ${timeString}</div>
-                            </div>
-                        `;
-                    });
-                }
-            }
         }
 
         function renderUsersList() {
@@ -1537,24 +1715,22 @@
         }
 
         function checkNotificationStatus() { if("Notification" in window && Notification.permission === "granted") document.getElementById('bellBtn').style.display = 'none'; }
-        function requestNotificationPermission() {
-            if(!("Notification" in window)) return alert("Tarayıcınız bildirimleri desteklemiyor.");
-            Notification.requestPermission().then(p => { if(p === "granted") { document.getElementById('bellBtn').style.display = 'none'; showToast("Bildirimler açıldı."); } });
-        }
-        function sendPushNotification(title, body) {
-            if ("Notification" in window && Notification.permission === "granted") {
-                if(navigator.serviceWorker) { 
-                    navigator.serviceWorker.ready.then(reg => { 
-                        reg.showNotification(title, { body: body, icon: "https://cdn-icons-png.flaticon.com/512/3003/3003984.png", vibrate: [200, 100, 200] }); 
-                    }); 
-                } else { 
-                    new Notification(title, { body: body }); 
-                }
-            }
-        }
+        
         function toggleTheme() { isDark = !isDark; safeSetLocal('kd_theme', isDark ? 'dark' : 'light'); document.body.classList.toggle('dark-mode', isDark); updateThemeIcon(); renderLibraryDrumpad(); }
         function updateThemeIcon() { const i = document.getElementById('themeIcon'); if(i) i.className = isDark ? "fa-solid fa-sun" : "fa-solid fa-moon"; }
-        function switchTab(tId, el) { document.querySelectorAll('.tab-pane').forEach(e => e.classList.remove('active')); document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active')); document.getElementById(tId).classList.add('active'); el.classList.add('active'); }
+        
+        function switchTab(tId, el) { 
+            // Aktif Tabı Değiştir
+            document.querySelectorAll('.tab-pane').forEach(e => e.classList.remove('active')); 
+            document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active')); 
+            document.getElementById(tId).classList.add('active'); 
+            el.classList.add('active'); 
+            
+            // Navigasyondan gelindiyse modalları kapat
+            document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+            document.body.classList.remove('no-scroll');
+        }
+
         function showToast(msg, isErr=false) { 
             const t = document.getElementById('toastNotification'); 
             t.innerHTML = `<span style="font-weight:600;">${msg}</span>`; 
