@@ -90,6 +90,23 @@
         .tab-pane.active { display: block; }
         @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } from { opacity: 0; transform: translateY(10px); } }
 
+        /* YENİ ANA SAYFA TASARIMI */
+        .welcome-card { background: linear-gradient(135deg, var(--accent), #005bb5); color: white; padding: 24px; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); margin-bottom: 20px; position: relative; overflow: hidden; }
+        .welcome-card::after { content: ''; position: absolute; right: -20px; top: -20px; width: 150px; height: 150px; background: rgba(255,255,255,0.1); border-radius: 50%; }
+        .welcome-card h2 { font-size: 24px; font-weight: 800; margin-bottom: 5px; position: relative; z-index: 2; }
+        .welcome-card p { font-size: 13px; opacity: 0.9; margin-bottom: 20px; position: relative; z-index: 2; font-weight: 500;}
+        .welcome-action { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); padding: 12px 18px; border-radius: var(--radius-md); color: white; font-weight: 700; font-size: 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; transition: var(--transition); backdrop-filter: blur(10px); position: relative; z-index: 2;}
+        .welcome-action:active { background: rgba(255,255,255,0.3); transform: scale(0.97); }
+
+        .mini-stats-container { display: flex; gap: 12px; margin-bottom: 25px; }
+        .mini-stat { flex: 1; background: var(--surface-solid); padding: 18px 15px; border-radius: var(--radius-lg); border: 1px solid var(--border); box-shadow: var(--shadow-sm); display: flex; flex-direction: column; align-items: flex-start; justify-content: center; transition: var(--transition); cursor: pointer; }
+        .mini-stat:active { transform: scale(0.95); }
+        .mini-stat .value { font-size: 28px; font-weight: 800; color: var(--text-main); line-height: 1; margin-bottom: 4px; }
+        .mini-stat .label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;}
+        .mini-stat .icon-box { width: 38px; height: 38px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 16px; margin-bottom: 12px; }
+        .mini-stat.warning .icon-box { background: var(--warning-light); color: var(--warning); }
+        .mini-stat.info .icon-box { background: var(--accent-light); color: var(--accent); }
+
         .btn { border: none; border-radius: var(--radius-md); font-family: inherit; font-weight: 700; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: var(--transition); padding: 16px 20px; width: 100%; }
         .btn:active { transform: scale(0.97); opacity: 0.9; }
         .btn-primary { background: var(--accent); color: white; box-shadow: var(--shadow-sm); }
@@ -104,11 +121,12 @@
         .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-light); }
 
         /* DASHBOARD GRID */
-        .dashboard-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
-        .dash-card { background: var(--surface-solid); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 20px 15px; text-align: center; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-sm); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
-        .dash-card:active { transform: scale(0.95); }
-        .dash-card i { font-size: 28px; color: var(--accent); }
-        .dash-card .title { font-weight: 700; font-size: 14px; color: var(--text-main); }
+        .dashboard-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px; }
+        .dash-card { background: var(--surface-solid); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 25px 15px; text-align: center; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-sm); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
+        .dash-card:active { transform: scale(0.95); background: var(--bg-color); }
+        .dash-card i { font-size: 32px; color: var(--accent); transition: transform 0.3s; }
+        .dash-card:hover i { transform: scale(1.1); }
+        .dash-card .title { font-weight: 800; font-size: 14px; color: var(--text-main); }
         .dash-card .desc { font-weight: 600; font-size: 11px; color: var(--text-muted); }
 
         /* Sipariş Satırları */
@@ -196,7 +214,7 @@
 </head>
 <body>
 
-    <!-- YÜKLEME EKRANI (JS ile anında silinecek, takılmayı önler) -->
+    <!-- YÜKLEME EKRANI -->
     <div id="fullScreenSpinner"></div>
 
     <!-- GİRİŞ EKRANI (PIN) -->
@@ -239,19 +257,26 @@
 
         <div class="app-container">
 
-            <!-- 1. ANA SAYFA (DASHBOARD) -->
+            <!-- 1. YENİ ANA SAYFA (DASHBOARD) -->
             <div id="tab-home" class="tab-pane active">
-                <h3 style="font-size: 24px; font-weight: 800; color: var(--text-main); margin-bottom:5px;">Kontrol Merkezi</h3>
-                <p style="color:var(--text-muted); font-size:13px; margin-bottom: 20px;">Hoşgeldin <span id="welcomeName" style="font-weight:700;">Personel</span>, işte menülerin.</p>
-
-                <!-- Admin Özel İstatistikleri -->
-                <div id="adminStatsArea" style="display:none;">
-                    <div class="dashboard-stats" id="dashboardStatsContainer">
-                        <div class="stat-card success"><div class="value">0</div><div class="label">BAŞARILI TÜKETİM</div></div>
-                        <div class="stat-card danger"><div class="value">0</div><div class="label">FİRE (İMHA)</div></div>
+                <!-- Karşılama Kartı Dinamik Yüklenecek -->
+                <div id="welcomeArea"></div>
+                
+                <!-- Özet İstatistikler (Widget) -->
+                <div class="mini-stats-container" id="homeMiniStats">
+                    <div class="mini-stat info">
+                        <div class="icon-box"><i class="fa-solid fa-clipboard-list"></i></div>
+                        <div class="value">0</div>
+                        <div class="label">BEKLEYEN GÖREV</div>
+                    </div>
+                    <div class="mini-stat warning">
+                        <div class="icon-box"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        <div class="value">0</div>
+                        <div class="label">RİSKLİ ÜRÜN</div>
                     </div>
                 </div>
 
+                <h3 style="font-size: 16px; font-weight: 800; margin-bottom:12px; color:var(--text-main);">Hızlı İşlemler</h3>
                 <div class="dashboard-grid" id="mainDashboardGrid"></div>
             </div>
 
@@ -276,17 +301,14 @@
 
             <!-- 2. ÜRETİM (DRUMPAD) -->
             <div id="tab-library" class="tab-pane">
-                <!-- Arama Motoru, Kamera Notu ve Sesli Komut -->
                 <div style="display:flex; gap:10px; margin-bottom: 20px; align-items:center;">
                     <div style="position: relative; flex: 1;">
                         <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 18px; top: 16px; color: var(--text-muted);"></i>
                         <input type="text" id="libSearchInput" class="form-input" style="padding-left: 45px; padding-right:40px; margin-bottom: 0; border-radius: 30px;" placeholder="Ürün ara..." onkeyup="handleSearchInput()">
                         <i class="fa-solid fa-xmark" id="clearSearchBtn" style="position: absolute; right: 18px; top: 16px; color: var(--text-muted); cursor: pointer; display: none;" onclick="clearSearch()"></i>
                     </div>
-                    <!-- Kamera Not İkonu -->
                     <button class="icon-btn" style="width: 50px; height: 50px; border-radius: 50%; flex-shrink:0; background: var(--surface-solid);" onclick="triggerFreeCamera()"><i class="fa-solid fa-camera"></i></button>
                     <input type="file" accept="image/*" capture="environment" id="cameraInput" style="display:none;" onchange="handleCameraUpload(event)">
-                    
                     <button class="icon-btn" id="voiceBtn" style="width: 50px; height: 50px; border-radius: 50%; flex-shrink:0; background: var(--accent); color: white; border: none;" onclick="startVoiceSearch()"><i class="fa-solid fa-microphone"></i></button>
                 </div>
 
@@ -345,7 +367,6 @@
                     <textarea id="shiftNoteArea" onchange="updateShiftNote()" placeholder="Sonraki vardiyaya not bırakın..." style="width:100%; border:none; background:var(--bg-color); outline:none; font-family:inherit; font-size:14px; font-weight:500; color:var(--text-main); resize:none; min-height:80px; padding:12px; border-radius:var(--radius-sm); box-shadow:inset 0 2px 4px rgba(0,0,0,0.02);"></textarea>
                 </div>
 
-                <!-- Görev Ekleme Alanı & Kişiye Atama -->
                 <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px; align-items:center; background:var(--surface-solid); padding:15px; border-radius:var(--radius-md); border:1px solid var(--border); box-shadow:var(--shadow-sm);">
                     <input type="text" id="todoInput" class="form-input" style="margin-bottom:0; flex:1; min-width: 150px;" placeholder="Yeni görev yazın...">
                     
@@ -374,28 +395,24 @@
         </nav>
     </div>
 
-    <!-- PROFİL MODALI -->
+    <!-- MODALLAR (Profil, Kamera, Galeri, Loglar vb.) -->
     <div class="modal-overlay" id="profileModal" onclick="closeOnOutsideClick(event, 'profileModal')">
         <div class="modal-content" style="text-align: center;">
             <div class="drag-handle"></div>
             <div style="width:70px; height:70px; background:var(--accent-light); color:var(--accent); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:30px; font-weight:800; margin:0 auto 15px;" id="profileModalAvatar">U</div>
             <h3 style="font-size:22px; font-weight:700; color:var(--text-main); margin-bottom:5px;" id="profileModalName">Personel</h3>
             <p style="color:var(--text-muted); font-size:13px; font-weight:600; text-transform:uppercase; margin-bottom:30px;" id="profileModalRole">Role</p>
-            
             <button class="btn" style="background:var(--danger-light); color:var(--danger); width:100%;" onclick="triggerLogoutFlow()"><i class="fa-solid fa-person-walking-arrow-right"></i> Vardiyayı Bitir / Çıkış Yap</button>
         </div>
     </div>
 
-    <!-- FOTOĞRAF ÇEKİM MODALI -->
     <div class="modal-overlay" id="cameraNoteModal" onclick="closeOnOutsideClick(event, 'cameraNoteModal')">
         <div class="modal-content" style="text-align: center;">
             <div class="drag-handle"></div>
             <h3 style="font-size:20px; font-weight:700; margin-bottom:15px; color:var(--text-main);">Fotoğraflı Kayıt</h3>
             <img id="cameraPreviewImg" src="" style="width:100%; max-height: 250px; object-fit:cover; border-radius:var(--radius-md); margin-bottom:15px; border:1px solid var(--border); box-shadow:var(--shadow-sm);">
-            
             <input type="text" id="cameraNoteTextInput" class="form-input" placeholder="Fotoğrafla ilgili açıklama yazın..." style="margin-bottom:10px;">
             <input type="hidden" id="cameraTargetTaskId" value="">
-            
             <div style="display:flex; gap:10px; flex-direction:column; margin-top:10px;">
                 <button class="btn btn-primary" id="saveTaskPhotoBtn" onclick="saveCameraNote()">Görev Panosuna Ekle</button>
                 <button class="btn" id="saveLogPhotoBtn" style="background:var(--success-light); color:var(--success);" onclick="saveCameraAsLog()">Sadece Log/Not Olarak Kaydet</button>
@@ -404,7 +421,6 @@
         </div>
     </div>
 
-    <!-- FOTOĞRAF GALERİSİ MODALI -->
     <div class="modal-overlay" id="galleryModal" onclick="closeOnOutsideClick(event, 'galleryModal')">
         <div class="modal-content">
             <div class="drag-handle"></div>
@@ -418,7 +434,6 @@
         </div>
     </div>
 
-    <!-- SİSTEM LOGLARI MODALI -->
     <div class="modal-overlay" id="logsModal" onclick="closeOnOutsideClick(event, 'logsModal')">
         <div class="modal-content">
             <div class="drag-handle"></div>
@@ -430,39 +445,10 @@
         </div>
     </div>
 
-    <!-- VARDİYA ÇIKIŞ KONTROL LİSTESİ -->
-    <div class="modal-overlay" id="checklistModal" onclick="closeOnOutsideClick(event, 'checklistModal')">
-        <div class="modal-content">
-            <div class="drag-handle"></div>
-            <h3 style="font-size:24px; font-weight:800; color:var(--text-main); margin-bottom:10px;">Vardiya Çıkışı</h3>
-            <p style="color:var(--text-muted); font-size:14px; margin-bottom: 20px; line-height:1.5;">Çıkış yapmadan önce tamamladığınız işleri işaretleyin. Vardiya puanınız buna göre hesaplanacaktır.</p>
-            
-            <div class="modal-body" id="dynamicChecklistContainer" style="max-height: 50vh;"></div>
-
-            <button class="btn btn-primary" style="margin-top:25px; transition: var(--transition); flex-shrink:0;" onclick="showSummary()">Vardiyayı Tamamla ve Çık</button>
-            <button class="btn" style="margin-top:10px; background:transparent; color:var(--text-muted); flex-shrink:0;" onclick="closeModal('checklistModal')">Geri Dön</button>
-        </div>
-    </div>
-
-    <!-- VARDİYA SONU ÖZETİ -->
-    <div class="modal-overlay" id="summaryModal" onclick="closeOnOutsideClick(event, 'summaryModal')">
-        <div class="modal-content" style="text-align:center;">
-            <div class="drag-handle"></div>
-            <div style="width:80px; height:80px; background:var(--success-light); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
-                <i class="fa-solid fa-star" style="font-size: 36px; color: var(--success);"></i>
-            </div>
-            <h3 style="font-size:24px; font-weight:800; margin-bottom:15px; color:var(--text-main);">Vardiya Tamamlandı!</h3>
-            <p id="summaryText" style="color:var(--text-muted); font-size:15px; margin-bottom:30px; line-height:1.6;"></p>
-            <button class="btn btn-primary" onclick="executeLogout()">Sistemi Kapat</button>
-        </div>
-    </div>
-
-    <!-- YÖNETİCİ MENÜSÜ MODALI -->
     <div class="modal-overlay" id="adminModal" onclick="closeOnOutsideClick(event, 'adminModal')">
         <div class="modal-content">
             <div class="drag-handle"></div>
             <h3 style="font-size:22px; font-weight:700; margin-bottom:20px; color:var(--text-main);">Yönetici Paneli</h3>
-            
             <div id="adminDashboardSection">
                 <h4 style="font-size:14px; font-weight:700; color:var(--text-main); margin-bottom:10px;">Haftalık Operasyon Özeti</h4>
                 <div class="dashboard-stats" id="dashboardStatsContainer">
@@ -470,13 +456,10 @@
                     <div class="stat-card danger"><div class="value">0</div><div class="label">FİRE</div></div>
                 </div>
             </div>
-
-            <!-- CANLI MESAİ RADARI -->
             <div id="adminActiveShiftsSection" style="margin-top:20px; margin-bottom:15px;">
                 <h4 style="font-size:14px; font-weight:700; color:var(--text-main); margin-bottom:10px;"><i class="fa-solid fa-satellite-dish" style="color:var(--accent);"></i> Aktif Mesaidekiler</h4>
                 <div id="activeShiftsContainer"></div>
             </div>
-
             <div class="admin-grid" style="margin-top:15px; display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
                 <div class="admin-card" onclick="closeModal('adminModal'); openModal('usersModal');" style="background:var(--bg-color); border:none; padding:15px; border-radius:var(--radius-md); text-align:center; cursor:pointer;">
                     <i class="fa-solid fa-users" style="color:var(--accent); font-size:24px; margin-bottom:8px;"></i>
@@ -487,12 +470,10 @@
                     <div style="font-weight:600; font-size:13px; color:var(--text-main);">Sistem Logları</div>
                 </div>
             </div>
-            
             <button class="btn" style="margin-top:25px; background:var(--danger-light); color:var(--danger);" onclick="executeLogout()">Sistemden Komple Çıkış Yap</button>
         </div>
     </div>
 
-    <!-- PERSONEL YÖNETİMİ MODALI -->
     <div class="modal-overlay" id="usersModal" onclick="closeOnOutsideClick(event, 'usersModal')">
         <div class="modal-content">
             <div class="drag-handle"></div>
@@ -501,7 +482,6 @@
                 <button onclick="closeModal('usersModal'); openModal('adminModal');" style="background:none; border:none; font-size:16px; font-weight:600; color:var(--accent); cursor:pointer;">Geri</button>
             </div>
             <div class="modal-body" id="usersList" style="max-height: 40vh; margin-bottom:15px;"></div>
-            
             <div style="background:var(--bg-color); padding:20px; border-radius:var(--radius-md); flex-shrink:0;">
                 <h4 style="font-size:14px; font-weight:700; margin-bottom:15px; color:var(--text-main);">Yeni Personel Ekle</h4>
                 <input type="text" id="newUserName" class="form-input" style="background:var(--surface-solid);" placeholder="Ad Soyad">
@@ -517,7 +497,6 @@
         </div>
     </div>
 
-    <!-- YENİ ÜRÜN EKLE MODALI -->
     <div class="modal-overlay" id="addProdModal" onclick="closeOnOutsideClick(event, 'addProdModal')">
         <div class="modal-content">
             <div class="drag-handle"></div>
@@ -595,131 +574,14 @@
             {id:"L2", kategori:"Şarküteri, Süt ve Soslar", urun:"Krem Peynir", raf_omru:3, birim:"Gün"},
             {id:"L3", kategori:"Şarküteri, Süt ve Soslar", urun:"Kaşar Peyniri", raf_omru:5, birim:"Gün"},
             {id:"L4", kategori:"Şarküteri, Süt ve Soslar", urun:"Mozarella Peyniri", raf_omru:5, birim:"Gün"},
-            {id:"L5", kategori:"Şarküteri, Süt ve Soslar", urun:"Cheddar", raf_omru:5, birim:"Gün"},
-            {id:"L6", kategori:"Şarküteri, Süt ve Soslar", urun:"Burger Peyniri", raf_omru:5, birim:"Gün"},
-            {id:"L7", kategori:"Şarküteri, Süt ve Soslar", urun:"Koyun Peyniri", raf_omru:5, birim:"Gün"},
-            {id:"L8", kategori:"Şarküteri, Süt ve Soslar", urun:"Parmesan Peyniri (Toz)", raf_omru:5, birim:"Gün"},
-            {id:"L9", kategori:"Şarküteri, Süt ve Soslar", urun:"Cheddar Sos", raf_omru:2, birim:"Gün"},
-            {id:"L10", kategori:"Şarküteri, Süt ve Soslar", urun:"Avokado Sos", raf_omru:3, birim:"Gün"},
-            {id:"L11", kategori:"Şarküteri, Süt ve Soslar", urun:"Pesto Sos", raf_omru:5, birim:"Gün"},
-            {id:"L12", kategori:"Şarküteri, Süt ve Soslar", urun:"Sezar Sos", raf_omru:7, birim:"Gün"},
-            {id:"L13", kategori:"Şarküteri, Süt ve Soslar", urun:"Salam", raf_omru:2, birim:"Gün"},
-            {id:"L14", kategori:"Şarküteri, Süt ve Soslar", urun:"Jambon", raf_omru:2, birim:"Gün"},
-            {id:"L15", kategori:"Şarküteri, Süt ve Soslar", urun:"Hindi Füme", raf_omru:2, birim:"Gün"},
             {id:"L16", kategori:"Şarküteri, Süt ve Soslar", urun:"Yoğurt", raf_omru:3, birim:"Gün"},
-            {id:"L17", kategori:"Şarküteri, Süt ve Soslar", urun:"Krema", raf_omru:2, birim:"Gün"},
             {id:"L18", kategori:"Şarküteri, Süt ve Soslar", urun:"Süt Çeşitleri", raf_omru:2, birim:"Gün"},
-            {id:"L19", kategori:"Şarküteri, Süt ve Soslar", urun:"Laktozsuz Süt", raf_omru:2, birim:"Gün"},
-            {id:"L20", kategori:"Şarküteri, Süt ve Soslar", urun:"Bitkisel Süt Çeşitleri", raf_omru:4, birim:"Gün"},
-            {id:"L21", kategori:"Şarküteri, Süt ve Soslar", urun:"Tereyağı", raf_omru:7, birim:"Gün"},
-            {id:"L22", kategori:"Şarküteri, Süt ve Soslar", urun:"Yumurta (Kırılmış)", raf_omru:0, birim:"Hemen Kullandır"},
-            {id:"L23", kategori:"Şarküteri, Süt ve Soslar", urun:"Yumurta (Yıkanmış)", raf_omru:1, birim:"Gün"},
-            {id:"L24", kategori:"Şarküteri, Süt ve Soslar", urun:"Yumurta (Kirli)", raf_omru:0, birim:"ORJ SKT"},
-            {id:"L25", kategori:"Şarküteri, Süt ve Soslar", urun:"Mayonez", raf_omru:1, birim:"Ay"},
-            {id:"L26", kategori:"Şarküteri, Süt ve Soslar", urun:"Zeytin Ezmesi", raf_omru:7, birim:"Gün"},
-            {id:"L27", kategori:"Şarküteri, Süt ve Soslar", urun:"Turşu", raf_omru:15, birim:"Gün"},
-            {id:"L124", kategori:"Şarküteri, Süt ve Soslar", urun:"Süzme Yoğurt", raf_omru:5, birim:"Gün"},
-            {id:"L121", kategori:"Şarküteri, Süt ve Soslar", urun:"Örgü Peyniri", raf_omru:5, birim:"Gün"},
-            {id:"L122", kategori:"Şarküteri, Süt ve Soslar", urun:"Eski Kaşar", raf_omru:10, birim:"Gün"},
-            {id:"L123", kategori:"Şarküteri, Süt ve Soslar", urun:"Tulum Peyniri", raf_omru:10, birim:"Gün"},
-            
-            {id:"L113", kategori:"Paketli Şarküteri", urun:"Dana Kavurma", raf_omru:7, birim:"Gün"},
-            {id:"L114", kategori:"Paketli Şarküteri", urun:"Pastırma", raf_omru:10, birim:"Gün"},
-            {id:"L115", kategori:"Paketli Şarküteri", urun:"Kasap Sucuk", raf_omru:10, birim:"Gün"},
-            {id:"L116", kategori:"Paketli Şarküteri", urun:"Sosis", raf_omru:5, birim:"Gün"},
-            {id:"L117", kategori:"Paketli Şarküteri", urun:"Füme Kaburga", raf_omru:5, birim:"Gün"},
-            {id:"L118", kategori:"Paketli Şarküteri", urun:"Macar Salam", raf_omru:5, birim:"Gün"},
-            {id:"L119", kategori:"Paketli Şarküteri", urun:"Fıstıklı Salam", raf_omru:5, birim:"Gün"},
-            {id:"L120", kategori:"Paketli Şarküteri", urun:"Dilimli Zeytin", raf_omru:7, birim:"Gün"},
-
             {id:"L28", kategori:"Meyve ve Sebze", urun:"Çilek", raf_omru:3, birim:"Gün"},
-            {id:"L29", kategori:"Meyve ve Sebze", urun:"Karpuz", raf_omru:3, birim:"Gün"},
             {id:"L30", kategori:"Meyve ve Sebze", urun:"Domates", raf_omru:5, birim:"Gün"},
-            {id:"L31", kategori:"Meyve ve Sebze", urun:"Salatalık", raf_omru:5, birim:"Gün"},
-            {id:"L32", kategori:"Meyve ve Sebze", urun:"Muz", raf_omru:5, birim:"Gün"},
-            {id:"L33", kategori:"Meyve ve Sebze", urun:"Havuç", raf_omru:7, birim:"Gün"},
-            {id:"L34", kategori:"Meyve ve Sebze", urun:"Portakal", raf_omru:7, birim:"Gün"},
-            {id:"L35", kategori:"Meyve ve Sebze", urun:"Greyfurt", raf_omru:7, birim:"Gün"},
             {id:"L36", kategori:"Meyve ve Sebze", urun:"Limon", raf_omru:7, birim:"Gün"},
-            {id:"L37", kategori:"Meyve ve Sebze", urun:"Kıvırcık", raf_omru:3, birim:"Gün"},
-            {id:"L38", kategori:"Meyve ve Sebze", urun:"Maydanoz", raf_omru:3, birim:"Gün"},
-            {id:"L39", kategori:"Meyve ve Sebze", urun:"Nane", raf_omru:3, birim:"Gün"},
-            {id:"L40", kategori:"Meyve ve Sebze", urun:"Brokoli", raf_omru:3, birim:"Gün"},
-            {id:"L41", kategori:"Meyve ve Sebze", urun:"Pancar", raf_omru:3, birim:"Gün"},
-            {id:"L42", kategori:"Meyve ve Sebze", urun:"Rezene", raf_omru:5, birim:"Gün"},
-            {id:"L43", kategori:"Meyve ve Sebze", urun:"Kereviz Sapı", raf_omru:5, birim:"Gün"},
-            {id:"L44", kategori:"Meyve ve Sebze", urun:"Taze Zencefil", raf_omru:5, birim:"Gün"},
-            
-            {id:"L45", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Kapari Salata", raf_omru:2, birim:"Gün"},
-            {id:"L46", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Tartar Sos", raf_omru:2, birim:"Gün"},
-            {id:"L47", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Tavuklu Sezar Salata", raf_omru:2, birim:"Gün"},
-            {id:"L48", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Ton Balıklı Salata", raf_omru:2, birim:"Gün"},
-            {id:"L49", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Amerikan Salatası", raf_omru:2, birim:"Gün"},
-            {id:"L50", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Hindistan Cevizi Püresi", raf_omru:2, birim:"Gün"},
-            {id:"L51", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Kırmızı Meyve Püresi", raf_omru:3, birim:"Gün"},
-            {id:"L52", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Dondurmalar", raf_omru:15, birim:"Gün"},
-            {id:"L53", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Spesiyal Çikolatalar", raf_omru:0, birim:"ORJ SKT"},
-            {id:"L54", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Trüf Çikolatalar", raf_omru:0, birim:"ORJ SKT"},
-            {id:"L55", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Lavi Çikolatalar", raf_omru:0, birim:"ORJ SKT"},
-            {id:"L56", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Roche Çikolatalar", raf_omru:0, birim:"ORJ SKT"},
-            {id:"L57", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Dondurma Külahı", raf_omru:15, birim:"Gün"},
-            {id:"L58", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Renkli Külahlar", raf_omru:1, birim:"Ay"},
-            {id:"L59", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Kalp Gofret", raf_omru:1, birim:"Ay"},
-            
             {id:"L60", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Mğz.da Çekilen Türk Kahvesi", raf_omru:0, birim:"Günlük"},
-            {id:"L61", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Öğütülmüş Kahveler", raf_omru:21, birim:"Gün"},
-            {id:"L62", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Çekirdek Kahveler", raf_omru:4, birim:"Ay"},
-            {id:"L63", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Salepli İçecek Tozu", raf_omru:4, birim:"Ay"},
-            {id:"L64", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Tuzlu Krmll. Spesiyal", raf_omru:14, birim:"Gün"},
-            {id:"L65", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Limonata", raf_omru:2, birim:"Gün"},
             {id:"L66", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Cold Brew", raf_omru:0, birim:"Günlük"},
-            {id:"L67", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Soğuk Espresso", raf_omru:0, birim:"Günlük"},
-            {id:"L68", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Soğuk Türk Kahvesi", raf_omru:0, birim:"Günlük"},
-            {id:"L69", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Sıcak Salepli İçecek", raf_omru:0, birim:"Günlük"},
-            {id:"L70", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Sıcak Çikolatalı İçecek", raf_omru:0, birim:"Günlük"},
-            {id:"L71", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"NO Serisi Hazırlık", raf_omru:0, birim:"Günlük"},
-            {id:"L72", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Choco Süt", raf_omru:1, birim:"Gün"},
-            {id:"L73", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"DRAFT Latte", raf_omru:3, birim:"Gün"},
-            {id:"L74", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"DRAFT Cold Brew", raf_omru:3, birim:"Gün"},
-            {id:"L75", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"DRAFT Americano", raf_omru:3, birim:"Gün"},
-            
-            {id:"L76", kategori:"Paketli & Kuru Gıdalar", urun:"Kırık Fındık", raf_omru:1, birim:"Ay"},
-            {id:"L77", kategori:"Paketli & Kuru Gıdalar", urun:"Kırık Ceviz", raf_omru:1, birim:"Ay"},
-            {id:"L78", kategori:"Paketli & Kuru Gıdalar", urun:"Badem Ezmesi", raf_omru:1, birim:"Ay"},
-            {id:"L79", kategori:"Paketli & Kuru Gıdalar", urun:"Gofrik Kreması", raf_omru:3, birim:"Ay"},
-            {id:"L80", kategori:"Paketli & Kuru Gıdalar", urun:"Yer Fıstığı Ezmesi", raf_omru:0, birim:"ORJ SKT"},
-            {id:"L81", kategori:"Paketli & Kuru Gıdalar", urun:"Fındık Kreması", raf_omru:0, birim:"ORJ SKT"},
-            {id:"L82", kategori:"Paketli & Kuru Gıdalar", urun:"Tahin", raf_omru:0, birim:"ORJ SKT"},
-            {id:"L83", kategori:"Paketli & Kuru Gıdalar", urun:"Bal", raf_omru:0, birim:"ORJ SKT"},
-            {id:"L84", kategori:"Paketli & Kuru Gıdalar", urun:"Yoğurtlu Dondurma Tozu", raf_omru:0, birim:"ORJ SKT"},
-            {id:"L85", kategori:"Paketli & Kuru Gıdalar", urun:"Hindistan Cevizi Tozu", raf_omru:0, birim:"ORJ SKT"},
-            {id:"L86", kategori:"Paketli & Kuru Gıdalar", urun:"Karabiber", raf_omru:0, birim:"ORJ SKT"},
-            {id:"L87", kategori:"Paketli & Kuru Gıdalar", urun:"Tarçın", raf_omru:0, birim:"ORJ SKT"},
-            {id:"L88", kategori:"Paketli & Kuru Gıdalar", urun:"Çörekotu", raf_omru:0, birim:"ORJ SKT"},
-            {id:"L89", kategori:"Paketli & Kuru Gıdalar", urun:"Zerdeçal Latte Baharatı", raf_omru:6, birim:"Ay"},
-            {id:"L90", kategori:"Paketli & Kuru Gıdalar", urun:"Nar Ekşisi", raf_omru:0, birim:"ORJ SKT"},
-            {id:"L91", kategori:"Paketli & Kuru Gıdalar", urun:"Renkli Crispy", raf_omru:3, birim:"Ay"},
-            {id:"L92", kategori:"Paketli & Kuru Gıdalar", urun:"Şuruplar", raf_omru:4, birim:"Ay"},
-            {id:"L93", kategori:"Paketli & Kuru Gıdalar", urun:"Meyveli Soslar", raf_omru:1, birim:"Ay"},
-            {id:"L94", kategori:"Paketli & Kuru Gıdalar", urun:"Çikolata Sos", raf_omru:2, birim:"Ay"},
-            {id:"L95", kategori:"Paketli & Kuru Gıdalar", urun:"Karamel Sos", raf_omru:2, birim:"Ay"},
-            {id:"L96", kategori:"Paketli & Kuru Gıdalar", urun:"Pudra Şekeri", raf_omru:0, birim:"ORJ SKT"},
-            {id:"L97", kategori:"Paketli & Kuru Gıdalar", urun:"Küp Şeker", raf_omru:0, birim:"ORJ SKT"},
-            {id:"L98", kategori:"Paketli & Kuru Gıdalar", urun:"Yaban Mersini", raf_omru:0, birim:"ORJ SKT"},
-            {id:"L99", kategori:"Paketli & Kuru Gıdalar", urun:"Yulaf Ezmesi", raf_omru:0, birim:"ORJ SKT"},
-            {id:"L100", kategori:"Paketli & Kuru Gıdalar", urun:"Granola", raf_omru:1, birim:"Ay"},
-            {id:"L101", kategori:"Paketli & Kuru Gıdalar", urun:"Müsli", raf_omru:2, birim:"Ay"},
-            {id:"L102", kategori:"Paketli & Kuru Gıdalar", urun:"Chia Tohumu", raf_omru:0, birim:"ORJ SKT"},
-            {id:"L103", kategori:"Paketli & Kuru Gıdalar", urun:"Protein Tozu", raf_omru:0, birim:"ORJ SKT"},
-            {id:"L104", kategori:"Paketli & Kuru Gıdalar", urun:"Rende Çikolata", raf_omru:0, birim:"ORJ SKT"},
-            {id:"L105", kategori:"Paketli & Kuru Gıdalar", urun:"Para Çikolata", raf_omru:0, birim:"ORJ SKT"},
-            {id:"L106", kategori:"Paketli & Kuru Gıdalar", urun:"Beyaz Kuvertür", raf_omru:0, birim:"ORJ SKT"},
-            {id:"L107", kategori:"Paketli & Kuru Gıdalar", urun:"Sütlü Kuvertür", raf_omru:0, birim:"ORJ SKT"},
-            {id:"L108", kategori:"Paketli & Kuru Gıdalar", urun:"Bitter Kuvertür", raf_omru:0, birim:"ORJ SKT"},
-            {id:"L109", kategori:"Paketli & Kuru Gıdalar", urun:"Toz Bisküvi", raf_omru:21, birim:"Gün"},
-            {id:"L110", kategori:"Paketli & Kuru Gıdalar", urun:"Fıstık Toz", raf_omru:21, birim:"Gün"},
-            {id:"L111", kategori:"Paketli & Kuru Gıdalar", urun:"Fıstık Tane", raf_omru:1, birim:"Ay"},
-            {id:"L112", kategori:"Paketli & Kuru Gıdalar", urun:"Kavanoz Vişne Sos", raf_omru:3, birim:"Gün"}
+            {id:"L73", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"DRAFT Latte", raf_omru:3, birim:"Gün"}
         ];
 
         let libraryDB = [...defaultLibrary];
@@ -728,11 +590,10 @@
         function safeGetLocal(key) { try { return localStorage.getItem(key); } catch(e) { return null; } }
         function safeRemoveLocal(key) { try { localStorage.removeItem(key); } catch(e) {} }
 
-        // BOŞ FONKSİYONLAR (Hata vermemesi için)
         function updateShiftNote() { console.log("Not güncellendi."); }
         function showSummary() { alert("Vardiya özeti ekranı eklenecek."); }
 
-        // SİSTEM BAŞLATICI (Sıfır Gecikme)
+        // SİSTEM BAŞLATICI
         document.addEventListener("DOMContentLoaded", () => {
             try { isDark = localStorage.getItem('kd_theme') === 'dark'; } catch(e){} 
             if(isDark) document.body.classList.add('dark-mode');
@@ -743,14 +604,11 @@
             setInterval(updateDateTime, 1000);
             updateDateTime();
 
-            // ADIM 1: ARAYÜZÜ ANINDA GÖSTER
             showLoginOrApp();
 
-            // ADIM 2: Firebase ve sipariş tablosu
             setTimeout(initDatabase, 100);
             setTimeout(() => loadOrderTemplate('Manav'), 200);
 
-            // ADIM 3: PWA Service Worker Kaydı
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('./sw.js')
                   .then(reg => console.log('Service Worker başarıyla kaydedildi.', reg.scope))
@@ -968,11 +826,13 @@
             db.ref(`${dbRoot}/active`).on('value', snap => {
                 activeItems = snap.val() ? Object.values(snap.val()) : [];
                 if(document.getElementById('tab-active').classList.contains('active')) renderActiveList();
+                updateHomeStats(); // Ana Sayfa istatistiklerini güncelle
             });
 
             db.ref(`${dbRoot}/todos`).on('value', snap => {
                 todos = snap.val() ? Object.values(snap.val()) : [];
                 if(document.getElementById('tab-todos').classList.contains('active')) renderTodos();
+                updateHomeStats(); // Ana Sayfa istatistiklerini güncelle
             });
 
             db.ref(`${dbRoot}/logs`).on('value', snap => {
@@ -1035,23 +895,11 @@
 
             const appC = document.getElementById('appContent');
             if(appC) appC.style.display = 'block';
-            
-            const welcome = document.getElementById('welcomeName');
-            if(welcome) welcome.innerText = currentUser.name.split(' ')[0];
 
             updateAssigneeDropdown();
 
-            if(currentUser.role === 'admin') {
-                const adminBtn = document.getElementById('adminBtn');
-                const ta = document.getElementById('todoAssignee');
-                const tq = document.getElementById('todoPhotoReqLabel');
-                if(adminBtn) adminBtn.style.display = 'flex';
-                if(ta) ta.style.display = 'block';
-                if(tq) tq.style.display = 'flex';
-                renderAdminDashboardTiles();
-            } else {
-                renderStaffDashboardTiles();
-            }
+            // YENİ ANA SAYFAYI YÜKLE
+            renderHomeDashboardTiles();
             
             showToast(`Hoşgeldin, ${currentUser.name}`);
             
@@ -1061,46 +909,88 @@
             setInterval(renderActiveList, 60000);
         }
 
-        function renderAdminDashboardTiles() {
+        // --- YENİ ANA SAYFA FONKSİYONLARI ---
+        function renderHomeDashboardTiles() {
+            const welcomeArea = document.getElementById('welcomeArea');
             const grid = document.getElementById('mainDashboardGrid');
-            const statArea = document.getElementById('adminStatsArea');
-            if(statArea) statArea.style.display = 'block';
-            if(grid) {
-                grid.innerHTML = `
-                    <div class="dash-card" onclick="switchTab('tab-library', document.getElementById('navLibrary'))">
-                        <i class="fa-solid fa-layer-group"></i><div class="title">Üretim Yap</div><div class="desc">Yeni tarih etiketi bas</div>
-                    </div>
-                    <div class="dash-card" onclick="openModal('adminModal')">
-                        <i class="fa-solid fa-chart-pie"></i><div class="title">Canlı Radar</div><div class="desc">Personel ve istatistik</div>
-                    </div>
-                    <div class="dash-card" onclick="switchTab('tab-order', document.getElementById('navHome'))">
-                        <i class="fa-solid fa-cart-shopping"></i><div class="title">Sipariş Oluştur</div><div class="desc">Manav, süt ve depo</div>
-                    </div>
-                    <div class="dash-card" onclick="openModal('galleryModal'); renderGallery();">
-                        <i class="fa-solid fa-images"></i><div class="title">Foto Galeri</div><div class="desc">Kanıtlar ve notlar</div>
+            
+            if(welcomeArea) {
+                welcomeArea.innerHTML = `
+                    <div class="welcome-card">
+                        <h2>Merhaba, ${currentUser.name.split(' ')[0]} 👋</h2>
+                        <p>Kahve Dünyası - Vardiya Kontrol Merkezi</p>
+                        <button class="welcome-action" onclick="triggerLogoutFlow()">
+                            <i class="fa-solid fa-person-walking-arrow-right"></i> Vardiyayı Bitir ve Çık
+                        </button>
                     </div>
                 `;
             }
+
+            if(grid) {
+                if(currentUser.role === 'admin') {
+                    grid.innerHTML = `
+                        <div class="dash-card" onclick="switchTab('tab-library', document.getElementById('navLibrary'))">
+                            <i class="fa-solid fa-layer-group"></i><div class="title">Üretim Yap</div><div class="desc">Yeni tarih etiketi bas</div>
+                        </div>
+                        <div class="dash-card" onclick="openModal('adminModal')">
+                            <i class="fa-solid fa-chart-pie"></i><div class="title">Canlı Radar</div><div class="desc">Personel ve istatistik</div>
+                        </div>
+                        <div class="dash-card" onclick="switchTab('tab-order', null)">
+                            <i class="fa-solid fa-cart-shopping"></i><div class="title">Sipariş Oluştur</div><div class="desc">Manav, süt ve depo</div>
+                        </div>
+                        <div class="dash-card" onclick="openModal('galleryModal'); renderGallery();">
+                            <i class="fa-solid fa-images"></i><div class="title">Foto Galeri</div><div class="desc">Kanıtlar ve notlar</div>
+                        </div>
+                    `;
+                } else {
+                    grid.innerHTML = `
+                        <div class="dash-card" onclick="switchTab('tab-library', document.getElementById('navLibrary'))">
+                            <i class="fa-solid fa-layer-group"></i><div class="title">Üretim Yap</div><div class="desc">Yeni tarih etiketi bas</div>
+                        </div>
+                        <div class="dash-card" onclick="switchTab('tab-active', document.getElementById('navActive'))">
+                            <i class="fa-solid fa-clock-rotate-left"></i><div class="title">Aktif Takip</div><div class="desc">Süresi dolanlar ve imha</div>
+                        </div>
+                        <div class="dash-card" onclick="switchTab('tab-todos', document.getElementById('navTodos'))">
+                            <i class="fa-solid fa-clipboard-check"></i><div class="title">Görevler</div><div class="desc">Vardiya notları ve işler</div>
+                        </div>
+                        <div class="dash-card" onclick="triggerFreeCamera()">
+                            <i class="fa-solid fa-camera"></i><div class="title">Hızlı Fotoğraf</div><div class="desc">Anlık durum bildir</div>
+                        </div>
+                    `;
+                }
+            }
+            updateHomeStats();
         }
 
-        function renderStaffDashboardTiles() {
-            const grid = document.getElementById('mainDashboardGrid');
-            if(grid) {
-                grid.innerHTML = `
-                    <div class="dash-card" onclick="switchTab('tab-library', document.getElementById('navLibrary'))">
-                        <i class="fa-solid fa-layer-group"></i><div class="title">Üretim Yap</div><div class="desc">Yeni tarih etiketi bas</div>
-                    </div>
-                    <div class="dash-card" onclick="switchTab('tab-active', document.getElementById('navActive'))">
-                        <i class="fa-solid fa-clock-rotate-left"></i><div class="title">Aktif Takip</div><div class="desc">Süresi dolanlar ve imha</div>
-                    </div>
-                    <div class="dash-card" onclick="switchTab('tab-todos', document.getElementById('navTodos'))">
-                        <i class="fa-solid fa-clipboard-check"></i><div class="title">Görevler</div><div class="desc">Vardiya notları ve işler</div>
-                    </div>
-                    <div class="dash-card" onclick="triggerFreeCamera()">
-                        <i class="fa-solid fa-camera"></i><div class="title">Hızlı Fotoğraf</div><div class="desc">Anlık durum bildir</div>
-                    </div>
-                `;
-            }
+        function updateHomeStats() {
+            const statsArea = document.getElementById('homeMiniStats');
+            if(!statsArea) return;
+
+            // Bana Atanan Bekleyen Görevler
+            const myPendingTasks = todos.filter(t => !t.done && (t.assignedTo === 'ALL' || t.assignedTo === currentUser.pin)).length;
+            
+            // SKT Yaklaşanlar (Kalan süresi 2 saatten az olanlar veya dolanlar)
+            const now = Date.now();
+            const expiringSoon = activeItems.filter(item => {
+                const target = new Date(item.expiresAt).getTime();
+                return (target - now) < (1000 * 60 * 60 * 2); 
+            }).length;
+
+            const iconTodos = document.querySelector('#navTodos');
+            const iconActive = document.querySelector('#navActive');
+
+            statsArea.innerHTML = `
+                <div class="mini-stat info" onclick="switchTab('tab-todos', document.getElementById('navTodos'))">
+                    <div class="icon-box"><i class="fa-solid fa-clipboard-list"></i></div>
+                    <div class="value">${myPendingTasks}</div>
+                    <div class="label">BEKLEYEN GÖREV</div>
+                </div>
+                <div class="mini-stat warning" onclick="switchTab('tab-active', document.getElementById('navActive'))">
+                    <div class="icon-box"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                    <div class="value">${expiringSoon}</div>
+                    <div class="label">RİSKLİ ÜRÜN (SKT)</div>
+                </div>
+            `;
         }
 
         function filterLib(cat, el) {
@@ -1359,7 +1249,6 @@
             try { recognition.start(); } catch(e){}
         }
 
-        // FOTOĞRAF MODU (GÖREV / LOG)
         function triggerFreeCamera() {
             const camInp = document.getElementById('cameraInput');
             const targetInp = document.getElementById('cameraTargetTaskId');
