@@ -556,6 +556,7 @@
         let db = null;
         let currentUser = null; 
         let currentPin = "";
+        let isDark = false; 
         let usersDB = { "1923": { name: "Yusuf (Yönetici)", role: "admin", pin: "1923" } };
         
         const dbRoot = 'kd_kordon_pro_v25'; 
@@ -588,12 +589,6 @@
         };
 
         const catIcons = { "Şarküteri, Süt ve Soslar": "fa-cheese", "Paketli & Kuru Gıdalar": "fa-box", "Meyve ve Sebze": "fa-apple-whole", "Çözündürülen / Dökme / Teşhir": "fa-ice-cream", "Kahveler, İçecekler ve Ön Hazırlık": "fa-mug-hot", "Paketli Şarküteri": "fa-bacon" };
-
-        const secretRecipes = {
-            "Cold Brew": "1. 1/10 oranında kalın öğütülmüş kahve tart.\n2. Bez veya kağıt filtreye yerleştir.\n3. Soğuk suyu yavaşça dök, tüm kahvenin ıslandığına emin ol.\n4. Ağzı kapalı şekilde +4°C dolapta 16-20 saat arası demlenmeye bırak.\n5. Süre bitiminde filtreyi al ve ürünü DRAFT fıçısına aktar.",
-            "Limonata": "1. 1 LT Taze Sıkılmış Limon Suyu\n2. 1 LT Şeker Şurubu\n3. 3 LT İçme Suyu ekle.\n4. İyice karıştır ve +4°C dolaba al. (Toplam 5 LT ürün elde edilir).",
-            "Mğz.da Çekilen Türk Kahvesi": "1. Türk kahvesi değirmenini en ince ayara al.\n2. Sadece günlük tüketilecek kadar (max 1-2 kg) taze çekim yap.\n3. Hava almayan opak kaplarda muhafaza et.\nNot: Kesinlikle ertesi güne çekilmiş kahve devretme."
-        };
 
         const defaultLibrary = [
             {id:"L1", kategori:"Şarküteri, Süt ve Soslar", urun:"Süzme Beyaz Peynir", raf_omru:3, birim:"Gün"},
@@ -733,10 +728,13 @@
         function safeGetLocal(key) { try { return localStorage.getItem(key); } catch(e) { return null; } }
         function safeRemoveLocal(key) { try { localStorage.removeItem(key); } catch(e) {} }
 
+        // BOŞ FONKSİYONLAR (Hata vermemesi için)
+        function updateShiftNote() { console.log("Not güncellendi."); }
+        function showSummary() { alert("Vardiya özeti ekranı eklenecek."); }
+
         // SİSTEM BAŞLATICI (Sıfır Gecikme)
         document.addEventListener("DOMContentLoaded", () => {
-            let isDark = false;
-            try { isDark = localStorage.getItem('kd_theme') === 'dark'; } catch(e){}
+            try { isDark = localStorage.getItem('kd_theme') === 'dark'; } catch(e){} 
             if(isDark) document.body.classList.add('dark-mode');
             updateThemeIcon();
 
@@ -874,7 +872,6 @@
             if(dateEl) dateEl.innerText = dateStr;
         }
 
-        // MENÜLERİ AŞAĞI KAYDIRARAK KAPATMA
         function initModalDragging() {
             let modalStartY = 0;
             let currentModal = null;
@@ -1891,7 +1888,6 @@
             setTimeout(()=>t.classList.remove('show'), 2500); 
         }
 
-        // Vardiyadan Çıkış (Eklenen Temel Log-Out)
         function triggerLogoutFlow() {
             if(confirm("Vardiyayı bitirip sistemden çıkış yapmak istiyor musunuz?")) {
                 executeLogout();
