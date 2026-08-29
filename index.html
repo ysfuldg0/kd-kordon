@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>KD Kordon Pro - Ultimate Dashboard</title>
     
+    <!-- PWA MANIFEST -->
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -557,7 +558,7 @@
         let currentPin = "";
         let usersDB = { "1923": { name: "Yusuf (Yönetici)", role: "admin", pin: "1923" } };
         
-        const dbRoot = 'kd_kordon_pro_v25'; // Temiz ve stabil son veritabanı alanı
+        const dbRoot = 'kd_kordon_pro_v25'; 
         let isAppLaunched = false;
         let isBulkMode = false;
         let isEditMode = false;
@@ -566,6 +567,16 @@
 
         let activeItems = [], todos = [], allLogs = [];
         let voiceSearchTimeout = null;
+
+        // --- SİPARİŞ SİSTEMİ DEĞİŞKENLERİ ---
+        const orderTemplates = {
+            "Manav": ["Çilek", "Domates", "Salatalık", "Muz", "Havuç", "Portakal", "Limon", "Kıvırcık", "Maydanoz", "Nane", "Taze Zencefil"],
+            "Süt": ["Tam Yağlı Süt (Koli)", "Laktozsuz Süt (Koli)", "Badem Sütü (Koli)", "Soya Sütü (Koli)", "Yulaf Sütü (Koli)", "Krema (Kutu)"],
+            "Su": ["0.5L Pet Su (Koli)", "1.5L Pet Su (Koli)", "Cam Şişe Su (Koli)"],
+            "Soda": ["Sade Soda (Koli)", "Meyveli Soda (Koli)", "Elmalı Soda (Koli)"]
+        };
+        let orderCounts = {}; 
+        let currentOrderCategory = "Manav"; 
 
         const catColors = {
             "Şarküteri, Süt ve Soslar": "#007AFF", 
@@ -730,17 +741,126 @@
             updateThemeIcon();
 
             initModalDragging();
-            initSwipeNavigation();
             
             setInterval(updateDateTime, 1000);
             updateDateTime();
 
-            // ADIM 1: ARAYÜZÜ ANINDA GÖSTER (Hiçbir şeyi bekleme)
+            // ADIM 1: ARAYÜZÜ ANINDA GÖSTER
             showLoginOrApp();
 
-            // ADIM 2: Firebase'i arka planda sessizce bağla
+            // ADIM 2: Firebase ve sipariş tablosu
             setTimeout(initDatabase, 100);
+            setTimeout(() => loadOrderTemplate('Manav'), 200);
+
+            // ADIM 3: PWA Service Worker Kaydı
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('./sw.js')
+                  .then(reg => console.log('Service Worker başarıyla kaydedildi.', reg.scope))
+                  .catch(err => console.log('Service Worker kaydı başarısız oldu:', err));
+            }
         });
+
+        // --- SİPARİŞ KODLARI BAŞLANGICI ---
+        function loadOrderTemplate(category, chipElement) {
+            currentOrderCategory = category;
+            
+            if(chipElement) {
+                document.querySelectorAll('#categoryChips .chip').forEach(c => c.classList.remove('active'));
+                chipElement.classList.add('active');
+            }
+
+            const titleEl = document.getElementById('currentTemplateTitle');
+            if(titleEl) titleEl.innerText = `${category} Listesi`;
+
+            const container = document.getElementById('orderTemplateList');
+            if(!container) return;
+            
+            container.innerHTML = '';
+            const items = orderTemplates[category] || [];
+
+            if(items.length === 0) {
+                container.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-muted);">Bu kategoride ürün bulunmuyor.</div>`;
+                return;
+            }
+
+            items.forEach(item => {
+                const count = orderCounts[item] || 0;
+                const rowClass = count > 0 ? "order-row active-row" : "order-row";
+
+                container.innerHTML += `
+                    <div class="${rowClass}" id="order-row-${item.replace(/\s+/g, '-')}">
+                        <div style="font-weight:600; font-size:14px; color:var(--text-main); flex:1;">${item}</div>
+                        <div class="counter">
+                            <button class="btn-count" onclick="updateOrderCount('${item}', -1)"><i class="fa-solid fa-minus" style="font-size:14px;"></i></button>
+                            <span id="count-${item.replace(/\s+/g, '-')}" style="width:24px; text-align:center; font-weight:800; font-size:16px;">${count}</span>
+                            <button class="btn-count" onclick="updateOrderCount('${item}', 1)"><i class="fa-solid fa-plus" style="font-size:14px;"></i></button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function updateOrderCount(item, change) {
+            if (!orderCounts[item]) orderCounts[item] = 0;
+            
+            orderCounts[item] += change;
+            if (orderCounts[item] < 0) orderCounts[item] = 0; 
+
+            const safeId = item.replace(/\s+/g, '-');
+            const countSpan = document.getElementById(`count-${safeId}`);
+            const rowDiv = document.getElementById(`order-row-${safeId}`);
+
+            if (countSpan) countSpan.innerText = orderCounts[item];
+            
+            if (rowDiv) {
+                if (orderCounts[item] > 0) {
+                    rowDiv.classList.add('active-row');
+                } else {
+                    rowDiv.classList.remove('active-row');
+                }
+            }
+        }
+
+        function resetCounters() {
+            if(confirm(`${currentOrderCategory} listesindeki tüm adetleri sıfırlamak istiyor musunuz?`)) {
+                const items = orderTemplates[currentOrderCategory] || [];
+                items.forEach(item => {
+                    orderCounts[item] = 0;
+                });
+                loadOrderTemplate(currentOrderCategory);
+                showToast("Liste sıfırlandı.");
+            }
+        }
+
+        function sendOrderViaWhatsApp() {
+            const selectedItems = Object.entries(orderCounts).filter(([item, count]) => count > 0);
+            
+            if (selectedItems.length === 0) {
+                showToast("Lütfen göndermeden önce listeye ürün ekleyin.", true);
+                if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
+                return;
+            }
+
+            const dateStr = new Date().toLocaleDateString('tr-TR');
+            
+            let message = `📦 *SİPARİŞ FİŞİ*\n`;
+            message += `📅 *Tarih:* ${dateStr}\n`;
+            message += `👤 *Gönderen:* ${currentUser ? currentUser.name.split(' ')[0] : 'Personel'}\n`;
+            message += `➖➖➖➖➖➖➖➖➖➖\n\n`;
+
+            selectedItems.forEach(([item, count]) => {
+                message += `▪️ ${count} x ${item}\n`;
+            });
+
+            message += `\nKolay gelsin.`;
+
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://api.whatsapp.com/send?text=${encodedMessage}`;
+            
+            window.open(whatsappUrl, '_blank');
+            logAction("Sipariş Gönderildi", `${selectedItems.length} kalem ürün WhatsApp üzerinden paylaşıldı.`);
+        }
+        // --- SİPARİŞ KODLARI BİTİŞİ ---
 
         function updateDateTime() {
             const now = new Date();
@@ -827,7 +947,6 @@
                         }
                     });
 
-                    // Eğer giriş yapıldıysa dataları çek
                     if(isAppLaunched) syncDataBackground();
                 }
             } catch(e) {
@@ -957,7 +1076,7 @@
                     <div class="dash-card" onclick="openModal('adminModal')">
                         <i class="fa-solid fa-chart-pie"></i><div class="title">Canlı Radar</div><div class="desc">Personel ve istatistik</div>
                     </div>
-                    <div class="dash-card" onclick="switchTab('tab-order', null)">
+                    <div class="dash-card" onclick="switchTab('tab-order', document.getElementById('navHome'))">
                         <i class="fa-solid fa-cart-shopping"></i><div class="title">Sipariş Oluştur</div><div class="desc">Manav, süt ve depo</div>
                     </div>
                     <div class="dash-card" onclick="openModal('galleryModal'); renderGallery();">
@@ -1006,6 +1125,13 @@
             if(sInp) sInp.value = '';
             handleSearchInput();
         }
+
+        function normalizeTR(str) {
+            if(!str) return "";
+            return str.replace(/İ/g, 'i').replace(/I/g, 'ı').toLowerCase();
+        }
+
+        let currentLibFilter = 'Tümü';
 
         function renderLibraryDrumpad() {
             const container = document.getElementById('drumpadContainer'); 
@@ -1765,6 +1891,20 @@
             setTimeout(()=>t.classList.remove('show'), 2500); 
         }
 
+        // Vardiyadan Çıkış (Eklenen Temel Log-Out)
+        function triggerLogoutFlow() {
+            if(confirm("Vardiyayı bitirip sistemden çıkış yapmak istiyor musunuz?")) {
+                executeLogout();
+            }
+        }
+
+        function executeLogout() {
+            if(db && currentUser) {
+                db.ref(`${dbRoot}/active_shifts/${currentUser.pin}`).remove();
+            }
+            safeRemoveLocal('kd_saved_pin');
+            window.location.reload();
+        }
     </script>
 </body>
 </html>
