@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KD Kordon Pro - V28</title>
+    <title>KD Kordon Pro - V29</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -55,6 +55,7 @@
         body { font-family: -apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-color); color: var(--text-main); transition: background-color 0.3s; overflow-x: hidden; overscroll-behavior-y: none; padding-top:env(safe-area-inset-top); }
         body.no-scroll { overflow: hidden; height: 100vh; touch-action: none; }
 
+        /* GİRİŞ EKRANI */
         #authScreen { position: fixed; inset: 0; background: var(--bg-color); z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
         .auth-card { background: var(--surface-solid); padding: 40px 25px; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); width: 100%; max-width: 380px; }
         .pin-display { font-size: 32px; letter-spacing: 8px; font-weight: 800; color: var(--text-main); margin: 20px 0; height: 40px; display: flex; justify-content: center; align-items: center; }
@@ -66,11 +67,13 @@
         
         #appContent { display: none; padding-bottom: 100px; }
 
+        /* HEADER */
         .app-header { display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; position: sticky; top: 0; z-index: 50; background: var(--bg-color); }
         .brand-text { font-size: 16px; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; }
         .icon-btn { background: var(--surface-solid); border: 1px solid var(--border); box-shadow: var(--shadow-sm); width: 40px; height: 40px; border-radius: 50%; color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: var(--transition); }
         .icon-btn:active { transform: scale(0.9); }
 
+        /* BOTTOM NAV */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--surface-glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); display: flex; justify-content: space-around; padding: 15px 10px 25px 10px; z-index: 100; border-top: 1px solid var(--border); }
         .nav-item { display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--text-muted); font-size: 11px; font-weight: 600; cursor: pointer; flex: 1; transition: var(--transition); }
         .nav-item i { font-size: 20px; padding: 10px 20px; border-radius: 30px; transition: var(--transition); }
@@ -86,6 +89,7 @@
         .btn:active { transform: scale(0.97); opacity: 0.9; }
         .btn-primary { background: var(--accent); color: white; box-shadow: var(--shadow-sm); }
 
+        /* DASHBOARD ANA SAYFA */
         .profile-section { margin-bottom: 25px; }
         .profile-greeting { font-size: 28px; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 5px; }
         .profile-date { font-size: 14px; font-weight: 600; color: var(--accent); display:flex; align-items:center; gap:6px; }
@@ -100,6 +104,7 @@
         .dash-card.logout { color: var(--danger); background: var(--danger-light); border-color: transparent; }
         .dash-card span { font-size: 13px; font-weight: 700; color: var(--text-main); }
 
+        /* CHIPS & INPUTS */
         .chips-container { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; scrollbar-width: none; scroll-behavior: smooth; }
         .chips-container::-webkit-scrollbar { display: none; }
         .chip { background: var(--surface-solid); border: 1px solid var(--border); padding: 12px 20px; border-radius: 30px; font-size: 13px; font-weight: 600; color: var(--text-muted); white-space: nowrap; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-sm); }
@@ -108,6 +113,7 @@
         .form-input { width: 100%; padding: 16px 20px; background: var(--surface-solid); border: 1px solid var(--border); border-radius: var(--radius-md); font-family: inherit; font-size: 15px; font-weight: 500; color: var(--text-main); margin-bottom: 15px; transition: var(--transition); box-shadow: var(--shadow-sm); outline: none;}
         .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-light); }
 
+        /* SİPARİŞ SATIRLARI */
         .order-row { background: var(--surface-solid); border-radius: var(--radius-md); padding: 16px; box-shadow: var(--shadow-sm); display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); margin-bottom:12px; transition: var(--transition);}
         .order-row.active-row { border-color: var(--success); background: var(--success-light); }
         .counter { display: flex; align-items: center; gap: 12px; background: var(--bg-color); padding: 6px; border-radius: 30px; }
@@ -123,15 +129,17 @@
         .lib-title { font-size: 14px; font-weight: 700; color: var(--text-main); line-height: 1.3; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .lib-desc { font-size: 11px; font-weight: 600; color: var(--text-muted); }
         .lib-action { display: flex; align-items: center; gap: 8px; margin-left: 10px; }
+        
         .recipe-btn { width: 36px; height: 36px; border-radius: 50%; background: var(--warning-light); color: var(--warning); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; transition: var(--transition); flex-shrink: 0; }
         .recipe-btn:active { transform: scale(0.9); }
-        .lib-add-btn { width: 36px; height: 36px; border-radius: 50%; background: var(--accent-light); color: var(--accent); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; flex-shrink: 0; }
+        .lib-add-btn { width: 36px; height: 36px; border-radius: 50%; background: var(--accent-light); color: var(--accent); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; flex-shrink: 0; transition: var(--transition); }
+        .lib-add-btn:active { transform: scale(0.9); }
         
         .lib-item.edit-mode { border: 2px dashed var(--danger-light); background: var(--bg-color); box-shadow: none; }
         .lib-item.edit-mode .lib-title, .lib-item.edit-mode .lib-desc { opacity: 0.5; }
         .lib-delete-btn { width: 36px; height: 36px; border-radius: 50%; background: var(--danger); color: white; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; box-shadow: 0 4px 10px rgba(255,59,48,0.3); flex-shrink: 0; }
 
-        /* Aktif SKT Swipe & Toplu Seçim */
+        /* AKTİF TAKİP SWIPE */
         .swipe-container { position: relative; overflow: hidden; border-radius: var(--radius-md); background: var(--bg-color); margin-bottom:12px; border: 1px solid var(--border); }
         .swipe-bg { position: absolute; inset:0; display:flex; justify-content:space-between; align-items:center; color:white; font-size:22px; font-weight:800; border-radius: var(--radius-md); overflow:hidden; }
         .bg-left { background: var(--accent); width: 50%; height: 100%; display:flex; align-items:center; padding-left: 20px; }
@@ -148,9 +156,11 @@
         .bulk-mode .swipe-container.selected .bulk-checkbox { background:var(--accent); border-color:var(--accent); }
         .bulk-mode .swipe-container.selected .active-card { background: var(--accent-light); }
         
+        /* FLOATING BULK BAR */
         .floating-bulk-bar { position:fixed; bottom:0; left:50%; transform: translateX(-50%) translateY(100%); width:95%; max-width: 500px; background: var(--surface-glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--border); padding:15px; display:flex; gap:12px; z-index:90; border-radius: var(--radius-lg) var(--radius-lg) 0 0; box-shadow: 0 -10px 30px rgba(0,0,0,0.1); transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
         .floating-bulk-bar.show { transform: translateX(-50%) translateY(-90px); }
 
+        /* MODALS */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 1000; display: flex; align-items: flex-end; justify-content: center; opacity: 0; visibility: hidden; transition: var(--transition); overscroll-behavior: none; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
         .modal-content { background: var(--surface-solid); width: 100%; max-width: 600px; border-radius: 30px 30px 0 0; padding: 25px 25px 50px; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); max-height: 90vh; overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.1); overscroll-behavior-y: contain; }
@@ -220,7 +230,7 @@
 
         <div class="app-container">
 
-            <!-- TAB 0: ANA SAYFA (DASHBOARD) -->
+            <!-- TAB 0: ANA SAYFA -->
             <div id="tab-home" class="tab-pane active">
                 <div class="profile-section">
                     <div class="profile-greeting">Merhaba,<br><span id="headerUserName" style="color:var(--accent);">Personel</span></div>
@@ -255,9 +265,7 @@
                     <h3 style="font-size: 18px; font-weight: 700; color: var(--text-main); margin-bottom: 15px; display:flex; align-items:center; gap:8px;">
                         <i class="fa-solid fa-clipboard-list" style="color:var(--accent);"></i> Bana Atanan Görevler
                     </h3>
-                    <div id="myTasksContainer">
-                        <!-- JS İle Doldurulacak -->
-                    </div>
+                    <div id="myTasksContainer"></div>
                 </div>
             </div>
             
@@ -283,7 +291,7 @@
                 <button class="btn btn-primary" style="margin-top:20px; background: #25D366;" onclick="sendOrderViaWhatsApp()"><i class="fa-brands fa-whatsapp" style="font-size: 18px;"></i> WhatsApp'a Gönder</button>
             </div>
 
-            <!-- 2. ÜRETİM (DRUMPAD) -->
+            <!-- 2. ÜRETİM (LİSTE GÖRÜNÜMÜ) -->
             <div id="tab-library" class="tab-pane">
                 <div style="display:flex; gap:10px; margin-bottom: 20px; align-items:center;">
                     <div style="position: relative; flex: 1;">
@@ -297,7 +305,7 @@
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                     <div>
                         <h3 style="font-size: 22px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Üretim Kütüphanesi</h3>
-                        <p style="font-size:12px; color:var(--text-muted);">Reçeteler için kitap simgesine dokunun.</p>
+                        <p style="font-size:12px; color:var(--text-muted);">Takip için ürüne tıklayın.</p>
                     </div>
                     <div style="display:flex; gap:10px;">
                         <button id="editModeBtn" onclick="toggleEditMode()" style="display:none; background:var(--accent-light); color:var(--accent); border:none; border-radius:20px; padding:8px 16px; font-weight:600; font-size:13px; cursor:pointer; transition:var(--transition);">Düzenle</button>
@@ -523,7 +531,7 @@
         </div>
     </div>
 
-    <!-- GİZLİ REÇETE MODALI -->
+    <!-- REÇETE MODALI -->
     <div class="modal-overlay" id="recipeModal" onclick="closeOnOutsideClick(event, 'recipeModal')">
         <div class="modal-content">
             <div class="drag-handle-area"><div class="drag-handle"></div></div>
@@ -560,7 +568,7 @@
         let currentPin = "";
         let usersDB = { "1923": { name: "Yusuf (Yönetici)", role: "admin", pin: "1923" } };
         
-        const dbRoot = 'kd_kordon_pro_v28'; 
+        const dbRoot = 'kd_kordon_pro_v29'; 
         let isAppLaunched = false;
         let isBulkMode = false;
         let isEditMode = false;
@@ -746,6 +754,7 @@
             if(spinner) spinner.style.display = 'none';
 
             updateThemeIcon();
+            initSwipeNavigation();
             initDragToClose(); 
             
             setInterval(updateDateTime, 1000);
@@ -810,6 +819,30 @@
             
             document.querySelectorAll('.clock-text').forEach(el => el.innerText = timeStr);
             document.querySelectorAll('.date-text').forEach(el => el.innerText = dateStr);
+        }
+
+        function initSwipeNavigation() {
+            let dragStartX = 0;
+            const container = document.getElementById('drumpadContainer');
+            if(!container) return;
+            container.addEventListener('touchstart', e => { dragStartX = e.touches[0].clientX; }, {passive: true});
+            container.addEventListener('touchend', e => {
+                let dragEndX = e.changedTouches[0].clientX;
+                let diff = dragStartX - dragEndX;
+                
+                if (Math.abs(diff) > 70) {
+                    let chips = Array.from(document.querySelectorAll('#libChips .chip'));
+                    let idx = chips.findIndex(c => c.classList.contains('active'));
+                    
+                    if (diff > 0 && idx < chips.length - 1) chips[idx + 1].click();
+                    else if (diff < 0 && idx > 0) chips[idx - 1].click();
+                    
+                    setTimeout(() => {
+                        let activeChip = document.querySelector('#libChips .chip.active');
+                        if(activeChip) activeChip.scrollIntoView({behavior: "smooth", inline: "center", block: "nearest"});
+                    }, 50);
+                }
+            });
         }
 
         function showLoginOrApp() {
@@ -1226,7 +1259,7 @@
             const container = document.getElementById('drumpadContainer'); 
             if(!container) return;
             container.innerHTML = '';
-            container.className = 'library-list'; 
+            container.className = 'library-list'; // LİSTE GÖRÜNÜMÜ AKTİF
             
             if (!libraryDB || libraryDB.length === 0) {
                 libraryDB = [...defaultLibrary];
@@ -1260,7 +1293,7 @@
                     let recipeBtn = secretRecipes[p.urun] ? `<button class="recipe-btn" onclick="event.stopPropagation(); showSecretRecipe('${p.urun}')"><i class="fa-solid fa-book-open"></i></button>` : '';
                     rightActionHtml = `
                         ${recipeBtn}
-                        <div class="lib-add-btn"><i class="fa-solid fa-plus"></i></div>
+                        <button class="lib-add-btn" onclick="event.stopPropagation(); startTracking('${p.id}')"><i class="fa-solid fa-plus"></i></button>
                     `;
                 }
 
@@ -1413,6 +1446,7 @@
         function startTracking(id) {
             if(isEditMode) return; 
             const prod = libraryDB.find(p => p.id === id);
+            if(!prod) return;
             const now = new Date();
             let target = new Date(now.getTime());
 
