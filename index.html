@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KD Kordon Pro - Ultimate V30</title>
+    <title>KD Kordon Pro - V30 Production</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -55,7 +55,6 @@
         body { font-family: -apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-color); color: var(--text-main); transition: background-color 0.3s; overflow-x: hidden; overscroll-behavior-y: none; padding-top:env(safe-area-inset-top); }
         body.no-scroll { overflow: hidden; height: 100vh; touch-action: none; }
 
-        /* GİRİŞ EKRANI */
         #authScreen { position: fixed; inset: 0; background: var(--bg-color); z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
         .auth-card { background: var(--surface-solid); padding: 40px 25px; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); width: 100%; max-width: 380px; }
         .pin-display { font-size: 32px; letter-spacing: 8px; font-weight: 800; color: var(--text-main); margin: 20px 0; height: 40px; display: flex; justify-content: center; align-items: center; }
@@ -115,7 +114,7 @@
         .btn-count { background: var(--surface-solid); border: none; width: 34px; height: 34px; border-radius: 50%; font-size: 18px; font-weight: 500; color: var(--text-main); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); cursor: pointer; transition: var(--transition); }
         .btn-count:active { transform: scale(0.9); }
 
-        /* YENİ ÜRETİM LİSTESİ TASARIMI (Grid'den Liste Tasarımına Geçiş) */
+        /* YENİ ÜRETİM LİSTESİ TASARIMI */
         .library-list { display: flex; flex-direction: column; gap: 10px; min-height: 50vh; padding-bottom: 20px; }
         .lib-item { background: var(--surface-solid); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px 16px; display: flex; align-items: center; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-sm); position: relative; }
         .lib-item:active { transform: scale(0.98); background: var(--bg-color); }
@@ -134,7 +133,6 @@
         .lib-item.edit-mode .lib-title, .lib-item.edit-mode .lib-desc { opacity: 0.5; }
         .lib-delete-btn { width: 36px; height: 36px; border-radius: 50%; background: var(--danger); color: white; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; box-shadow: 0 4px 10px rgba(255,59,48,0.3); flex-shrink: 0; }
 
-        /* AKTİF TAKİP SWIPE */
         .swipe-container { position: relative; overflow: hidden; border-radius: var(--radius-md); background: var(--bg-color); margin-bottom:12px; border: 1px solid var(--border); }
         .swipe-bg { position: absolute; inset:0; display:flex; justify-content:space-between; align-items:center; color:white; font-size:22px; font-weight:800; border-radius: var(--radius-md); overflow:hidden; }
         .bg-left { background: var(--accent); width: 50%; height: 100%; display:flex; align-items:center; padding-left: 20px; }
@@ -154,7 +152,6 @@
         .floating-bulk-bar { position:fixed; bottom:0; left:50%; transform: translateX(-50%) translateY(100%); width:95%; max-width: 500px; background: var(--surface-glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--border); padding:15px; display:flex; gap:12px; z-index:90; border-radius: var(--radius-lg) var(--radius-lg) 0 0; box-shadow: 0 -10px 30px rgba(0,0,0,0.1); transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
         .floating-bulk-bar.show { transform: translateX(-50%) translateY(-90px); }
 
-        /* MODALS */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 1000; display: flex; align-items: flex-end; justify-content: center; opacity: 0; visibility: hidden; transition: var(--transition); overscroll-behavior: none; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
         .modal-content { background: var(--surface-solid); width: 100%; max-width: 600px; border-radius: 30px 30px 0 0; padding: 25px 25px 50px; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); max-height: 90vh; overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.1); overscroll-behavior-y: contain; }
@@ -195,7 +192,7 @@
     <!-- GİRİŞ EKRANI (PIN) -->
     <div id="authScreen">
         <div class="auth-card">
-            <i class="fa-solid fa-shield-check" style="font-size: 40px; color: var(--accent); margin-bottom:15px;"></i>
+            <i class="fa-solid fa-shield-halved" style="font-size: 40px; color: var(--accent); margin-bottom:15px;"></i>
             <h2 style="color:var(--text-main); font-weight:700; font-size:22px;">KD Kordon Pro</h2>
             <p style="color:var(--text-muted); font-size:13px; margin-top:5px;">Operasyon sistemine giriş yapın.</p>
             
@@ -450,9 +447,7 @@
             <div id="adminDashboardSection">
                 <h4 style="font-size:14px; font-weight:700; color:var(--text-main); margin-bottom:10px;">Görev ve Operasyon Özeti (Son 7 Gün)</h4>
                 <div class="dashboard-stats" id="dashboardStatsContainer">
-                    <div class="stat-card success"><div class="value">0</div><div class="label">TÜKETİLEN ÜRÜN</div></div>
-                    <div class="stat-card danger"><div class="value">0</div><div class="label">İMHA EDİLEN</div></div>
-                    <div class="stat-card" style="grid-column: 1 / -1;"><div class="value">0</div><div class="label">TAMAMLANAN GÖREVLER</div></div>
+                    <!-- Dinamik Yüklenir -->
                 </div>
             </div>
 
@@ -541,6 +536,14 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <script>
+        // XSS KORUMASI: Kullanıcıdan gelen tüm girdileri render öncesi temizler
+        function esc(s) {
+            if(!s) return "";
+            return String(s).replace(/[&<>"']/g, c => ({
+                '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+            })[c]);
+        }
+
         function safeSetLocal(key, val) { try { localStorage.setItem(key, val); } catch(e) {} }
         function safeGetLocal(key) { try { return localStorage.getItem(key); } catch(e) { return null; } }
         function safeRemoveLocal(key) { try { localStorage.removeItem(key); } catch(e) {} }
@@ -562,7 +565,7 @@
         let currentPin = "";
         let usersDB = { "1923": { name: "Yusuf (Yönetici)", role: "admin", pin: "1923" } };
         
-        const dbRoot = 'kd_kordon_pro_v29'; 
+        const dbRoot = 'kd_kordon_pro_v30'; 
         let isAppLaunched = false;
         let isBulkMode = false;
         let isEditMode = false;
@@ -738,9 +741,10 @@
 
         let libraryDB = [...defaultLibrary]; 
 
+        // GÜNCELLEME: ARAMA MOTONU FIX (Büyük/Küçük İ-I Harf Uyumu)
         function normalizeTR(str) {
             if(!str) return '';
-            return String(str).replace(/İ/g, 'i').replace(/I/g, 'ı').toLowerCase();
+            return String(str).toLocaleLowerCase('tr-TR');
         }
 
         document.addEventListener("DOMContentLoaded", () => {
@@ -753,9 +757,11 @@
             setInterval(updateDateTime, 1000);
             updateDateTime();
 
-            showLoginOrApp();
+            setTimeout(initDatabase, 50);
 
-            setTimeout(initDatabase, 100);
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('./sw.js').catch(() => {});
+            }
         });
 
         function initDragToClose() {
@@ -826,36 +832,32 @@
             }
         }
 
+        // GÜNCELLEME: OTURUM HATALARI (RACE CONDITION) GİDERİLDİ (once-then yapısı)
         function initDatabase() {
-            try {
-                if(typeof firebase !== 'undefined') {
+            if(typeof firebase !== 'undefined') {
+                try {
                     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
                     db = firebase.database();
                     
-                    db.ref(`${dbRoot}/users`).on('value', snap => {
-                        const data = snap.val();
-                        if(!data) {
-                            db.ref(`${dbRoot}/users/1923`).set(usersDB["1923"]);
+                    db.ref(`${dbRoot}/users`).once('value').then(snap => {
+                        if(snap.exists()) {
+                            usersDB = snap.val();
                         } else {
-                            usersDB = data;
+                            db.ref(`${dbRoot}/users/1923`).set(usersDB["1923"]);
                         }
                         
-                        const savedPin = safeGetLocal('kd_saved_pin');
-                        if(savedPin && usersDB[savedPin]) {
-                            currentUser = usersDB[savedPin];
-                            if(document.getElementById('headerUserName')) document.getElementById('headerUserName').innerText = currentUser.name.split(' ')[0];
-                            if(currentUser.role === 'admin') {
-                                document.getElementById('adminDashboardBtn').style.display = 'flex';
-                                document.getElementById('editModeBtn').style.display = 'block'; 
-                                document.getElementById('todoAssignee').style.display = 'block'; 
-                                document.getElementById('cameraAssigneeWrapper').style.display = 'block'; 
-                                updateAssigneeDropdown(); 
+                        showLoginOrApp();
+                        
+                        db.ref(`${dbRoot}/users`).on('value', snap2 => {
+                            if(snap2.exists()) usersDB = snap2.val();
+                            if (isAppLaunched) {
+                                updateAssigneeDropdown();
+                                if(document.getElementById('usersModal').classList.contains('active')) renderUsersList();
                             }
-                        }
-                        
-                        if (isAppLaunched && document.getElementById('usersModal').classList.contains('active')) {
-                            renderUsersList();
-                        }
+                        });
+                    }).catch(e => {
+                        console.warn("Offline Mod - Önbellekten çalışılıyor.");
+                        showLoginOrApp();
                     });
 
                     db.ref(`${dbRoot}/active_shifts`).on('value', snap => {
@@ -866,9 +868,12 @@
                     });
 
                     syncDataBackground();
+                } catch(e) {
+                    console.warn("Veritabanı uyarısı (Offline çalışılabilir):", e);
+                    showLoginOrApp();
                 }
-            } catch(e) {
-                console.warn("Veritabanı uyarısı (Offline çalışılabilir):", e);
+            } else {
+                showLoginOrApp();
             }
         }
 
@@ -877,12 +882,13 @@
             selects.forEach(selectEl => {
                 if(!selectEl) return;
                 const currentVal = selectEl.value;
-                selectEl.innerHTML = '<option value="ALL">Herkese</option>';
-                for(const pin in usersDB) {
-                    if(usersDB[pin].name) {
-                        selectEl.innerHTML += `<option value="${pin}">${usersDB[pin].name.split(' ')[0]}</option>`;
-                    }
-                }
+                
+                // PERFORMANCE: innerHTML += yerine map
+                const optionsHtml = Object.keys(usersDB).map(pin => {
+                    return `<option value="${esc(pin)}">${esc(usersDB[pin].name.split(' ')[0])}</option>`;
+                }).join('');
+                
+                selectEl.innerHTML = '<option value="ALL">Herkese</option>' + optionsHtml;
                 selectEl.value = currentVal || 'ALL';
             });
         }
@@ -917,7 +923,6 @@
             db.ref(`${dbRoot}/todos`).on('value', snap => {
                 todos = snap.val() ? Object.values(snap.val()) : [];
                 renderTodos();
-                renderMyTasksWidget();
             });
             db.ref(`${dbRoot}/logs`).on('value', snap => {
                 allLogs = snap.val() ? Object.values(snap.val()) : [];
@@ -968,7 +973,7 @@
             if(isAppLaunched) return;
             isAppLaunched = true;
             document.getElementById('appContent').style.display = 'block';
-            if(document.getElementById('headerUserName')) document.getElementById('headerUserName').innerText = currentUser.name.split(' ')[0];
+            if(document.getElementById('headerUserName')) document.getElementById('headerUserName').innerText = esc(currentUser.name.split(' ')[0]);
             
             if(currentUser.role === 'admin') {
                 document.getElementById('adminDashboardBtn').style.display = 'flex';
@@ -978,7 +983,7 @@
                 updateAssigneeDropdown(); 
             }
             
-            showToast(`Hoşgeldin, ${currentUser.name.split(' ')[0]}`);
+            showToast(`Hoşgeldin, ${esc(currentUser.name.split(' ')[0])}`);
             
             switchTab('tab-home');
             loadOrderTemplate('Manav', document.querySelector('#tab-order .chip'));
@@ -986,14 +991,12 @@
             renderLibraryDrumpad();
             renderActiveList();
             renderTodos();
-            renderMyTasksWidget();
-            setInterval(renderActiveList, 60000);
+            setInterval(() => { if (!document.hidden) renderActiveList(); }, 60000);
         }
 
         function renderMyTasksWidget() {
             const container = document.getElementById('myTasksContainer');
             if(!container) return;
-            container.innerHTML = '';
             
             const myTasks = (todos || []).filter(t => !t.done && !t.isInfo && (t.assignedTo === currentUser.pin || t.assignedTo === 'ALL'));
             
@@ -1002,16 +1005,19 @@
                 return;
             }
 
-            myTasks.forEach(t => {
+            // GÜNCELLEME: Performans için innerHTML += yerine map().join('')
+            const html = myTasks.map(t => {
                 let badge = t.assignedTo !== 'ALL' ? `<span style="color:var(--danger); font-size:10px; font-weight:800; margin-left:5px;">(SANA ÖZEL)</span>` : '';
-                container.innerHTML += `
+                return `
                     <div onclick="switchTab('tab-todos')" style="background:var(--surface-solid); padding:12px 15px; border-radius:var(--radius-md); border-left:3px solid var(--accent); box-shadow:var(--shadow-sm); margin-bottom:8px; display:flex; align-items:center; gap:10px; cursor:pointer;">
                         <i class="fa-solid fa-circle-exclamation" style="color:var(--accent);"></i>
-                        <div style="font-size:13px; font-weight:600; color:var(--text-main); flex:1;">${t.text} ${badge}</div>
+                        <div style="font-size:13px; font-weight:600; color:var(--text-main); flex:1;">${esc(t.text)} ${badge}</div>
                         <i class="fa-solid fa-chevron-right" style="color:var(--text-muted); font-size:12px;"></i>
                     </div>
                 `;
-            });
+            }).join('');
+            
+            container.innerHTML = html;
         }
 
         // VARDİYA ÇIKIŞ FONKSİYONLARI
@@ -1019,7 +1025,6 @@
             closeModal('adminModal');
             const container = document.getElementById('dynamicChecklistContainer');
             if(!container) return; 
-            container.innerHTML = '';
             
             const standards = [
                 "Kasa sayımı eksiksiz tamamlandı.",
@@ -1027,18 +1032,16 @@
                 "Dolap dereceleri kontrol edildi.",
                 "Gün sonu fişleri ve evraklar düzenlendi."
             ];
-            standards.forEach(text => {
-                container.innerHTML += `<label class="closing-cb-label"><input type="checkbox" class="closing-cb"> <span>${text}</span></label>`;
-            });
+            
+            let html = standards.map(text => `<label class="closing-cb-label"><input type="checkbox" class="closing-cb"> <span>${text}</span></label>`).join('');
 
             const myTasks = (todos || []).filter(t => !t.done && !t.isInfo && (t.assignedTo === currentUser.pin));
             if(myTasks.length > 0) {
-                container.innerHTML += `<hr style="border:0; border-top:1px dashed var(--border); margin:15px 0;">`;
-                container.innerHTML += `<h5 style="color:var(--danger); font-size:12px; font-weight:800; margin-bottom:10px;">SİZE ATANAN ÖZEL GÖREVLER</h5>`;
-                myTasks.forEach(t => {
-                    container.innerHTML += `<label class="closing-cb-label" style="background:var(--danger-light);"><input type="checkbox" class="closing-cb dynamic-task" data-id="${t.id}"> <span style="color:var(--danger); font-weight:700;">${t.text}</span></label>`;
-                });
+                html += `<hr style="border:0; border-top:1px dashed var(--border); margin:15px 0;">`;
+                html += `<h5 style="color:var(--danger); font-size:12px; font-weight:800; margin-bottom:10px;">SİZE ATANAN ÖZEL GÖREVLER</h5>`;
+                html += myTasks.map(t => `<label class="closing-cb-label" style="background:var(--danger-light);"><input type="checkbox" class="closing-cb dynamic-task" data-id="${t.id}"> <span style="color:var(--danger); font-weight:700;">${esc(t.text)}</span></label>`).join('');
             }
+            container.innerHTML = html;
             openModal('checklistModal');
         }
 
@@ -1097,29 +1100,37 @@
             }
 
             const titleEl = document.getElementById('currentTemplateTitle');
-            if(titleEl) titleEl.innerText = `${category} Listesi`;
+            if(titleEl) titleEl.innerText = `${esc(category)} Listesi`;
 
             const container = document.getElementById('orderTemplateList');
             if(!container) return;
             
-            container.innerHTML = '';
             const items = orderTemplates[category] || [];
 
-            items.forEach(item => {
+            if(items.length === 0) {
+                container.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-muted);">Bu kategoride ürün bulunmuyor.</div>`;
+                return;
+            }
+
+            // GÜNCELLEME: Performans için HTML haritalaması
+            const html = items.map(item => {
                 const count = orderCounts[item] || 0;
                 const rowClass = count > 0 ? "order-row active-row" : "order-row";
+                const safeId = String(item).replace(/[^a-zA-Z0-9]/g, '-');
 
-                container.innerHTML += `
-                    <div class="${rowClass}" id="order-row-${item.replace(/\s+/g, '-')}">
-                        <div style="font-weight:600; font-size:14px; color:var(--text-main); flex:1;">${item}</div>
+                return `
+                    <div class="${rowClass}" id="order-row-${safeId}">
+                        <div style="font-weight:600; font-size:14px; color:var(--text-main); flex:1;">${esc(item)}</div>
                         <div class="counter">
-                            <button class="btn-count" onclick="updateOrderCount('${item}', -1)"><i class="fa-solid fa-minus" style="font-size:14px;"></i></button>
-                            <span id="count-${item.replace(/\s+/g, '-')}" style="width:24px; text-align:center; font-weight:800; font-size:16px;">${count}</span>
-                            <button class="btn-count" onclick="updateOrderCount('${item}', 1)"><i class="fa-solid fa-plus" style="font-size:14px;"></i></button>
+                            <button class="btn-count" onclick="updateOrderCount('${esc(item)}', -1)"><i class="fa-solid fa-minus" style="font-size:14px;"></i></button>
+                            <span id="count-${safeId}" style="width:24px; text-align:center; font-weight:800; font-size:16px;">${count}</span>
+                            <button class="btn-count" onclick="updateOrderCount('${esc(item)}', 1)"><i class="fa-solid fa-plus" style="font-size:14px;"></i></button>
                         </div>
                     </div>
                 `;
-            });
+            }).join('');
+            
+            container.innerHTML = html;
         }
 
         function updateOrderCount(item, change) {
@@ -1127,7 +1138,7 @@
             orderCounts[item] += change;
             if (orderCounts[item] < 0) orderCounts[item] = 0; 
 
-            const safeId = item.replace(/\s+/g, '-');
+            const safeId = String(item).replace(/[^a-zA-Z0-9]/g, '-');
             const countSpan = document.getElementById(`count-${safeId}`);
             const rowDiv = document.getElementById(`order-row-${safeId}`);
 
@@ -1161,9 +1172,7 @@
             message += `👤 *Gönderen:* ${currentUser ? currentUser.name.split(' ')[0] : 'Personel'}\n`;
             message += `➖➖➖➖➖➖➖➖➖➖\n\n`;
 
-            selectedItems.forEach(([item, count]) => {
-                message += `▪️ ${count} x ${item}\n`;
-            });
+            selectedItems.forEach(([item, count]) => { message += `▪️ ${count} x ${item}\n`; });
 
             message += `\nKolay gelsin.`;
             const encodedMessage = encodeURIComponent(message);
@@ -1173,24 +1182,21 @@
 
         function renderOrderHistory() {
             const container = document.getElementById('orderHistoryList');
-            container.innerHTML = '';
             const logsArray = Array.isArray(allLogs) ? allLogs : Object.values(allLogs || {});
             const orderLogs = logsArray.filter(l => l.action === 'Sipariş Gönderildi').sort((a,b) => b.timestamp - a.timestamp);
             
             if(orderLogs.length === 0) {
                 container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);">Geçmiş sipariş bulunmuyor.</div>';
             } else {
-                orderLogs.forEach(l => {
-                    container.innerHTML += `
-                        <div style="background:var(--bg-color); padding:12px; border-radius:var(--radius-md); margin-bottom:10px; border:1px solid var(--border);">
-                            <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-muted); font-weight:700; margin-bottom:5px;">
-                                <span>${l.date}</span>
-                                <span><i class="fa-solid fa-user"></i> ${l.user.split(' ')[0]}</span>
-                            </div>
-                            <div style="font-size:13px; color:var(--text-main); font-weight:600;">${l.detail}</div>
+                container.innerHTML = orderLogs.map(l => `
+                    <div style="background:var(--bg-color); padding:12px; border-radius:var(--radius-md); margin-bottom:10px; border:1px solid var(--border);">
+                        <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-muted); font-weight:700; margin-bottom:5px;">
+                            <span>${esc(l.date)}</span>
+                            <span><i class="fa-solid fa-user"></i> ${esc(l.user.split(' ')[0])}</span>
                         </div>
-                    `;
-                });
+                        <div style="font-size:13px; color:var(--text-main); font-weight:600;">${esc(l.detail)}</div>
+                    </div>
+                `).join('');
             }
             openModal('orderHistoryModal');
         }
@@ -1215,7 +1221,7 @@
         }
 
         function showSecretRecipe(name) {
-            document.getElementById('recipeTitle').innerHTML = `<i class="fa-solid fa-scroll"></i> ${name}`;
+            document.getElementById('recipeTitle').innerHTML = `<i class="fa-solid fa-scroll"></i> ${esc(name)}`;
             let rec = secretRecipes[name];
             if(!rec) return; 
             document.getElementById('recipeContent').innerText = rec;
@@ -1227,24 +1233,27 @@
         function renderLibraryDrumpad() {
             const container = document.getElementById('drumpadContainer'); 
             if(!container) return;
-            container.innerHTML = '';
-            container.className = 'library-list'; // LİSTE GÖRÜNÜMÜ
+            container.className = 'library-list';
             
-            if (!libraryDB || libraryDB.length === 0) {
-                libraryDB = [...defaultLibrary];
-            }
+            if (!libraryDB || libraryDB.length === 0) libraryDB = [...defaultLibrary];
             
             const searchInput = document.getElementById('libSearchInput').value;
-            const searchTerms = normalizeTR(searchInput ? searchInput : '').split(' ').filter(x => x);
+            const searchTerms = normalizeTR(searchInput).split(' ').filter(x => x);
             
-            libraryDB.filter(p => currentLibFilter === 'Tümü' || p.kategori === currentLibFilter)
+            const filtered = libraryDB.filter(p => currentLibFilter === 'Tümü' || p.kategori === currentLibFilter)
                      .filter(p => {
                          if(searchTerms.length === 0) return true;
                          const urunTR = normalizeTR(p.urun);
                          return searchTerms.every(term => urunTR.includes(term));
-                     })
-                     .forEach(p => {
-                
+                     });
+
+            if (filtered.length === 0) {
+                 container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: var(--text-muted);">Ürün bulunamadı.</div>`;
+                 return;
+            }
+
+            // GÜNCELLEME: innerHTML += kaldırıldı. EVENT DELEGATION mantığı için class ve data eklendi
+            const html = filtered.map(p => {
                 let omurStr = "";
                 if (p.birim === "Günlük") omurStr = "GÜN SONU";
                 else if (p.birim === "Hemen Kullandır") omurStr = "HEMEN";
@@ -1259,7 +1268,7 @@
                 if (isEditMode && currentUser && currentUser.role === 'admin') {
                     rightActionHtml = `<button class="lib-delete-btn" onclick="event.stopPropagation(); deleteProduct('${p.id}')"><i class="fa-solid fa-trash"></i></button>`;
                 } else {
-                    let recipeBtn = secretRecipes[p.urun] ? `<button class="recipe-btn" onclick="event.stopPropagation(); showSecretRecipe('${p.urun}')"><i class="fa-solid fa-book-open"></i></button>` : '';
+                    let recipeBtn = secretRecipes[p.urun] ? `<button class="recipe-btn" onclick="event.stopPropagation(); showSecretRecipe('${esc(p.urun)}')"><i class="fa-solid fa-book-open"></i></button>` : '';
                     rightActionHtml = `
                         ${recipeBtn}
                         <button class="lib-add-btn" onclick="event.stopPropagation(); startTracking('${p.id}', this)"><i class="fa-solid fa-plus"></i></button>
@@ -1268,14 +1277,13 @@
 
                 let editClass = isEditMode ? 'edit-mode' : '';
 
-                // DOKUNMATİK ÇAKIŞMASI KALDIRILDI: onclick ile doğrudan fonksiyon çağrıldı.
-                container.innerHTML += `
+                return `
                     <div class="lib-item ${editClass}" onclick="if(!isEditMode) startTracking('${p.id}', this.querySelector('.lib-add-btn'))">
                         <div class="lib-icon" style="background: ${topBorderColor}20; color: ${topBorderColor};">
                             <i class="fa-solid ${icon}"></i>
                         </div>
                         <div class="lib-info">
-                            <div class="lib-title">${p.urun}</div>
+                            <div class="lib-title">${esc(p.urun)}</div>
                             <div class="lib-desc"><i class="fa-regular fa-clock"></i> Ömür: ${omurStr}</div>
                         </div>
                         <div class="lib-action">
@@ -1283,7 +1291,9 @@
                         </div>
                     </div>
                 `;
-            });
+            }).join('');
+            
+            container.innerHTML = html;
         }
 
         function toggleEditMode() {
@@ -1388,9 +1398,9 @@
         function deleteProduct(id) {
             if(!isEditMode) return;
             if(confirm("Bu ürünü silmek istediğinize emin misiniz?")) {
+                if(db) db.ref(`${dbRoot}/library/${id}`).remove();
                 libraryDB = libraryDB.filter(p => p.id !== id);
                 renderLibraryDrumpad();
-                if(db) db.ref(`${dbRoot}/library`).set(libraryDB);
                 showToast("Ürün silindi.");
             }
         }
@@ -1421,7 +1431,6 @@
             const now = new Date();
             let target = new Date(now.getTime());
 
-            // TARİH HATASINA KARŞI GÜVENLİK DUVARI: Sayısal (integer) olduğundan %100 emin oluyoruz.
             const rafOmruNum = parseInt(prod.raf_omru, 10) || 0;
 
             try {
@@ -1444,8 +1453,7 @@
                 renderActiveList();
                 if(db) db.ref(`${dbRoot}/active/${newItem.id}`).set(newItem);
                 
-                // MÜKEMMEL GÖRSEL GERİ BİLDİRİM (ANIMASYON)
-                showToast(`✅ ${prod.urun} takibe alındı!`);
+                showToast(`✅ ${esc(prod.urun)} takibe alındı!`);
                 if(navigator.vibrate) navigator.vibrate([50]);
 
                 if(btnElement) {
@@ -1492,7 +1500,6 @@
             recognition.start();
         }
 
-        // FOTOĞRAF ÇEKİMİ VE YÜKLEME
         function triggerTaskCamera(taskId) {
             const camInp = document.getElementById('cameraInput');
             const targetInp = document.getElementById('cameraTargetTaskId');
@@ -1613,15 +1620,19 @@
         function renderTodos() {
             const container = document.getElementById('todoContainer'); 
             if(!container) return;
-            container.innerHTML = '';
             
             const myTodos = todos.filter(t => t.assignedTo === 'ALL' || t.assignedTo === currentUser.pin || currentUser.role === 'admin');
 
-            if(myTodos.length === 0) { container.innerHTML = `<div style="font-size:13px; color:var(--text-muted); text-align:center; padding:20px; background:var(--surface-solid); border-radius:var(--radius-md); border:1px solid var(--border);">Gösterilecek görev yok.</div>`; return; }
+            if(myTodos.length === 0) { 
+                container.innerHTML = `<div style="font-size:13px; color:var(--text-muted); text-align:center; padding:20px; background:var(--surface-solid); border-radius:var(--radius-md); border:1px solid var(--border);">Gösterilecek görev yok.</div>`; 
+                renderMyTasksWidget();
+                return; 
+            }
             
-            myTodos.forEach(t => {
+            // GÜNCELLEME: innerHTML += O(n²) performansı map().join ile hızlandırıldı
+            const html = myTodos.map(t => {
                 let imgHtml = t.imgData ? `<img src="${t.imgData}" style="width:100%; max-height:200px; object-fit:cover; border-radius:8px; margin-top:10px; border:1px solid var(--border);">` : '';
-                let badgeHtml = (!t.isInfo && t.assignedTo !== 'ALL') ? `<span style="background:var(--danger-light); color:var(--danger); padding:2px 6px; border-radius:10px; font-size:9px; margin-left:6px; font-weight:800;">@${t.assignedName}</span>` : '';
+                let badgeHtml = (!t.isInfo && t.assignedTo !== 'ALL') ? `<span style="background:var(--danger-light); color:var(--danger); padding:2px 6px; border-radius:10px; font-size:9px; margin-left:6px; font-weight:800;">@${esc(t.assignedName)}</span>` : '';
 
                 let checkBtnHtml = '';
                 if(t.done) {
@@ -1633,7 +1644,7 @@
                 }
 
                 if (t.isInfo) {
-                    container.innerHTML += `
+                    return `
                         <div style="padding:16px; background:linear-gradient(135deg, var(--accent-light), transparent); border-radius:var(--radius-md); margin-bottom:10px; border:1px solid var(--accent-light);">
                             <div style="display:flex; justify-content:space-between; align-items:flex-start;">
                                 <div style="flex:1;">
@@ -1641,9 +1652,9 @@
                                         <i class="fa-solid fa-circle-info" style="color:var(--accent);"></i>
                                         <span style="font-size:11px; font-weight:700; color:var(--accent);">BİLGİ NOTU</span>
                                     </div>
-                                    <div style="font-size:14px; font-weight:600; color:var(--text-main);">${t.text}</div>
+                                    <div style="font-size:14px; font-weight:600; color:var(--text-main);">${esc(t.text)}</div>
                                     ${imgHtml}
-                                    <div style="font-size:11px; color:var(--text-muted); margin-top:8px;">Paylaşan: ${t.addedBy.split(' ')[0]}</div>
+                                    <div style="font-size:11px; color:var(--text-muted); margin-top:8px;">Paylaşan: ${esc(t.addedBy.split(' ')[0])}</div>
                                 </div>
                                 ${(currentUser.role === 'admin' || t.addedBy === currentUser.name) ? `
                                 <button style="background:transparent; border:none; color:var(--danger); cursor:pointer; padding:5px;" onclick="deleteTodo('${t.id}')">
@@ -1653,14 +1664,14 @@
                         </div>
                     `;
                 } else {
-                    container.innerHTML += `
+                    return `
                         <div style="display:flex; justify-content:space-between; align-items:flex-start; padding:16px; background:var(--surface-solid); border-radius:var(--radius-md); box-shadow:var(--shadow-sm); margin-bottom:10px; border:1px solid var(--border);">
                             <div style="display:flex; align-items:flex-start; gap:12px; flex:1;">
                                 ${checkBtnHtml}
                                 <div style="flex:1;" onclick="if(!${t.requiresPhoto}) toggleTodo('${t.id}', ${t.done})">
-                                    <div style="font-size:14px; font-weight:600; text-decoration:${t.done ? 'line-through' : 'none'}; color:${t.done ? 'var(--text-muted)' : 'var(--text-main)'}; cursor:pointer;">${t.text} ${badgeHtml}</div>
+                                    <div style="font-size:14px; font-weight:600; text-decoration:${t.done ? 'line-through' : 'none'}; color:${t.done ? 'var(--text-muted)' : 'var(--text-main)'}; cursor:pointer;">${esc(t.text)} ${badgeHtml}</div>
                                     ${imgHtml}
-                                    <div style="font-size:11px; color:var(--text-muted); margin-top:6px;">Ekleyen: ${t.addedBy.split(' ')[0]}</div>
+                                    <div style="font-size:11px; color:var(--text-muted); margin-top:6px;">Ekleyen: ${esc(t.addedBy.split(' ')[0])}</div>
                                 </div>
                             </div>
                             ${(currentUser.role === 'admin' || t.addedBy === currentUser.name) ? `
@@ -1670,7 +1681,9 @@
                         </div>
                     `;
                 }
-            });
+            }).join('');
+
+            container.innerHTML = html;
             renderMyTasksWidget(); 
         }
 
@@ -1756,38 +1769,109 @@
                 if(pins.length === 0) {
                     shiftContainer.innerHTML = `<div style="font-size:12px; color:var(--text-muted); padding:15px; border:1px dashed var(--border); border-radius:var(--radius-sm); text-align:center;">Şu an aktif mesaide personel yok.</div>`;
                 } else {
-                    pins.forEach(p => {
+                    const html = pins.map(p => {
                         const s = activeShifts[p];
                         const timeString = new Date(s.loginTime).toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'});
-                        shiftContainer.innerHTML += `
+                        return `
                             <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; background:var(--surface-solid); border:1px solid var(--border); border-left:4px solid var(--success); border-radius:var(--radius-md); margin-bottom:8px; box-shadow:var(--shadow-sm);">
-                                <div style="font-weight:700; font-size:14px; color:var(--text-main);"><i class="fa-solid fa-user-circle" style="color:var(--text-muted); margin-right:4px;"></i> ${s.name}</div>
+                                <div style="font-weight:700; font-size:14px; color:var(--text-main);"><i class="fa-solid fa-user-circle" style="color:var(--text-muted); margin-right:4px;"></i> ${esc(s.name)}</div>
                                 <div style="font-size:11px; color:var(--text-muted); font-weight:600;"><i class="fa-regular fa-clock"></i> Giriş: ${timeString}</div>
                             </div>
                         `;
-                    });
+                    }).join('');
+                    shiftContainer.innerHTML = html;
                 }
             }
         }
 
-        function renderUsersList() {
-            const container = document.getElementById('usersList'); container.innerHTML = '';
-            for(const [pin, u] of Object.entries(usersDB)) {
-                const roleClass = u.role === 'admin' ? 'role-admin' : 'role-staff';
-                const roleText = u.role === 'admin' ? 'Yönetici' : 'Personel';
-                container.innerHTML += `
-                    <div class="user-row">
-                        <div>
-                            <div style="font-weight:700; font-size:15px; color:var(--text-main);">${u.name}</div>
-                            <div style="font-size:12px; color:var(--text-muted); margin-top:4px; font-family:monospace;">PIN: ${pin}</div>
-                        </div>
-                        <div style="display:flex; align-items:center; gap:12px;">
-                            <span class="role-badge ${roleClass}">${roleText}</span>
-                            ${pin !== '1923' ? `<button onclick="deleteUser('${pin}')" style="background:var(--danger-light); width:32px; height:32px; border-radius:50%; border:none; color:var(--danger); cursor:pointer; transition:var(--transition); display:flex; align-items:center; justify-content:center;"><i class="fa-solid fa-trash"></i></button>` : ''}
+        function renderActiveList() {
+            const container = document.getElementById('activeList'); 
+            if(!container) return;
+            
+            if(activeItems.length === 0) { 
+                container.innerHTML = `<div style="text-align:center; padding:40px 20px; color:var(--text-muted); font-size:14px; background:var(--surface-solid); border-radius:var(--radius-md); box-shadow:var(--shadow-sm); border:1px solid var(--border);">Şu an aktif takip edilen ürün yok.</div>`; 
+                return; 
+            }
+            
+            const now = new Date().getTime();
+            
+            const html = activeItems.sort((a,b) => new Date(a.expiresAt) - new Date(b.expiresAt)).map(item => {
+                const target = new Date(item.expiresAt).getTime();
+                const total = target - new Date(item.startedAt).getTime();
+                const diff = target - now;
+                
+                let timeStr = "", color = "var(--success)";
+                let percent = Math.max(0, Math.min(100, (diff / total) * 100));
+
+                if(diff <= 0) { 
+                    timeStr = "SÜRESİ DOLDU"; color = "var(--danger)"; percent = 0; 
+                } else {
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    
+                    if (days > 0) { timeStr = `${days} Gün ${hours}s ${mins}d`; } 
+                    else if (hours > 0) { timeStr = `${hours} Saat ${mins} Dak`; } 
+                    else { timeStr = `${mins} Dakika`; }
+
+                    if(percent < 20) color = "var(--danger)"; 
+                    else if(percent < 40) color = "var(--warning)";
+                }
+
+                const isSelected = selectedBulkItems.includes(item.id) ? 'selected' : '';
+                const touchEvents = isBulkMode ? `onclick="toggleBulkItem('${item.id}')"` : `ontouchstart="handleTS(event, '${item.id}')" ontouchmove="handleTM(event, '${item.id}')" ontouchend="handleTE(event, '${item.id}')"`;
+
+                return `
+                    <div class="swipe-container ${isSelected}" id="swipe-${item.id}">
+                        ${!isBulkMode ? `
+                        <div class="swipe-bg">
+                            <div class="bg-left"><i class="fa-solid fa-box-open"></i></div>
+                            <div class="bg-right"><i class="fa-solid fa-trash"></i></div>
+                        </div>` : ''}
+                        
+                        <div class="active-card" id="card-${item.id}" ${touchEvents} style="border-left-color:${color};">
+                            <div class="bulk-checkbox"><i class="fa-solid fa-check"></i></div>
+                            <div style="flex:1;">
+                                <div style="display:flex; justify-content:space-between; align-items:center;">
+                                    <div style="font-weight:700; font-size:16px; color:var(--text-main);">
+                                        <i class="fa-solid ${item.icon}" style="color:${color}; margin-right:8px; font-size:14px;"></i> ${esc(item.name)}
+                                    </div>
+                                    <div style="font-size:11px; color:var(--text-muted); font-weight:600;">
+                                        ${esc(item.startedBy.split(' ')[0])}
+                                    </div>
+                                </div>
+                                <div class="timer-display" style="color:${color};">${timeStr}</div>
+                                <div class="progress-track"><div class="progress-fill" style="width:${percent}%; background:${color};"></div></div>
+                            </div>
                         </div>
                     </div>
                 `;
-            }
+            }).join('');
+
+            container.innerHTML = html;
+        }
+
+        function renderUsersList() {
+            const container = document.getElementById('usersList'); 
+            
+            const html = Object.entries(usersDB).map(([pin, u]) => {
+                const roleClass = u.role === 'admin' ? 'role-admin' : 'role-staff';
+                const roleText = u.role === 'admin' ? 'Yönetici' : 'Personel';
+                return `
+                    <div class="user-row">
+                        <div>
+                            <div style="font-weight:700; font-size:15px; color:var(--text-main);">${esc(u.name)}</div>
+                            <div style="font-size:12px; color:var(--text-muted); margin-top:4px; font-family:monospace;">PIN: ${esc(pin)}</div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <span class="role-badge ${roleClass}">${roleText}</span>
+                            ${pin !== '1923' ? `<button onclick="deleteUser('${esc(pin)}')" style="background:var(--danger-light); width:32px; height:32px; border-radius:50%; border:none; color:var(--danger); cursor:pointer; transition:var(--transition); display:flex; align-items:center; justify-content:center;"><i class="fa-solid fa-trash"></i></button>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            container.innerHTML = html;
         }
 
         function addUser() {
@@ -1818,11 +1902,18 @@
         function toggleTheme() { isDark = !isDark; safeSetLocal('kd_theme', isDark ? 'dark' : 'light'); document.body.classList.toggle('dark-mode', isDark); updateThemeIcon(); renderLibraryDrumpad(); }
         function updateThemeIcon() { const i = document.getElementById('themeIcon'); if(i) i.className = isDark ? "fa-solid fa-sun" : "fa-solid fa-moon"; }
         
-        function switchTab(tId, el) { 
+        // GÜNCELLEME: Alt sekmelerdeki renk vurgusu (Highlight) sorunu çözüldü
+        function switchTab(tId) { 
+            const map = { 'tab-home':'navHome', 'tab-library':'navLibrary', 'tab-active':'navActive', 'tab-todos':'navTodos', 'tab-order':'navOrder' };
             document.querySelectorAll('.tab-pane').forEach(e => e.classList.remove('active')); 
             document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active')); 
-            document.getElementById(tId).classList.add('active'); 
-            if(el) el.classList.add('active'); 
+            
+            const tb = document.getElementById(tId);
+            if(tb) tb.classList.add('active'); 
+            
+            const navEl = document.getElementById(map[tId]);
+            if(navEl) navEl.classList.add('active');
+            
             if(tId === 'tab-home') renderMyTasksWidget();
         }
 
