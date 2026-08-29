@@ -53,7 +53,7 @@
         body { font-family: -apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-color); color: var(--text-main); transition: background-color 0.3s; overflow-x: hidden; overscroll-behavior-y: none; }
         body.no-scroll { overflow: hidden; height: 100vh; touch-action: none; }
 
-        /* GİRİŞ EKRANI */
+        /* GİRİŞ EKRANI (Varsayılan olarak AÇIK - Beyaz ekranı önler) */
         #authScreen { position: fixed; inset: 0; background: var(--bg-color); z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
         .auth-card { background: var(--surface-solid); padding: 40px 25px; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); width: 100%; max-width: 380px; }
         .pin-display { font-size: 32px; letter-spacing: 8px; font-weight: 800; color: var(--text-main); margin: 20px 0; height: 40px; display: flex; justify-content: center; align-items: center; }
@@ -92,6 +92,7 @@
         .btn { border: none; border-radius: var(--radius-md); font-family: inherit; font-weight: 700; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: var(--transition); padding: 16px 20px; width: 100%; }
         .btn:active { transform: scale(0.97); opacity: 0.9; }
         .btn-primary { background: var(--accent); color: white; box-shadow: var(--shadow-sm); }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
 
         /* CHIPS */
         .chips-container { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; scrollbar-width: none; scroll-behavior: smooth; }
@@ -102,7 +103,7 @@
         .form-input { width: 100%; padding: 16px 20px; background: var(--surface-solid); border: 1px solid var(--border); border-radius: var(--radius-md); font-family: inherit; font-size: 15px; font-weight: 500; color: var(--text-main); margin-bottom: 15px; transition: var(--transition); box-shadow: var(--shadow-sm); outline: none;}
         .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-light); }
 
-        /* DASHBOARD GRID */
+        /* DASHBOARD GRID (ANA SAYFA) */
         .dashboard-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
         .dash-card { background: var(--surface-solid); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 20px 15px; text-align: center; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-sm); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
         .dash-card:active { transform: scale(0.95); }
@@ -188,8 +189,8 @@
 </head>
 <body>
 
-    <!-- GİRİŞ EKRANI (PIN) -->
-    <div id="authScreen" style="display:none;">
+    <!-- GİRİŞ EKRANI (JS Hatası Olsa Bile Ekranda Kalır) -->
+    <div id="authScreen">
         <div class="auth-card">
             <i class="fa-solid fa-shield-check" style="font-size: 40px; color: var(--accent); margin-bottom:15px;"></i>
             <h2 style="color:var(--text-main); font-weight:700; font-size:22px;">Personel Girişi</h2>
@@ -246,15 +247,15 @@
             <!-- 2. ÜRETİM (DRUMPAD) -->
             <div id="tab-library" class="tab-pane">
 
-                <!-- Arama Motoru, Kamera Notu ve Sesli Komut -->
+                <!-- Arama Motoru, Kamera ve Sesli Komut -->
                 <div style="display:flex; gap:10px; margin-bottom: 20px; align-items:center;">
                     <div style="position: relative; flex: 1;">
                         <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 18px; top: 16px; color: var(--text-muted);"></i>
                         <input type="text" id="libSearchInput" class="form-input" style="padding-left: 45px; padding-right:40px; margin-bottom: 0; border-radius: 30px;" placeholder="Ürün ara..." onkeyup="handleSearchInput()">
                         <i class="fa-solid fa-xmark" id="clearSearchBtn" style="position: absolute; right: 18px; top: 16px; color: var(--text-muted); cursor: pointer; display: none;" onclick="clearSearch()"></i>
                     </div>
+                    <!-- Kamera Not İkonu -->
                     <button class="icon-btn" style="width: 50px; height: 50px; border-radius: 50%; flex-shrink:0; background: var(--surface-solid);" onclick="triggerFreeCamera()"><i class="fa-solid fa-camera"></i></button>
-                    <!-- Gizli Input -->
                     <input type="file" accept="image/*" capture="environment" id="cameraInput" style="display:none;" onchange="handleCameraUpload(event)">
                     
                     <button class="icon-btn" id="voiceBtn" style="width: 50px; height: 50px; border-radius: 50%; flex-shrink:0; background: var(--accent); color: white; border: none;" onclick="startVoiceSearch()"><i class="fa-solid fa-microphone"></i></button>
@@ -319,7 +320,7 @@
                 <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px; align-items:center; background:var(--surface-solid); padding:15px; border-radius:var(--radius-md); border:1px solid var(--border); box-shadow:var(--shadow-sm);">
                     <input type="text" id="todoInput" class="form-input" style="margin-bottom:0; flex:1; min-width: 150px;" placeholder="Yeni görev yazın...">
                     
-                    <select id="todoAssignee" class="form-input" style="width:120px; margin-bottom:0; padding: 10px; font-size: 13px; display:none;" onmousedown="populateAssignees(this)">
+                    <select id="todoAssignee" class="form-input" style="width:120px; margin-bottom:0; padding: 10px; font-size: 13px; display:none;" onfocus="updateAssigneeDropdown()">
                         <option value="ALL">Herkese</option>
                     </select>
 
@@ -427,13 +428,48 @@
         </div>
     </div>
 
+    <!-- YÖNETİCİ MENÜSÜ MODALI -->
+    <div class="modal-overlay" id="adminModal">
+        <div class="modal-content">
+            <div class="drag-handle"></div>
+            <h3 style="font-size:22px; font-weight:700; margin-bottom:20px; color:var(--text-main);">Yönetici Paneli</h3>
+            
+            <div id="adminDashboardSection">
+                <h4 style="font-size:14px; font-weight:700; color:var(--text-main); margin-bottom:10px;">Haftalık Operasyon Özeti</h4>
+                <div class="dashboard-stats" id="dashboardStatsContainer">
+                    <div class="stat-card success"><div class="value">0</div><div class="label">BAŞARILI</div></div>
+                    <div class="stat-card danger"><div class="value">0</div><div class="label">FİRE</div></div>
+                </div>
+            </div>
+
+            <!-- CANLI MESAİ RADARI -->
+            <div id="adminActiveShiftsSection" style="margin-top:20px; margin-bottom:15px;">
+                <h4 style="font-size:14px; font-weight:700; color:var(--text-main); margin-bottom:10px;"><i class="fa-solid fa-satellite-dish" style="color:var(--accent);"></i> Aktif Mesaidekiler</h4>
+                <div id="activeShiftsContainer"></div>
+            </div>
+
+            <div class="admin-grid" style="margin-top:15px; display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                <div class="admin-card" onclick="closeModal('adminModal'); openModal('usersModal');" style="background:var(--bg-color); border:none; padding:15px; border-radius:var(--radius-md); text-align:center; cursor:pointer;">
+                    <i class="fa-solid fa-users" style="color:var(--accent); font-size:24px; margin-bottom:8px;"></i>
+                    <div style="font-weight:600; font-size:13px; color:var(--text-main);">Personel Yönetimi</div>
+                </div>
+                <div class="admin-card" onclick="closeModal('adminModal'); openModal('logsModal');" style="background:var(--bg-color); border:none; padding:15px; border-radius:var(--radius-md); text-align:center; cursor:pointer;">
+                    <i class="fa-solid fa-clipboard-list" style="color:var(--warning); font-size:24px; margin-bottom:8px;"></i>
+                    <div style="font-weight:600; font-size:13px; color:var(--text-main);">Sistem Logları</div>
+                </div>
+            </div>
+            
+            <button class="btn" style="margin-top:25px; background:var(--danger-light); color:var(--danger);" onclick="executeLogout()">Sistemden Komple Çıkış Yap</button>
+        </div>
+    </div>
+
     <!-- PERSONEL YÖNETİMİ MODALI -->
     <div class="modal-overlay" id="usersModal">
         <div class="modal-content">
             <div class="drag-handle"></div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                 <h3 style="font-size:22px; font-weight:700; color:var(--text-main);">Kullanıcılar</h3>
-                <button onclick="closeModal('usersModal');" style="background:none; border:none; font-size:16px; font-weight:600; color:var(--accent); cursor:pointer;">Kapat</button>
+                <button onclick="closeModal('usersModal'); openModal('adminModal');" style="background:none; border:none; font-size:16px; font-weight:600; color:var(--accent); cursor:pointer;">Geri</button>
             </div>
             <div class="modal-body" id="usersList" style="max-height: 40vh; margin-bottom:15px;"></div>
             
@@ -452,58 +488,19 @@
         </div>
     </div>
 
-    <!-- YENİ ÜRÜN EKLE MODALI -->
-    <div class="modal-overlay" id="addProdModal">
-        <div class="modal-content">
-            <div class="drag-handle"></div>
-            <h3 style="font-size:22px; font-weight:700; margin-bottom:20px; color:var(--text-main);">Yeni Ürün</h3>
-            <input type="text" id="newProdName" class="form-input" placeholder="Ürün Adı">
-            <select id="newProdCat" class="form-input">
-                <option value="Şarküteri, Süt ve Soslar">Süt ve Soslar</option>
-                <option value="Paketli & Kuru Gıdalar">Kuru Gıdalar</option>
-                <option value="Meyve ve Sebze">Meyve/Sebze</option>
-                <option value="Çözündürülen / Dökme / Teşhir">Teşhir/Çözündürülen</option>
-                <option value="Kahveler, İçecekler ve Ön Hazırlık">Kahveler/Ön Haz.</option>
-                <option value="Paketli Şarküteri">Paketli Şarküteri</option>
-            </select>
-            <div style="display:flex; gap:10px; margin-bottom: 25px;">
-                <input type="number" id="newProdTime" class="form-input" placeholder="Süre" style="flex:1; margin-bottom: 0;">
-                <select id="newProdUnit" class="form-input" style="flex:1; margin-bottom: 0;">
-                    <option value="Gün">Gün</option>
-                    <option value="Ay">Ay</option>
-                    <option value="Yıl">Yıl</option>
-                    <option value="Günlük">Gün Sonu</option>
-                    <option value="ORJ SKT">ORJ SKT</option>
-                    <option value="Hemen Kullandır">Hemen</option>
-                </select>
-            </div>
-            <button class="btn btn-primary" onclick="saveCustomProduct()">Kütüphaneye Ekle</button>
-        </div>
-    </div>
-
-    <!-- GİZLİ REÇETE MODALI -->
-    <div class="modal-overlay" id="recipeModal">
-        <div class="modal-content">
-            <div class="drag-handle"></div>
-            <h3 id="recipeTitle" style="font-size:20px; font-weight:800; color:var(--text-main); margin-bottom:15px; display:flex; align-items:center; gap:8px;"></h3>
-            <div id="recipeContent" style="color:var(--text-main); font-size:15px; font-weight:500; line-height:1.6; white-space: pre-wrap; background: var(--bg-color); padding: 20px; border-radius: var(--radius-md); border:1px solid var(--border);"></div>
-            <button class="btn" style="margin-top:25px; background:var(--surface-solid); color:var(--text-main); border:1px solid var(--border);" onclick="closeModal('recipeModal')">Kapat</button>
-        </div>
-    </div>
-
     <div id="toastNotification" class="toast"></div>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <script>
-        // GLOBALS
+        // GLOBALS AND LIBRARIES (En tepede tanımlandı, JS çökmesini önler)
         let db = null;
         let currentUser = null; 
         let currentPin = "";
         let usersDB = { "1923": { name: "Yusuf (Yönetici)", role: "admin", pin: "1923" } };
         
-        const dbRoot = 'kd_kordon_pro_v23'; 
+        const dbRoot = 'kd_kordon_pro_v24'; 
         let isAppLaunched = false;
         let isBulkMode = false;
         let isEditMode = false;
@@ -523,12 +520,6 @@
         };
 
         const catIcons = { "Şarküteri, Süt ve Soslar": "fa-cheese", "Paketli & Kuru Gıdalar": "fa-box", "Meyve ve Sebze": "fa-apple-whole", "Çözündürülen / Dökme / Teşhir": "fa-ice-cream", "Kahveler, İçecekler ve Ön Hazırlık": "fa-mug-hot", "Paketli Şarküteri": "fa-bacon" };
-
-        const secretRecipes = {
-            "Cold Brew": "1. 1/10 oranında kalın öğütülmüş kahve tart.\n2. Bez veya kağıt filtreye yerleştir.\n3. Soğuk suyu yavaşça dök, tüm kahvenin ıslandığına emin ol.\n4. Ağzı kapalı şekilde +4°C dolapta 16-20 saat arası demlenmeye bırak.\n5. Süre bitiminde filtreyi al ve ürünü DRAFT fıçısına aktar.",
-            "Limonata": "1. 1 LT Taze Sıkılmış Limon Suyu\n2. 1 LT Şeker Şurubu\n3. 3 LT İçme Suyu ekle.\n4. İyice karıştır ve +4°C dolaba al. (Toplam 5 LT ürün elde edilir).",
-            "Mğz.da Çekilen Türk Kahvesi": "1. Türk kahvesi değirmenini en ince ayara al.\n2. Sadece günlük tüketilecek kadar (max 1-2 kg) taze çekim yap.\n3. Hava almayan opak kaplarda muhafaza et.\nNot: Kesinlikle ertesi güne çekilmiş kahve devretme."
-        };
 
         const defaultLibrary = [
             {id:"L1", kategori:"Şarküteri, Süt ve Soslar", urun:"Süzme Beyaz Peynir", raf_omru:3, birim:"Gün"},
@@ -661,35 +652,39 @@
             {id:"L111", kategori:"Paketli & Kuru Gıdalar", urun:"Fıstık Tane", raf_omru:1, birim:"Ay"},
             {id:"L112", kategori:"Paketli & Kuru Gıdalar", urun:"Kavanoz Vişne Sos", raf_omru:3, birim:"Gün"}
         ];
+
         let libraryDB = [...defaultLibrary];
 
-        function normalizeTR(str) {
-            return str.replace(/İ/g, 'i').replace(/I/g, 'ı').toLowerCase();
-        }
-
-        // GÜVENLİ LOCALSTORAGE
+        // GÜVENLİ LOCALSTORAGE FONKSİYONLARI
         function safeSetLocal(key, val) { try { localStorage.setItem(key, val); } catch(e) {} }
         function safeGetLocal(key) { try { return localStorage.getItem(key); } catch(e) { return null; } }
         function safeRemoveLocal(key) { try { localStorage.removeItem(key); } catch(e) {} }
 
-        // SIFIR GECİKME İLE BAŞLAT
+        // SİSTEM BAŞLATICI (Sıfır Gecikme)
         document.addEventListener("DOMContentLoaded", () => {
+            // Yükleme ekranı asla çıkmayacak
             const spinner = document.getElementById('fullScreenSpinner');
             if(spinner) spinner.style.display = 'none';
 
+            // Temayı ayarla
             let isDark = false;
             try { isDark = localStorage.getItem('kd_theme') === 'dark'; } catch(e){}
             if(isDark) document.body.classList.add('dark-mode');
             updateThemeIcon();
 
+            // Sürükleme ve Kaydırmaları başlat
             initModalDragging();
             initSwipeNavigation();
             
+            // Saati başlat
             setInterval(updateDateTime, 1000);
             updateDateTime();
 
+            // ADIM 1: ARAYÜZÜ ANINDA GÖSTER (Hiçbir şeyi bekleme)
             showLoginOrApp();
-            setTimeout(initDatabase, 50);
+
+            // ADIM 2: Firebase'i arka planda sessizce başlat
+            setTimeout(initDatabase, 100);
         });
 
         function updateDateTime() {
@@ -699,10 +694,12 @@
             
             const clockEl = document.getElementById('clockDisplay');
             const dateEl = document.getElementById('dateDisplay');
+            
             if(clockEl) clockEl.innerText = timeStr;
             if(dateEl) dateEl.innerText = dateStr;
         }
 
+        // MENÜLERİ AŞAĞI KAYDIRARAK KAPATMA
         function initModalDragging() {
             let modalStartY = 0;
             let currentModal = null;
@@ -761,14 +758,8 @@
                         }
                         
                         if (isAppLaunched) {
-                            if(currentUser && currentUser.role === 'admin') {
-                                const ta = document.getElementById('todoAssignee');
-                                const tq = document.getElementById('todoPhotoReqLabel');
-                                if(ta) ta.style.display = 'block';
-                                if(tq) tq.style.display = 'flex';
-                            }
-                            const um = document.getElementById('usersModal');
-                            if(um && um.classList.contains('active')) {
+                            updateAssigneeDropdown();
+                            if(document.getElementById('usersModal').classList.contains('active')) {
                                 renderUsersList();
                             }
                         }
@@ -776,13 +767,13 @@
 
                     db.ref(`${dbRoot}/active_shifts`).on('value', snap => {
                         activeShifts = snap.val() || {};
-                        const am = document.getElementById('adminModal');
-                        if(am && am.classList.contains('active')) {
+                        if(document.getElementById('adminModal').classList.contains('active')) {
                             renderAdminDashboard();
                         }
                     });
 
-                    syncDataBackground();
+                    // Eğer giriş yapıldıysa dataları çek
+                    if(isAppLaunched) syncDataBackground();
                 }
             } catch(e) {
                 console.warn("Bulut bağlantısı reddedildi, yerel mod çalışıyor.");
@@ -790,14 +781,12 @@
         }
 
         function syncDataBackground() {
-            if(!db) return;
+            if(!db || !currentUser) return;
             
-            if(currentUser && currentUser.pin) {
-                db.ref(`${dbRoot}/active_shifts/${currentUser.pin}`).set({
-                    name: currentUser.name,
-                    loginTime: Date.now()
-                });
-            }
+            db.ref(`${dbRoot}/active_shifts/${currentUser.pin}`).set({
+                name: currentUser.name,
+                loginTime: Date.now()
+            });
 
             db.ref(`${dbRoot}/library`).on('value', snap => {
                 const data = snap.val();
@@ -806,22 +795,19 @@
 
             db.ref(`${dbRoot}/active`).on('value', snap => {
                 activeItems = snap.val() ? Object.values(snap.val()) : [];
-                const ta = document.getElementById('tab-active');
-                if(ta && ta.classList.contains('active')) renderActiveList();
+                if(document.getElementById('tab-active').classList.contains('active')) renderActiveList();
             });
+
             db.ref(`${dbRoot}/todos`).on('value', snap => {
                 todos = snap.val() ? Object.values(snap.val()) : [];
-                const tt = document.getElementById('tab-todos');
-                if(tt && tt.classList.contains('active')) renderTodos();
+                if(document.getElementById('tab-todos').classList.contains('active')) renderTodos();
             });
+
             db.ref(`${dbRoot}/logs`).on('value', snap => {
                 allLogs = snap.val() ? Object.values(snap.val()) : [];
-                const am = document.getElementById('adminModal');
-                const lm = document.getElementById('logsModal');
-                const gm = document.getElementById('galleryModal');
-                if(am && am.classList.contains('active')) renderAdminDashboard();
-                if(lm && lm.classList.contains('active')) renderLogsList();
-                if(gm && gm.classList.contains('active')) renderGallery();
+                if(document.getElementById('adminModal').classList.contains('active')) renderAdminDashboard();
+                if(document.getElementById('logsModal').classList.contains('active')) renderLogsList();
+                if(document.getElementById('galleryModal').classList.contains('active')) renderGallery();
             });
         }
 
@@ -847,6 +833,7 @@
                         name: currentUser.name,
                         loginTime: Date.now()
                     });
+                    syncDataBackground(); // Giriş yapınca dataları çek
                 }
 
                 const authScr = document.getElementById('authScreen');
@@ -857,84 +844,6 @@
                 clearPin();
                 if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
             }
-        }
-        
-        function triggerLogoutFlow() {
-            closeModal('profileModal');
-            const container = document.getElementById('dynamicChecklistContainer');
-            if(!container) return;
-            container.innerHTML = '';
-            
-            const standards = [
-                "Kasa sayımı eksiksiz tamamlandı.",
-                "Çöpler atıldı, bar temizlendi.",
-                "Dolap dereceleri kontrol edildi.",
-                "Gün sonu fişleri ve evraklar düzenlendi."
-            ];
-            standards.forEach(text => {
-                container.innerHTML += `<label class="closing-cb-label"><input type="checkbox" class="closing-cb"> <span>${text}</span></label>`;
-            });
-
-            const myTasks = todos.filter(t => !t.done && (t.assignedTo === currentUser.pin));
-            if(myTasks.length > 0) {
-                container.innerHTML += `<hr style="border:0; border-top:1px dashed var(--border); margin:15px 0;">`;
-                container.innerHTML += `<h5 style="color:var(--danger); font-size:12px; font-weight:800; margin-bottom:10px;">SİZE ATANAN ÖZEL GÖREVLER</h5>`;
-                myTasks.forEach(t => {
-                    let photoReqHtml = t.requiresPhoto ? `<span style="background:var(--warning-light); color:var(--warning); padding:2px 6px; border-radius:10px; font-size:9px; font-weight:800; margin-left:6px;"><i class="fa-solid fa-camera"></i> FOTO ZORUNLU</span>` : '';
-                    if(t.requiresPhoto) {
-                        container.innerHTML += `<label class="closing-cb-label" style="opacity:0.6;"><input type="checkbox" disabled> <span style="color:var(--danger); font-weight:700;">${t.text} ${photoReqHtml} (Görevler panosundan foto ekleyiniz)</span></label>`;
-                    } else {
-                        container.innerHTML += `<label class="closing-cb-label"><input type="checkbox" class="closing-cb dynamic-task" data-id="${t.id}"> <span style="color:var(--danger); font-weight:700;">${t.text}</span></label>`;
-                    }
-                });
-            }
-
-            openModal('checklistModal');
-        }
-
-        function showSummary() {
-            closeModal('checklistModal');
-            
-            document.querySelectorAll('.dynamic-task').forEach(cb => {
-                if(cb.checked) {
-                    const tid = cb.getAttribute('data-id');
-                    const t = todos.find(x => x.id === tid);
-                    if(t && !t.requiresPhoto) {
-                        t.done = true;
-                        if(db) db.ref(`${dbRoot}/todos/${tid}`).update({done: true});
-                    }
-                }
-            });
-
-            const todayStr = new Date().toLocaleDateString('tr-TR');
-            const myLogs = allLogs.filter(l => l.user === currentUser.name && l.date.includes(todayStr));
-            const completedCount = myLogs.filter(l => l.action.includes('Tüketildi') || l.action.includes('İmha')).length;
-            
-            const allCheckboxes = document.querySelectorAll('.closing-cb');
-            let checkedCount = 0;
-            allCheckboxes.forEach(cb => { if(cb.checked) checkedCount++; });
-            
-            const score = allCheckboxes.length > 0 ? Math.round((checkedCount / allCheckboxes.length) * 100) : 100;
-
-            let scoreText = score === 100 ? "KUSURSUZ VARDİYA!" : (score >= 50 ? "İDARE EDER" : "DİKKATSİZ!");
-            let scoreColor = score === 100 ? "var(--success)" : (score >= 50 ? "var(--warning)" : "var(--danger)");
-
-            let summaryHtml = `Bugün senin vardiyanda toplam <b>${completedCount}</b> ürün işlemi yapıldı.<br><br>
-            <div style="font-size: 42px; font-weight: 800; color: ${scoreColor}; margin: 10px 0;">%${score}</div>
-            <div style="font-weight:700; color:${scoreColor}; margin-bottom:20px; font-size:14px;">VARDİYA PUANI (${scoreText})</div>
-            Günün yorgunluğunu atma vakti geldi, iyi dinlenmeler!`;
-            
-            const sumText = document.getElementById('summaryText');
-            if(sumText) sumText.innerHTML = summaryHtml;
-            openModal('summaryModal');
-            
-            logAction("Vardiya Kapanışı", `Puan: %${score}`);
-            if(db) db.ref(`${dbRoot}/active_shifts/${currentUser.pin}`).remove();
-        }
-
-        function executeLogout() {
-            safeRemoveLocal('kd_saved_pin');
-            location.reload();
         }
 
         function launchApp() {
@@ -957,6 +866,8 @@
             
             const welcome = document.getElementById('welcomeName');
             if(welcome) welcome.innerText = currentUser.name.split(' ')[0];
+
+            updateAssigneeDropdown();
 
             if(currentUser.role === 'admin') {
                 const adminBtn = document.getElementById('adminBtn');
@@ -1020,34 +931,9 @@
             }
         }
 
-        function initSwipeNavigation() {
-            let dragStartX = 0;
-            const container = document.getElementById('drumpadContainer');
-            if(!container) return;
-            container.addEventListener('touchstart', e => { dragStartX = e.touches[0].clientX; }, {passive: true});
-            container.addEventListener('touchend', e => {
-                let dragEndX = e.changedTouches[0].clientX;
-                let diff = dragStartX - dragEndX;
-                
-                if (Math.abs(diff) > 70) {
-                    let chips = Array.from(document.querySelectorAll('#libChips .chip'));
-                    let idx = chips.findIndex(c => c.classList.contains('active'));
-                    
-                    if (diff > 0 && idx < chips.length - 1) {
-                        chips[idx + 1].click();
-                    } else if (diff < 0 && idx > 0) {
-                        chips[idx - 1].click();
-                    }
-                    
-                    setTimeout(() => {
-                        let activeChip = document.querySelector('#libChips .chip.active');
-                        if(activeChip) activeChip.scrollIntoView({behavior: "smooth", inline: "center", block: "nearest"});
-                    }, 50);
-                }
-            });
+        function normalizeTR(str) {
+            return str.replace(/İ/g, 'i').replace(/I/g, 'ı').toLowerCase();
         }
-
-        let currentLibFilter = 'Tümü';
 
         function filterLib(cat, el) {
             document.querySelectorAll('#libChips .chip').forEach(c => c.classList.remove('active'));
@@ -1074,8 +960,8 @@
             if(!container) return;
             container.innerHTML = '';
             
-            const sInp = document.getElementById('libSearchInput');
-            const searchTerm = sInp ? normalizeTR(sInp.value) : "";
+            const searchInput = document.getElementById('libSearchInput');
+            const searchTerm = searchInput ? normalizeTR(searchInput.value) : "";
             
             const filtered = libraryDB.filter(p => currentLibFilter === 'Tümü' || p.kategori === currentLibFilter)
                                       .filter(p => normalizeTR(p.urun).includes(searchTerm));
@@ -1234,6 +1120,7 @@
             if(navigator.vibrate) navigator.vibrate(50);
         }
 
+        // AKILLI SESLİ ARAMA (İNGİLİZCE OKUNUŞ DÜZELTİCİ)
         function startVoiceSearch() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRecognition) {
@@ -1269,6 +1156,8 @@
                                        .replace(/kold brew/g, 'cold brew')
                                        .replace(/kol bru/g, 'cold brew')
                                        .replace(/kold/g, 'cold')
+                                       .replace(/vold brew/g, 'cold brew')
+                                       .replace(/gold brew/g, 'cold brew')
                                        .replace(/dırıft/g, 'draft')
                                        .replace(/dıraf/g, 'draft')
                                        .replace(/duraft/g, 'draft')
@@ -1300,7 +1189,7 @@
         function triggerFreeCamera() {
             const camInp = document.getElementById('cameraInput');
             const targetInp = document.getElementById('cameraTargetTaskId');
-            if(targetInp) targetInp.value = ""; // Görev ID'sini sıfırla, serbest mod
+            if(targetInp) targetInp.value = ""; 
             if(camInp) camInp.click();
         }
 
@@ -1412,6 +1301,7 @@
             showToast("Sadece log kayıtlarına eklendi.");
         }
 
+        // GALERİ RENDER
         function renderGallery() {
             const container = document.getElementById('galleryGridArea');
             if(!container) return;
@@ -1499,6 +1389,33 @@
             });
         }
 
+        function initSwipeNavigation() {
+            let dragStartX = 0;
+            const container = document.getElementById('drumpadContainer');
+            if(!container) return;
+            container.addEventListener('touchstart', e => { dragStartX = e.touches[0].clientX; }, {passive: true});
+            container.addEventListener('touchend', e => {
+                let dragEndX = e.changedTouches[0].clientX;
+                let diff = dragStartX - dragEndX;
+                
+                if (Math.abs(diff) > 70) {
+                    let chips = Array.from(document.querySelectorAll('#libChips .chip'));
+                    let idx = chips.findIndex(c => c.classList.contains('active'));
+                    
+                    if (diff > 0 && idx < chips.length - 1) {
+                        chips[idx + 1].click();
+                    } else if (diff < 0 && idx > 0) {
+                        chips[idx - 1].click();
+                    }
+                    
+                    setTimeout(() => {
+                        let activeChip = document.querySelector('#libChips .chip.active');
+                        if(activeChip) activeChip.scrollIntoView({behavior: "smooth", inline: "center", block: "nearest"});
+                    }, 50);
+                }
+            });
+        }
+
         let tsx = 0, tcx = 0;
         function handleTS(e, id) { if(isBulkMode) return; tsx = e.touches[0].clientX; tcx = tsx; }
         function handleTM(e, id) { if(isBulkMode) return; tcx = e.touches[0].clientX; const diff = tcx - tsx; if(Math.abs(diff)>20) { const c = document.getElementById(`card-${id}`); if(c) c.style.transform = `translateX(${diff}px)`; } }
@@ -1528,7 +1445,9 @@
             if(am && am.classList.contains('active')) renderAdminDashboard();
         }
 
-        function populateAssignees(selectEl) {
+        function updateAssigneeDropdown() {
+            const selectEl = document.getElementById('todoAssignee');
+            if(!selectEl) return;
             const currentVal = selectEl.value;
             selectEl.innerHTML = '<option value="ALL">Herkese</option>';
             for(const pin in usersDB) {
@@ -1537,6 +1456,10 @@
                 }
             }
             selectEl.value = currentVal || 'ALL';
+        }
+
+        function populateAssignees(selectEl) {
+            updateAssigneeDropdown();
         }
 
         function addTodo() {
@@ -1787,24 +1710,7 @@
             const btn = document.getElementById('bellBtn');
             if(btn && "Notification" in window && Notification.permission === "granted") btn.style.display = 'none'; 
         }
-        function requestNotificationPermission() {
-            if(!("Notification" in window)) return alert("Tarayıcınız bildirimleri desteklemiyor.");
-            Notification.requestPermission().then(p => { 
-                const btn = document.getElementById('bellBtn');
-                if(p === "granted") { if(btn) btn.style.display = 'none'; showToast("Bildirimler açıldı."); } 
-            });
-        }
-        function sendPushNotification(title, body) {
-            if ("Notification" in window && Notification.permission === "granted") {
-                if(navigator.serviceWorker) { 
-                    navigator.serviceWorker.ready.then(reg => { 
-                        reg.showNotification(title, { body: body, icon: "https://cdn-icons-png.flaticon.com/512/3003/3003984.png", vibrate: [200, 100, 200] }); 
-                    }).catch(e=>{}); 
-                } else { 
-                    try { new Notification(title, { body: body }); } catch(e){}
-                }
-            }
-        }
+        
         function toggleTheme() { 
             isDark = !isDark; 
             safeSetLocal('kd_theme', isDark ? 'dark' : 'light'); 
@@ -1834,6 +1740,80 @@
             t.style.color = isErr ? '#FFF' : 'var(--text-main)'; 
             t.classList.add('show'); 
             setTimeout(()=>t.classList.remove('show'), 2500); 
+        }
+
+        // ÇIKIŞ VE DİNAMİK GÖREV ONAYI
+        function triggerLogoutFlow() {
+            closeModal('profileModal');
+            const container = document.getElementById('dynamicChecklistContainer');
+            if(!container) return;
+            container.innerHTML = '';
+            
+            const standards = [
+                "Kasa sayımı eksiksiz tamamlandı.",
+                "Çöpler atıldı, bar temizlendi.",
+                "Dolap dereceleri kontrol edildi.",
+                "Gün sonu fişleri ve evraklar düzenlendi."
+            ];
+            standards.forEach(text => {
+                container.innerHTML += `<label class="closing-cb-label"><input type="checkbox" class="closing-cb"> <span>${text}</span></label>`;
+            });
+
+            const myTasks = todos.filter(t => !t.done && (t.assignedTo === currentUser.pin));
+            if(myTasks.length > 0) {
+                container.innerHTML += `<hr style="border:0; border-top:1px dashed var(--border); margin:15px 0;">`;
+                container.innerHTML += `<h5 style="color:var(--danger); font-size:12px; font-weight:800; margin-bottom:10px;">SİZE ATANAN ÖZEL GÖREVLER</h5>`;
+                myTasks.forEach(t => {
+                    let photoReqHtml = t.requiresPhoto ? `<span style="background:var(--warning-light); color:var(--warning); padding:2px 6px; border-radius:10px; font-size:9px; font-weight:800; margin-left:6px;"><i class="fa-solid fa-camera"></i> FOTO ZORUNLU</span>` : '';
+                    if(t.requiresPhoto) {
+                        container.innerHTML += `<label class="closing-cb-label" style="opacity:0.6;"><input type="checkbox" disabled> <span style="color:var(--danger); font-weight:700;">${t.text} ${photoReqHtml} (Görevler panosundan foto ekleyiniz)</span></label>`;
+                    } else {
+                        container.innerHTML += `<label class="closing-cb-label"><input type="checkbox" class="closing-cb dynamic-task" data-id="${t.id}"> <span style="color:var(--danger); font-weight:700;">${t.text}</span></label>`;
+                    }
+                });
+            }
+
+            openModal('checklistModal');
+        }
+
+        function showSummary() {
+            closeModal('checklistModal');
+            
+            document.querySelectorAll('.dynamic-task').forEach(cb => {
+                if(cb.checked) {
+                    const tid = cb.getAttribute('data-id');
+                    const t = todos.find(x => x.id === tid);
+                    if(t && !t.requiresPhoto) {
+                        t.done = true;
+                        if(db) db.ref(`${dbRoot}/todos/${tid}`).update({done: true});
+                    }
+                }
+            });
+
+            const todayStr = new Date().toLocaleDateString('tr-TR');
+            const myLogs = allLogs.filter(l => l.user === currentUser.name && l.date.includes(todayStr));
+            const completedCount = myLogs.filter(l => l.action.includes('Tüketildi') || l.action.includes('İmha')).length;
+            
+            const allCheckboxes = document.querySelectorAll('.closing-cb');
+            let checkedCount = 0;
+            allCheckboxes.forEach(cb => { if(cb.checked) checkedCount++; });
+            
+            const score = allCheckboxes.length > 0 ? Math.round((checkedCount / allCheckboxes.length) * 100) : 100;
+
+            let scoreText = score === 100 ? "KUSURSUZ VARDİYA!" : (score >= 50 ? "İDARE EDER" : "DİKKATSİZ!");
+            let scoreColor = score === 100 ? "var(--success)" : (score >= 50 ? "var(--warning)" : "var(--danger)");
+
+            let summaryHtml = `Bugün senin vardiyanda toplam <b>${completedCount}</b> ürün işlemi yapıldı.<br><br>
+            <div style="font-size: 42px; font-weight: 800; color: ${scoreColor}; margin: 10px 0;">%${score}</div>
+            <div style="font-weight:700; color:${scoreColor}; margin-bottom:20px; font-size:14px;">VARDİYA PUANI (${scoreText})</div>
+            Günün yorgunluğunu atma vakti geldi, iyi dinlenmeler!`;
+            
+            const sumText = document.getElementById('summaryText');
+            if(sumText) sumText.innerHTML = summaryHtml;
+            openModal('summaryModal');
+            
+            logAction("Vardiya Kapanışı", `Puan: %${score}`);
+            if(db) db.ref(`${dbRoot}/active_shifts/${currentUser.pin}`).remove();
         }
 
     </script>
