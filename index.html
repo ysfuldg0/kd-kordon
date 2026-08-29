@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KD Kordon Pro - V27</title>
+    <title>KD Kordon Pro - V28</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -114,18 +114,24 @@
         .btn-count { background: var(--surface-solid); border: none; width: 34px; height: 34px; border-radius: 50%; font-size: 18px; font-weight: 500; color: var(--text-main); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); cursor: pointer; transition: var(--transition); }
         .btn-count:active { transform: scale(0.9); }
 
-        .drumpad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; min-height: 50vh; align-content: start; }
-        .pad { background: var(--surface-solid); border: 1px solid var(--border); border-radius: var(--radius-md); min-height: 105px; padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-sm); position: relative;}
-        .pad:active { transform: scale(0.95); background: var(--bg-color); }
-        .pad i { font-size: 26px; margin-bottom: 8px; transition: var(--transition); }
-        .pad-name { font-size: 11px; font-weight: 600; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: var(--text-main); }
-        .pad-time { position:absolute; top:6px; right:6px; font-size:9px; background: var(--bg-color); padding:4px 6px; border-radius:8px; font-weight:700; color:var(--text-muted); }
+        /* YENİ ÜRETİM LİSTESİ TASARIMI */
+        .library-list { display: flex; flex-direction: column; gap: 10px; min-height: 50vh; padding-bottom: 20px; }
+        .lib-item { background: var(--surface-solid); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px 16px; display: flex; align-items: center; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-sm); position: relative; }
+        .lib-item:active { transform: scale(0.98); background: var(--bg-color); }
+        .lib-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-right: 15px; flex-shrink: 0; }
+        .lib-info { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .lib-title { font-size: 14px; font-weight: 700; color: var(--text-main); line-height: 1.3; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .lib-desc { font-size: 11px; font-weight: 600; color: var(--text-muted); }
+        .lib-action { display: flex; align-items: center; gap: 8px; margin-left: 10px; }
+        .recipe-btn { width: 36px; height: 36px; border-radius: 50%; background: var(--warning-light); color: var(--warning); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; transition: var(--transition); flex-shrink: 0; }
+        .recipe-btn:active { transform: scale(0.9); }
+        .lib-add-btn { width: 36px; height: 36px; border-radius: 50%; background: var(--accent-light); color: var(--accent); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; flex-shrink: 0; }
         
-        .pad-delete { position: absolute; top: -8px; right: -8px; width: 28px; height: 28px; background: var(--danger); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; box-shadow: 0 4px 10px rgba(255, 59, 48, 0.4); opacity: 0; visibility: hidden; transform: scale(0.5); transition: var(--transition); z-index: 10; border: 2px solid var(--surface-solid); }
-        .drumpad-grid.edit-mode .pad-delete { opacity: 1; visibility: visible; transform: scale(1); }
-        .drumpad-grid.edit-mode .pad { border: 2px dashed var(--danger-light); background: var(--bg-color); box-shadow: none; }
-        .drumpad-grid.edit-mode .pad i, .drumpad-grid.edit-mode .pad-name { opacity: 0.5; }
+        .lib-item.edit-mode { border: 2px dashed var(--danger-light); background: var(--bg-color); box-shadow: none; }
+        .lib-item.edit-mode .lib-title, .lib-item.edit-mode .lib-desc { opacity: 0.5; }
+        .lib-delete-btn { width: 36px; height: 36px; border-radius: 50%; background: var(--danger); color: white; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; box-shadow: 0 4px 10px rgba(255,59,48,0.3); flex-shrink: 0; }
 
+        /* Aktif SKT Swipe & Toplu Seçim */
         .swipe-container { position: relative; overflow: hidden; border-radius: var(--radius-md); background: var(--bg-color); margin-bottom:12px; border: 1px solid var(--border); }
         .swipe-bg { position: absolute; inset:0; display:flex; justify-content:space-between; align-items:center; color:white; font-size:22px; font-weight:800; border-radius: var(--radius-md); overflow:hidden; }
         .bg-left { background: var(--accent); width: 50%; height: 100%; display:flex; align-items:center; padding-left: 20px; }
@@ -290,8 +296,8 @@
 
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                     <div>
-                        <h3 style="font-size: 22px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Üretim</h3>
-                        <p style="font-size:12px; color:var(--text-muted);">Reçeteler için ürüne basılı tutun.</p>
+                        <h3 style="font-size: 22px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Üretim Kütüphanesi</h3>
+                        <p style="font-size:12px; color:var(--text-muted);">Reçeteler için kitap simgesine dokunun.</p>
                     </div>
                     <div style="display:flex; gap:10px;">
                         <button id="editModeBtn" onclick="toggleEditMode()" style="display:none; background:var(--accent-light); color:var(--accent); border:none; border-radius:20px; padding:8px 16px; font-weight:600; font-size:13px; cursor:pointer; transition:var(--transition);">Düzenle</button>
@@ -308,7 +314,7 @@
                     <div class="chip" onclick="filterLib('Paketli & Kuru Gıdalar', this)">Kuru Gıdalar</div>
                 </div>
                 
-                <div class="drumpad-grid" id="drumpadContainer"></div>
+                <div class="library-list" id="drumpadContainer"></div>
             </div>
 
             <!-- 3. AKTİF TAKİP -->
@@ -363,7 +369,7 @@
             <button class="btn" style="flex:1; background:var(--danger); color:white;" onclick="processBulkItems('İmha Edildi')"><i class="fa-solid fa-trash"></i> İmha Et</button>
         </div>
 
-        <!-- BOTTOM NAV (Artık 4 Sekme) -->
+        <!-- BOTTOM NAV -->
         <nav class="bottom-nav">
             <div class="nav-item active" id="navHome" onclick="switchTab('tab-home')"><i class="fa-solid fa-house"></i><span>Ana Sayfa</span></div>
             <div class="nav-item" id="navLibrary" onclick="switchTab('tab-library')"><i class="fa-solid fa-layer-group"></i><span>Üretim</span></div>
@@ -386,7 +392,7 @@
     <div class="modal-overlay" id="cameraNoteModal" onclick="closeOnOutsideClick(event, 'cameraNoteModal')">
         <div class="modal-content" style="text-align: center;">
             <div class="drag-handle-area"><div class="drag-handle"></div></div>
-            <h3 style="font-size:20px; font-weight:700; margin-bottom:15px; color:var(--text-main);">Fotoğraflı Bilgi Notu</h3>
+            <h3 style="font-size:20px; font-weight:700; margin-bottom:15px; color:var(--text-main);">Fotoğraflı İşlem</h3>
             <img id="cameraPreviewImg" src="" style="width:100%; max-height: 250px; object-fit:cover; border-radius:var(--radius-md); margin-bottom:15px; border:1px solid var(--border); box-shadow:var(--shadow-sm);">
             
             <input type="text" id="cameraNoteTextInput" class="form-input" placeholder="Bu fotoğrafla ilgili açıklama yazın..." style="margin-bottom:15px;">
@@ -533,7 +539,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <script>
-        // GÜVENLİ LOCALSTORAGE FONKSİYONLARI
         function safeSetLocal(key, val) { try { localStorage.setItem(key, val); } catch(e) {} }
         function safeGetLocal(key) { try { return localStorage.getItem(key); } catch(e) { return null; } }
         function safeRemoveLocal(key) { try { localStorage.removeItem(key); } catch(e) {} }
@@ -555,7 +560,7 @@
         let currentPin = "";
         let usersDB = { "1923": { name: "Yusuf (Yönetici)", role: "admin", pin: "1923" } };
         
-        const dbRoot = 'kd_kordon_pro_v27'; // TERTEMİZ VERİTABANI
+        const dbRoot = 'kd_kordon_pro_v28'; 
         let isAppLaunched = false;
         let isBulkMode = false;
         let isEditMode = false;
@@ -564,7 +569,6 @@
         let activeItems = [], todos = [], allLogs = [];
         let undoTimeout = null, lastActionData = null;
 
-        // --- SİPARİŞ SİSTEMİ DEĞİŞKENLERİ ---
         const orderTemplates = {
             "Manav": ["Çilek", "Domates", "Salatalık", "Muz", "Havuç", "Portakal", "Limon", "Kıvırcık", "Maydanoz", "Nane", "Taze Zencefil"],
             "Süt": ["Tam Yağlı Süt (Koli)", "Laktozsuz Süt (Koli)", "Badem Sütü (Koli)", "Soya Sütü (Koli)", "Yulaf Sütü (Koli)", "Krema (Kutu)"],
@@ -598,7 +602,6 @@
             "Mğz.da Çekilen Türk Kahvesi": "1. Türk kahvesi değirmenini en ince ayara al.\n2. Sadece günlük tüketilecek kadar (max 1-2 kg) taze çekim yap.\n3. Hava almayan opak kaplarda muhafaza et.\nNot: Kesinlikle ertesi güne çekilmiş kahve devretme."
         };
 
-        // KÜTÜPHANENİN TAM HALİ
         const defaultLibrary = [
             {id:"L1", kategori:"Şarküteri, Süt ve Soslar", urun:"Süzme Beyaz Peynir", raf_omru:3, birim:"Gün"},
             {id:"L2", kategori:"Şarküteri, Süt ve Soslar", urun:"Krem Peynir", raf_omru:3, birim:"Gün"},
@@ -743,7 +746,6 @@
             if(spinner) spinner.style.display = 'none';
 
             updateThemeIcon();
-            initSwipeNavigation();
             initDragToClose(); 
             
             setInterval(updateDateTime, 1000);
@@ -808,30 +810,6 @@
             
             document.querySelectorAll('.clock-text').forEach(el => el.innerText = timeStr);
             document.querySelectorAll('.date-text').forEach(el => el.innerText = dateStr);
-        }
-
-        function initSwipeNavigation() {
-            let dragStartX = 0;
-            const container = document.getElementById('drumpadContainer');
-            if(!container) return;
-            container.addEventListener('touchstart', e => { dragStartX = e.touches[0].clientX; }, {passive: true});
-            container.addEventListener('touchend', e => {
-                let dragEndX = e.changedTouches[0].clientX;
-                let diff = dragStartX - dragEndX;
-                
-                if (Math.abs(diff) > 70) {
-                    let chips = Array.from(document.querySelectorAll('#libChips .chip'));
-                    let idx = chips.findIndex(c => c.classList.contains('active'));
-                    
-                    if (diff > 0 && idx < chips.length - 1) chips[idx + 1].click();
-                    else if (diff < 0 && idx > 0) chips[idx - 1].click();
-                    
-                    setTimeout(() => {
-                        let activeChip = document.querySelector('#libChips .chip.active');
-                        if(activeChip) activeChip.scrollIntoView({behavior: "smooth", inline: "center", block: "nearest"});
-                    }, 50);
-                }
-            });
         }
 
         function showLoginOrApp() {
@@ -945,8 +923,13 @@
             });
             db.ref(`${dbRoot}/shiftNote`).on('value', snap => {
                 const sn = document.getElementById('shiftNoteArea');
-                if(sn) sn.value = snap.val() || "";
+                if(sn && sn !== document.activeElement) sn.value = snap.val() || "";
             });
+        }
+
+        function updateShiftNote() {
+            const val = document.getElementById('shiftNoteArea').value;
+            if(db) db.ref(`${dbRoot}/shiftNote`).set(val);
         }
 
         function addPin(num) {
@@ -995,7 +978,7 @@
             
             showToast(`Hoşgeldin, ${currentUser.name.split(' ')[0]}`);
             
-            switchTab('tab-home', document.getElementById('navHome'));
+            switchTab('tab-home');
             loadOrderTemplate('Manav', document.querySelector('#tab-order .chip'));
             
             renderLibraryDrumpad();
@@ -1013,14 +996,14 @@
             const myTasks = (todos || []).filter(t => !t.done && !t.isInfo && (t.assignedTo === currentUser.pin || t.assignedTo === 'ALL'));
             
             if(myTasks.length === 0) {
-                container.innerHTML = `<div style="font-size:13px; color:var(--text-muted); text-align:center; padding:20px; background:var(--surface-solid); border-radius:var(--radius-md); border:1px solid var(--border);">Bekleyen özel göreviniz yok.</div>`;
+                container.innerHTML = `<div style="font-size:13px; color:var(--text-muted); text-align:center; padding:20px; background:var(--surface-solid); border-radius:var(--radius-md); border:1px solid var(--border);">Bekleyen görev yok.</div>`;
                 return;
             }
 
             myTasks.forEach(t => {
                 let badge = t.assignedTo !== 'ALL' ? `<span style="color:var(--danger); font-size:10px; font-weight:800; margin-left:5px;">(SANA ÖZEL)</span>` : '';
                 container.innerHTML += `
-                    <div onclick="switchTab('tab-todos', document.getElementById('navTodos'))" style="background:var(--surface-solid); padding:12px 15px; border-radius:var(--radius-md); border-left:3px solid var(--accent); box-shadow:var(--shadow-sm); margin-bottom:8px; display:flex; align-items:center; gap:10px; cursor:pointer;">
+                    <div onclick="switchTab('tab-todos')" style="background:var(--surface-solid); padding:12px 15px; border-radius:var(--radius-md); border-left:3px solid var(--accent); box-shadow:var(--shadow-sm); margin-bottom:8px; display:flex; align-items:center; gap:10px; cursor:pointer;">
                         <i class="fa-solid fa-circle-exclamation" style="color:var(--accent);"></i>
                         <div style="font-size:13px; font-weight:600; color:var(--text-main); flex:1;">${t.text} ${badge}</div>
                         <i class="fa-solid fa-chevron-right" style="color:var(--text-muted); font-size:12px;"></i>
@@ -1229,26 +1212,6 @@
             handleSearchInput();
         }
 
-        let pressTimer;
-        let isLongPress = false;
-
-        function handlePadTouchStart(e, id, name) {
-            if(isEditMode || isBulkMode) return;
-            if(!secretRecipes[name]) return; 
-
-            isLongPress = false;
-            pressTimer = setTimeout(() => {
-                isLongPress = true;
-                if(navigator.vibrate) navigator.vibrate([50, 50]);
-                showSecretRecipe(name);
-            }, 600); 
-        }
-        function handlePadTouchEnd() { clearTimeout(pressTimer); }
-        function handlePadClick(id) {
-            if(isLongPress) return; 
-            startTracking(id);
-        }
-
         function showSecretRecipe(name) {
             document.getElementById('recipeTitle').innerHTML = `<i class="fa-solid fa-scroll"></i> ${name}`;
             let rec = secretRecipes[name];
@@ -1263,6 +1226,7 @@
             const container = document.getElementById('drumpadContainer'); 
             if(!container) return;
             container.innerHTML = '';
+            container.className = 'library-list'; 
             
             if (!libraryDB || libraryDB.length === 0) {
                 libraryDB = [...defaultLibrary];
@@ -1288,18 +1252,32 @@
                 let icon = catIcons[p.kategori] || "fa-box";
                 let topBorderColor = catColors[p.kategori] || "var(--text-muted)";
                 
-                let deleteBtnHtml = (currentUser && currentUser.role === 'admin' && isEditMode) ? 
-                    `<div class="pad-delete" onclick="event.stopPropagation(); deleteProduct('${p.id}')"><i class="fa-solid fa-xmark"></i></div>` : '';
+                let rightActionHtml = '';
+
+                if (isEditMode && currentUser && currentUser.role === 'admin') {
+                    rightActionHtml = `<button class="lib-delete-btn" onclick="event.stopPropagation(); deleteProduct('${p.id}')"><i class="fa-solid fa-trash"></i></button>`;
+                } else {
+                    let recipeBtn = secretRecipes[p.urun] ? `<button class="recipe-btn" onclick="event.stopPropagation(); showSecretRecipe('${p.urun}')"><i class="fa-solid fa-book-open"></i></button>` : '';
+                    rightActionHtml = `
+                        ${recipeBtn}
+                        <div class="lib-add-btn"><i class="fa-solid fa-plus"></i></div>
+                    `;
+                }
+
+                let editClass = isEditMode ? 'edit-mode' : '';
 
                 container.innerHTML += `
-                    <div class="pad" 
-                         ontouchstart="handlePadTouchStart(event, '${p.id}', '${p.urun}')" 
-                         ontouchend="handlePadTouchEnd()" 
-                         onclick="handlePadClick('${p.id}')">
-                        <div class="pad-time">${omurStr}</div>
-                        <i class="fa-solid ${icon}" style="color:${topBorderColor}"></i>
-                        <div class="pad-name">${p.urun}</div>
-                        ${deleteBtnHtml}
+                    <div class="lib-item ${editClass}" onclick="if(!isEditMode) startTracking('${p.id}')">
+                        <div class="lib-icon" style="background: ${topBorderColor}20; color: ${topBorderColor};">
+                            <i class="fa-solid ${icon}"></i>
+                        </div>
+                        <div class="lib-info">
+                            <div class="lib-title">${p.urun}</div>
+                            <div class="lib-desc"><i class="fa-regular fa-clock"></i> Ömür: ${omurStr}</div>
+                        </div>
+                        <div class="lib-action">
+                            ${rightActionHtml}
+                        </div>
                     </div>
                 `;
             });
@@ -1309,20 +1287,17 @@
             isEditMode = !isEditMode;
             const btn = document.getElementById('editModeBtn');
             const addBtn = document.getElementById('addProdBtn');
-            const container = document.getElementById('drumpadContainer');
 
             if(isEditMode) {
                 btn.style.background = 'var(--text-main)';
                 btn.style.color = 'var(--surface-solid)';
                 btn.innerHTML = 'Tamam';
                 addBtn.style.display = 'block'; 
-                container.classList.add('edit-mode');
             } else {
                 btn.style.background = 'var(--accent-light)';
                 btn.style.color = 'var(--accent)';
                 btn.innerHTML = 'Düzenle';
                 addBtn.style.display = 'none';
-                container.classList.remove('edit-mode');
             }
             renderLibraryDrumpad(); 
         }
@@ -1516,13 +1491,11 @@
                     const targetTaskId = document.getElementById('cameraTargetTaskId') ? document.getElementById('cameraTargetTaskId').value : "";
                     
                     if(targetTaskId) {
-                        // Bir göreve fotoğraf yükleniyor
                         document.getElementById('cameraNoteTextInput').style.display = 'none';
                         document.getElementById('cameraAssigneeWrapper').style.display = 'none';
                         document.getElementById('saveTaskPhotoBtn').innerText = "Görevi Tamamla (Fotoğrafı Ekle)";
                         document.getElementById('saveTaskPhotoBtn').onclick = () => savePhotoToTask(targetTaskId, dataURL);
                     } else {
-                        // Yeni bir fotoğraflı not ekleniyor
                         document.getElementById('cameraNoteTextInput').style.display = 'block';
                         document.getElementById('cameraAssigneeWrapper').style.display = 'block';
                         document.getElementById('saveTaskPhotoBtn').innerText = "Panoya Sabitle";
@@ -1561,7 +1534,7 @@
                 text: (noteText || "Fotoğraflı Görev"), 
                 imgData: imgData,
                 isInfo: false, 
-                requiresPhoto: false, // Bu zaten fotoğraflı oluşturulan bir görev/not
+                requiresPhoto: false, 
                 done: false,
                 addedBy: currentUser.name, 
                 assignedTo: assignedTo,
@@ -1619,7 +1592,6 @@
                 let imgHtml = t.imgData ? `<img src="${t.imgData}" style="width:100%; max-height:200px; object-fit:cover; border-radius:8px; margin-top:10px; border:1px solid var(--border);">` : '';
                 let badgeHtml = (!t.isInfo && t.assignedTo !== 'ALL') ? `<span style="background:var(--danger-light); color:var(--danger); padding:2px 6px; border-radius:10px; font-size:9px; margin-left:6px; font-weight:800;">@${t.assignedName}</span>` : '';
 
-                // Tamamlama / Fotoğraf Butonu Mantığı
                 let checkBtnHtml = '';
                 if(t.done) {
                     checkBtnHtml = `<div style="width:28px; height:28px; border-radius:50%; border:2px solid var(--success); display:flex; align-items:center; justify-content:center; color:white; background:var(--success); transition:var(--transition); margin-top:2px; flex-shrink:0;"><i class="fa-solid fa-check" style="font-size:12px;"></i></div>`;
@@ -1630,7 +1602,6 @@
                 }
 
                 if (t.isInfo) {
-                    // Bilgi Notu Tasarımı
                     container.innerHTML += `
                         <div style="padding:16px; background:linear-gradient(135deg, var(--accent-light), transparent); border-radius:var(--radius-md); margin-bottom:10px; border:1px solid var(--accent-light);">
                             <div style="display:flex; justify-content:space-between; align-items:flex-start;">
@@ -1651,7 +1622,6 @@
                         </div>
                     `;
                 } else {
-                    // Normal Görev Tasarımı
                     container.innerHTML += `
                         <div style="display:flex; justify-content:space-between; align-items:flex-start; padding:16px; background:var(--surface-solid); border-radius:var(--radius-md); box-shadow:var(--shadow-sm); margin-bottom:10px; border:1px solid var(--border);">
                             <div style="display:flex; align-items:flex-start; gap:12px; flex:1;">
@@ -1822,7 +1792,6 @@
             document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active')); 
             document.getElementById(tId).classList.add('active'); 
             if(el) el.classList.add('active'); 
-            
             if(tId === 'tab-home') renderMyTasksWidget();
         }
 
