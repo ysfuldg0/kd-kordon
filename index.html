@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KD Kordon Pro - Final AI Master</title>
+    <title>KD Kordon Pro - Final Stable</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -69,10 +69,10 @@
         .app-header { background: var(--surface-glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
         .datetime-container { display: flex; flex-direction: column; }
         .clock-text { font-size: 20px; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; line-height: 1.1; }
-        .date-text { font-size: 11px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; }
+        .date-text { font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; }
 
         .header-actions { display: flex; align-items: center; gap: 8px; }
-        .user-badge { display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 13px; color: var(--text-main); background: var(--bg-color); padding: 8px 12px; border-radius: 30px; cursor: pointer; transition: var(--transition); }
+        .user-badge { display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 13px; color: var(--danger); background: var(--danger-light); padding: 8px 14px; border-radius: 30px; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-sm); border: 1px solid var(--danger); }
         .user-badge:active { transform: scale(0.95); opacity: 0.8; }
         .icon-btn { background: var(--surface-solid); border: 1px solid var(--border); box-shadow: var(--shadow-sm); width: 40px; height: 40px; border-radius: 50%; color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: var(--transition); }
         .icon-btn:active { transform: scale(0.9); }
@@ -101,20 +101,6 @@
         
         .form-input { width: 100%; padding: 16px 20px; background: var(--surface-solid); border: 1px solid var(--border); border-radius: var(--radius-md); font-family: inherit; font-size: 15px; font-weight: 500; color: var(--text-main); margin-bottom: 15px; transition: var(--transition); box-shadow: var(--shadow-sm); outline: none;}
         .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-light); }
-
-        /* AI ZAMAN ASİSTANI WIDGET */
-        .ai-widget { background: linear-gradient(135deg, var(--accent-light), transparent); border: 1px solid var(--accent-light); padding: 16px; border-radius: var(--radius-md); margin-bottom: 20px; display: flex; gap: 15px; align-items: flex-start; }
-        .ai-icon { width: 40px; height: 40px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; color: white; box-shadow: var(--shadow-sm); flex-shrink: 0; }
-        .ai-text { flex: 1; }
-        .ai-title { font-size: 14px; font-weight: 800; color: var(--accent); margin-bottom: 4px; display: flex; align-items:center; gap: 6px; }
-        .ai-desc { font-size: 13px; font-weight: 600; color: var(--text-main); line-height: 1.5; }
-
-        /* Sipariş Satırları */
-        .order-row { background: var(--surface-solid); border-radius: var(--radius-md); padding: 16px; box-shadow: var(--shadow-sm); display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); margin-bottom:12px; transition: var(--transition);}
-        .order-row.active-row { border-color: var(--success); background: var(--success-light); }
-        .counter { display: flex; align-items: center; gap: 12px; background: var(--bg-color); padding: 6px; border-radius: 30px; }
-        .btn-count { background: var(--surface-solid); border: none; width: 34px; height: 34px; border-radius: 50%; font-size: 18px; font-weight: 500; color: var(--text-main); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); cursor: pointer; transition: var(--transition); }
-        .btn-count:active { transform: scale(0.9); }
 
         /* SKT Drumpad */
         .drumpad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; min-height: 50vh; align-content: start; }
@@ -156,9 +142,9 @@
         .modal-overlay.active .modal-content { transform: translateY(0); }
         .drag-handle { width: 40px; height: 5px; background: var(--border); border-radius: 10px; margin: 0 auto 25px; }
         
-        .closing-cb-label { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; font-size: 14px; font-weight: 500; color: var(--text-main); cursor: pointer; background: var(--bg-color); padding: 15px; border-radius: var(--radius-md); transition: var(--transition); }
+        .closing-cb-label { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; font-size: 14px; font-weight: 500; color: var(--text-main); cursor: pointer; background: var(--bg-color); padding: 15px; border-radius: var(--radius-md); transition: var(--transition); border:1px solid transparent; }
         .closing-cb-label input[type="checkbox"] { width: 22px; height: 22px; accent-color: var(--success); cursor: pointer; }
-        .closing-cb-label.checked { background: var(--success-light); color: var(--success); text-decoration: line-through; }
+        .closing-cb-label.checked { background: var(--success-light); color: var(--success); text-decoration: line-through; border-color:var(--success-light); }
 
         .user-row { display:flex; justify-content:space-between; align-items:center; padding:16px; background:var(--surface-solid); border:1px solid var(--border); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); margin-bottom:10px; }
         .role-badge { font-size:11px; padding:5px 10px; font-weight:700; border-radius: 20px; }
@@ -168,9 +154,7 @@
         .toast { position: fixed; top: 30px; left: 50%; transform: translateX(-50%) translateY(-100px); background: var(--surface-solid); color: var(--text-main); box-shadow: var(--shadow-md); padding: 14px 24px; border-radius: 40px; font-size: 14px; font-weight: 600; z-index: 9999; transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); opacity: 0; white-space: nowrap; display:flex; align-items:center; border: 1px solid var(--border);}
         .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
         
-        #fullScreenSpinner { position: fixed; inset:0; background:var(--bg-color); z-index:999999; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--text-muted); font-weight:500; font-size:15px; text-align: center; padding: 20px;}
-        #offlineBanner { display: none; background: var(--warning); color: white; text-align: center; padding: 8px; font-size: 12px; font-weight: 700; position: sticky; top: 0; z-index: 51; }
-
+        /* Dashboard Stats */
         .dashboard-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
         .stat-card { background: var(--bg-color); padding: 15px; border-radius: var(--radius-md); text-align: center; border: 1px solid var(--border); }
         .stat-card .value { font-size: 24px; font-weight: 800; color: var(--text-main); margin-bottom: 5px; }
@@ -180,20 +164,11 @@
         .stat-card.success { background: var(--success-light); border-color: var(--success-light); }
         .stat-card.success .value { color: var(--success); }
 
-        /* CAMERA / BARCODE MODAL */
-        #cameraStream { width: 100%; border-radius: var(--radius-md); background: #000; min-height: 250px; object-fit: cover; }
-        .scan-line { position: absolute; width: 100%; height: 2px; background: var(--success); top: 50%; box-shadow: 0 0 10px var(--success); animation: scan 2s infinite linear; }
-        @keyframes scan { 0% { top: 10%; } 50% { top: 90%; } 100% { top: 10%; } }
-
     </style>
 </head>
 <body>
 
-    <div id="fullScreenSpinner">
-        <i class="fa-solid fa-spinner fa-spin fa-2x" style="margin-bottom: 15px; color: var(--accent);"></i>
-        <span id="spinnerText">Sistem Başlatılıyor...</span>
-    </div>
-
+    <!-- GİRİŞ EKRANI (PIN) -->
     <div id="authScreen" style="display:none;">
         <div class="auth-card">
             <i class="fa-solid fa-shield-check" style="font-size: 40px; color: var(--accent); margin-bottom:15px;"></i>
@@ -218,68 +193,47 @@
 
     <!-- ANA UYGULAMA -->
     <div id="appContent">
-        <div id="offlineBanner"><i class="fa-solid fa-wifi" style="text-decoration: line-through;"></i> Çevrimdışı mod aktif. Yerel veriler kullanılıyor.</div>
         <header class="app-header">
-            <div class="datetime-container" onclick="triggerLogoutFlow()" style="cursor: pointer;">
-                <div class="clock-text" id="clockDisplay">--:--</div>
+            <!-- Dinamik Saat ve Tarih -->
+            <div class="datetime-container">
+                <div class="clock-text" id="clockDisplay">00:00</div>
                 <div class="date-text" id="dateDisplay">-- --- ----</div>
             </div>
             
             <div class="header-actions">
-                <div class="user-badge" onclick="openModal('adminModal')">
-                    <i class="fa-solid fa-user-circle" style="font-size: 16px;"></i> 
-                    <span id="headerUserName">Personel</span> 
+                <div class="user-badge" onclick="triggerLogoutFlow()">
+                    <i class="fa-solid fa-power-off"></i> 
+                    <span id="headerUserName">Personel</span>
                 </div>
                 <button class="icon-btn" onclick="toggleTheme()" id="themeBtn"><i class="fa-regular fa-moon" id="themeIcon"></i></button>
+                <button class="icon-btn" onclick="openModal('adminModal')" id="adminBtn" style="display:none; color:var(--warning); border-color:var(--warning);"><i class="fa-solid fa-sliders"></i></button>
             </div>
         </header>
 
         <div class="app-container">
             
-            <!-- 1. SİPARİŞ -->
-            <div id="tab-order" class="tab-pane">
-                <div class="chips-container" id="categoryChips">
-                    <div class="chip active" onclick="loadOrderTemplate('Manav', this)">🥦 Manav</div>
-                    <div class="chip" onclick="loadOrderTemplate('Süt', this)">🥛 Süt</div>
-                    <div class="chip" onclick="loadOrderTemplate('Su', this)">💧 Su</div>
-                    <div class="chip" onclick="loadOrderTemplate('Soda', this)">🥤 Soda</div>
-                </div>
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                    <h3 id="currentTemplateTitle" style="font-size: 22px; font-weight: 700; color: var(--text-main);">Manav Listesi</h3>
-                    <button onclick="resetCounters()" style="background:none; border:none; color:var(--accent); font-size:14px; font-weight: 600; cursor:pointer;">Sıfırla</button>
-                </div>
-                <div id="orderTemplateList" class="list-grid mb-4"></div>
-                <button class="btn btn-primary" style="margin-top:20px; background: #25D366;" onclick="sendOrderViaWhatsApp()"><i class="fa-brands fa-whatsapp" style="font-size: 18px;"></i> WhatsApp'a Gönder</button>
-            </div>
-
-            <!-- 2. ÜRETİM (DRUMPAD) -->
+            <!-- 1. ÜRETİM (DRUMPAD) -->
             <div id="tab-library" class="tab-pane active">
-                
-                <!-- AI ZAMAN ASİSTANI -->
-                <div class="ai-widget">
-                    <div class="ai-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
-                    <div class="ai-text">
-                        <div class="ai-title">Dijital Şef Önerisi</div>
-                        <div class="ai-desc" id="aiTimePromptText">Yükleniyor...</div>
-                    </div>
-                </div>
 
-                <!-- ŞİMŞEK ARAMA, BARKOD VE SESLİ ASİSTAN -->
+                <!-- Arama Motoru, Kamera Notu ve Sesli Komut -->
                 <div style="display:flex; gap:10px; margin-bottom: 20px; align-items:center;">
                     <div style="position: relative; flex: 1;">
                         <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 18px; top: 16px; color: var(--text-muted);"></i>
-                        <input type="text" id="libSearchInput" class="form-input" style="padding-left: 45px; padding-right:40px; margin-bottom: 0; border-radius: 30px;" placeholder="Ürün ara veya soru sor..." onkeyup="handleSearchInput()">
+                        <input type="text" id="libSearchInput" class="form-input" style="padding-left: 45px; padding-right:40px; margin-bottom: 0; border-radius: 30px;" placeholder="Ürün ara..." onkeyup="handleSearchInput()">
                         <i class="fa-solid fa-xmark" id="clearSearchBtn" style="position: absolute; right: 18px; top: 16px; color: var(--text-muted); cursor: pointer; display: none;" onclick="clearSearch()"></i>
                     </div>
-                    <button class="icon-btn" id="aiSolverBtn" style="width: 50px; height: 50px; border-radius: 50%; flex-shrink:0; background: var(--warning); color: white; border: none; display:none;" onclick="triggerAISolver()"><i class="fa-solid fa-brain"></i></button>
-                    <button class="icon-btn" id="barcodeBtn" style="width: 50px; height: 50px; border-radius: 50%; flex-shrink:0; background: var(--surface-solid);" onclick="startBarcodeScanner()"><i class="fa-solid fa-qrcode"></i></button>
-                    <button class="icon-btn" id="voiceBtn" style="width: 50px; height: 50px; border-radius: 50%; flex-shrink:0; background: var(--accent); color: white; border: none;" onclick="startVoiceSearch()"><i class="fa-solid fa-microphone"></i></button>
+                    <!-- Kamera Not İkonu -->
+                    <button class="icon-btn" style="width: 50px; height: 50px; border-radius: 50%; flex-shrink:0; background: var(--surface-solid);" onclick="document.getElementById('cameraInput').click()"><i class="fa-solid fa-camera"></i></button>
+                    <!-- Görünmez Dosya Yükleme Inputu -->
+                    <input type="file" accept="image/*" capture="environment" id="cameraInput" style="display:none;" onchange="handleCameraUpload(event)">
+                    
+                    <button class="icon-btn" style="width: 50px; height: 50px; border-radius: 50%; flex-shrink:0; background: var(--accent); color: white; border: none;" onclick="startVoiceSearch()"><i class="fa-solid fa-microphone"></i></button>
                 </div>
 
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                     <div>
                         <h3 style="font-size: 22px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Üretim</h3>
-                        <p style="font-size:12px; color:var(--text-muted);">Reçeteler için ürüne basılı tutun.</p>
+                        <p style="font-size:12px; color:var(--text-muted);">Tarih takibini başlatmak için dokunun.</p>
                     </div>
                     <div style="display:flex; gap:10px;">
                         <button id="editModeBtn" onclick="toggleEditMode()" style="background:var(--accent-light); color:var(--accent); border:none; border-radius:20px; padding:8px 16px; font-weight:600; font-size:13px; cursor:pointer; transition:var(--transition);">Düzenle</button>
@@ -289,23 +243,22 @@
                 
                 <div class="chips-container" id="libChips">
                     <div class="chip active" onclick="filterLib('Tümü', this)">Tümü</div>
-                    <div class="chip" onclick="filterLib('Şarküteri, Süt ve Soslar', this)">Süt & Sos</div>
-                    <div class="chip" onclick="filterLib('Paketli Şarküteri', this)">Şarküteri</div>
-                    <div class="chip" onclick="filterLib('Meyve ve Sebze', this)">Meyve</div>
-                    <div class="chip" onclick="filterLib('Paketli & Kuru Gıdalar', this)">Kuru Gıda</div>
-                    <div class="chip" onclick="filterLib('Çözündürülen / Dökme / Teşhir', this)">Teşhir</div>
-                    <div class="chip" onclick="filterLib('Kahveler, İçecekler ve Ön Hazırlık', this)">İçecek</div>
+                    <div class="chip" onclick="filterLib('Şarküteri, Süt ve Soslar', this)">Şarküteri & Süt</div>
+                    <div class="chip" onclick="filterLib('Meyve ve Sebze', this)">Meyve & Sebze</div>
+                    <div class="chip" onclick="filterLib('Çözündürülen / Dökme / Teşhir', this)">Teşhir & Dökme</div>
+                    <div class="chip" onclick="filterLib('Kahveler, İçecekler ve Ön Hazırlık', this)">İçecek & Ön Hazırlık</div>
+                    <div class="chip" onclick="filterLib('Paketli & Kuru Gıdalar', this)">Kuru Gıdalar</div>
                 </div>
                 
                 <div class="drumpad-grid" id="drumpadContainer"></div>
             </div>
 
-            <!-- 3. AKTİF TAKİP -->
+            <!-- 2. AKTİF TAKİP -->
             <div id="tab-active" class="tab-pane">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                     <div>
                         <h3 style="font-size: 22px; font-weight: 700; color: var(--text-main); margin-bottom:4px;">Aktif Takip</h3>
-                        <span style="font-size:12px; color:var(--text-muted);">Sola/Sağa kaydırarak işlemi tamamlayın.</span>
+                        <span style="font-size:12px; color:var(--text-muted);">Sola veya Sağa kaydırın.</span>
                     </div>
                     <button id="bulkModeBtn" onclick="toggleBulkMode()" style="background:var(--surface-solid); color:var(--text-main); border:1px solid var(--border); box-shadow: var(--shadow-sm); padding:8px 16px; border-radius:20px; font-weight:600; font-size:13px; cursor:pointer; transition:var(--transition);">Toplu Seç</button>
                 </div>
@@ -318,7 +271,7 @@
                 </div>
             </div>
 
-            <!-- 4. GÖREVLER & DİJİTAL PANO -->
+            <!-- 3. GÖREVLER & DİJİTAL PANO -->
             <div id="tab-todos" class="tab-pane">
                 <h3 style="font-size: 22px; font-weight: 700; color: var(--text-main); margin-bottom: 20px;">Görev Panosu</h3>
 
@@ -327,16 +280,21 @@
                         <h4 style="font-size:14px; font-weight:700; color:var(--text-main); display:flex; align-items:center; gap:8px;">
                             <i class="fa-solid fa-clipboard" style="color:var(--accent);"></i> VARDİYA TESLİM NOTU
                         </h4>
-                        <!-- AI SEKRETER BUTONU -->
-                        <button onclick="summarizeShiftNoteWithAI()" style="background:var(--accent-light); color:var(--accent); border:none; padding:6px 12px; border-radius:20px; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; transition:var(--transition);"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Özetle</button>
                     </div>
-                    <textarea id="shiftNoteArea" onchange="updateShiftNote()" placeholder="Bir sonraki vardiyaya not bırakın... (Dağınık yazabilirsiniz, AI toparlar)" style="width:100%; border:none; background:var(--bg-color); outline:none; font-family:inherit; font-size:14px; font-weight:500; color:var(--text-main); resize:none; min-height:80px; padding:12px; border-radius:var(--radius-sm); box-shadow:inset 0 2px 4px rgba(0,0,0,0.02);"></textarea>
+                    <textarea id="shiftNoteArea" onchange="updateShiftNote()" placeholder="Sonraki vardiyaya not bırakın..." style="width:100%; border:none; background:var(--bg-color); outline:none; font-family:inherit; font-size:14px; font-weight:500; color:var(--text-main); resize:none; min-height:80px; padding:12px; border-radius:var(--radius-sm); box-shadow:inset 0 2px 4px rgba(0,0,0,0.02);"></textarea>
                 </div>
 
-                <div style="display:flex; gap:10px; margin-bottom:20px;">
-                    <input type="text" id="todoInput" class="form-input" style="margin-bottom:0; border-radius:30px;" placeholder="Yeni görev ekle...">
-                    <button class="btn btn-primary" style="width:55px; border-radius:30px; padding:0;" onclick="addTodo()"><i class="fa-solid fa-plus" style="font-size:18px;"></i></button>
+                <!-- Görev Ekleme Alanı & Kişiye Atama -->
+                <div style="display:flex; gap:10px; margin-bottom:20px; align-items:center;">
+                    <input type="text" id="todoInput" class="form-input" style="margin-bottom:0; border-radius:30px; flex:1;" placeholder="Yeni görev yazın...">
+                    
+                    <select id="todoAssignee" class="form-input" style="width:110px; margin-bottom:0; border-radius:30px; padding: 10px; font-size: 13px; display:none;" onmousedown="populateAssignees(this)">
+                        <option value="ALL">Herkese</option>
+                    </select>
+
+                    <button class="btn btn-primary" style="width:50px; height:50px; border-radius:50%; padding:0; flex-shrink:0;" onclick="addTodo()"><i class="fa-solid fa-plus" style="font-size:18px;"></i></button>
                 </div>
+
                 <div id="todoContainer"></div>
             </div>
 
@@ -344,36 +302,25 @@
 
         <!-- BOTTOM NAV -->
         <nav class="bottom-nav">
-            <div class="nav-item" id="navOrder" onclick="switchTab('tab-order', this)" style="display:none;"><i class="fa-solid fa-cart-shopping"></i><span>Sipariş</span></div>
             <div class="nav-item active" id="navLibrary" onclick="switchTab('tab-library', this)"><i class="fa-solid fa-layer-group"></i><span>Üretim</span></div>
             <div class="nav-item" id="navActive" onclick="switchTab('tab-active', this)"><i class="fa-solid fa-clock-rotate-left"></i><span>Takip</span></div>
             <div class="nav-item" id="navTodos" onclick="switchTab('tab-todos', this)"><i class="fa-solid fa-clipboard-check"></i><span>Görevler</span></div>
         </nav>
     </div>
 
-    <!-- KAMERA BARKOD MODALI -->
-    <div class="modal-overlay" id="barcodeModal" onclick="closeOnOutsideClick(event, 'barcodeModal')">
+    <!-- KAMERA İLE FOTOĞRAFLI NOT MODALI -->
+    <div class="modal-overlay" id="cameraNoteModal" onclick="closeOnOutsideClick(event, 'cameraNoteModal')">
         <div class="modal-content" style="text-align: center;">
             <div class="drag-handle"></div>
-            <h3 style="font-size:22px; font-weight:700; margin-bottom:15px; color:var(--text-main);">Barkod / QR Okuyucu</h3>
-            <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px;">Kamerayı ürünün barkoduna hizalayın.</p>
+            <h3 style="font-size:20px; font-weight:700; margin-bottom:15px; color:var(--text-main);">Fotoğraflı Görev Oluştur</h3>
+            <img id="cameraPreviewImg" src="" style="width:100%; max-height: 250px; object-fit:cover; border-radius:var(--radius-md); margin-bottom:15px; border:1px solid var(--border); box-shadow:var(--shadow-sm);">
             
-            <div style="position: relative; width: 100%; border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--border);">
-                <video id="cameraStream" autoplay playsinline></video>
-                <div class="scan-line"></div>
+            <input type="text" id="cameraNoteTextInput" class="form-input" placeholder="Fotoğrafla ilgili açıklama yazın..." style="margin-bottom:20px;">
+            
+            <div style="display:flex; gap:10px;">
+                <button class="btn" style="background:var(--bg-color); color:var(--text-main);" onclick="closeModal('cameraNoteModal')">İptal</button>
+                <button class="btn btn-primary" onclick="saveCameraNote()">Görevi Kaydet</button>
             </div>
-
-            <button class="btn" style="margin-top:25px; background:var(--danger-light); color:var(--danger);" onclick="stopBarcodeScanner()">Taramayı İptal Et</button>
-        </div>
-    </div>
-
-    <!-- GİZLİ REÇETE & AI ÇÖZÜCÜ MODALI -->
-    <div class="modal-overlay" id="recipeModal" onclick="closeOnOutsideClick(event, 'recipeModal')">
-        <div class="modal-content">
-            <div class="drag-handle"></div>
-            <h3 id="recipeTitle" style="font-size:20px; font-weight:800; color:var(--text-main); margin-bottom:15px; display:flex; align-items:center; gap:8px;"></h3>
-            <div id="recipeContent" style="color:var(--text-main); font-size:15px; font-weight:500; line-height:1.6; white-space: pre-wrap; background: var(--bg-color); padding: 20px; border-radius: var(--radius-md); border:1px solid var(--border);"></div>
-            <button class="btn" style="margin-top:25px; background:var(--surface-solid); color:var(--text-main); border:1px solid var(--border);" onclick="closeModal('recipeModal')">Kapat</button>
         </div>
     </div>
 
@@ -381,16 +328,13 @@
     <div class="modal-overlay" id="checklistModal" onclick="closeOnOutsideClick(event, 'checklistModal')">
         <div class="modal-content">
             <div class="drag-handle"></div>
-            <h3 style="font-size:24px; font-weight:800; color:var(--text-main); margin-bottom:10px;">Çıkış Protokolü</h3>
-            <p style="color:var(--text-muted); font-size:14px; margin-bottom: 25px; line-height:1.5;">Vardiya puanını yükseltmek için görevleri tamamla.</p>
+            <h3 style="font-size:24px; font-weight:800; color:var(--text-main); margin-bottom:10px;">Vardiya Çıkışı</h3>
+            <p style="color:var(--text-muted); font-size:14px; margin-bottom: 20px; line-height:1.5;">Çıkış yapmadan önce tamamladığınız işleri işaretleyin. Vardiya puanınız buna göre hesaplanacaktır.</p>
             
-            <label class="closing-cb-label"><input type="checkbox" class="closing-cb"> Kasa sayımı eksiksiz tamamlandı.</label>
-            <label class="closing-cb-label"><input type="checkbox" class="closing-cb"> Çöpler atıldı, bar temizlendi.</label>
-            <label class="closing-cb-label"><input type="checkbox" class="closing-cb"> Dolap dereceleri (+4 / -18) kontrol edildi.</label>
-            <label class="closing-cb-label"><input type="checkbox" class="closing-cb"> Gün sonu fişleri ve evraklar düzenlendi.</label>
+            <div id="dynamicChecklistContainer"></div>
 
-            <button class="btn btn-primary" id="finishClosingBtn" style="margin-top:25px; transition: var(--transition);" onclick="showSummary()">Vardiyayı Tamamla</button>
-            <button class="btn" style="margin-top:10px; background:transparent; color:var(--text-muted);" onclick="closeModal('checklistModal')">İptal Et</button>
+            <button class="btn btn-primary" style="margin-top:25px; transition: var(--transition);" onclick="showSummary()">Vardiyayı Tamamla ve Çık</button>
+            <button class="btn" style="margin-top:10px; background:transparent; color:var(--text-muted);" onclick="closeModal('checklistModal')">Geri Dön</button>
         </div>
     </div>
 
@@ -403,7 +347,7 @@
             </div>
             <h3 style="font-size:24px; font-weight:800; margin-bottom:15px; color:var(--text-main);">Vardiya Tamamlandı!</h3>
             <p id="summaryText" style="color:var(--text-muted); font-size:15px; margin-bottom:30px; line-height:1.6;"></p>
-            <button class="btn btn-primary" onclick="executeLogout()">Sistemden Çık ve Dinlen</button>
+            <button class="btn btn-primary" onclick="executeLogout()">Sistemi Kapat</button>
         </div>
     </div>
 
@@ -416,17 +360,24 @@
             <div id="adminDashboardSection">
                 <h4 style="font-size:14px; font-weight:700; color:var(--text-main); margin-bottom:10px;">Haftalık Operasyon Özeti</h4>
                 <div class="dashboard-stats" id="dashboardStatsContainer">
-                    <!-- JS ile Doldurulacak -->
+                    <div class="stat-card success"><div class="value">0</div><div class="label">BAŞARILI</div></div>
+                    <div class="stat-card danger"><div class="value">0</div><div class="label">FİRE</div></div>
                 </div>
             </div>
 
+            <!-- CANLI MESAİ RADARI EKLENDİ -->
+            <div id="adminActiveShiftsSection" style="margin-top:20px; margin-bottom:15px;">
+                <h4 style="font-size:14px; font-weight:700; color:var(--text-main); margin-bottom:10px;"><i class="fa-solid fa-satellite-dish" style="color:var(--accent);"></i> Aktif Mesaidekiler</h4>
+                <div id="activeShiftsContainer"></div>
+            </div>
+
             <div class="admin-grid" style="margin-top:15px;">
-                <div class="admin-card" onclick="openModal('usersModal');" style="background:var(--bg-color); border:none; padding:15px; border-radius:var(--radius-md); text-align:center; cursor:pointer;">
+                <div class="admin-card" onclick="closeModal('adminModal'); openModal('usersModal');" style="background:var(--bg-color); border:none; padding:15px; border-radius:var(--radius-md); text-align:center; cursor:pointer;">
                     <i class="fa-solid fa-users" style="color:var(--accent); font-size:24px; margin-bottom:8px;"></i>
                     <div style="font-weight:600; font-size:13px; color:var(--text-main);">Personel Yönetimi</div>
                 </div>
             </div>
-            <button class="btn" style="margin-top:25px; background:var(--danger-light); color:var(--danger);" onclick="confirmLogout()">Sistemden Çıkış Yap</button>
+            <button class="btn" style="margin-top:25px; background:var(--danger-light); color:var(--danger);" onclick="executeLogout()">Sistemden Komple Çıkış Yap</button>
         </div>
     </div>
 
@@ -436,7 +387,7 @@
             <div class="drag-handle"></div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                 <h3 style="font-size:22px; font-weight:700; color:var(--text-main);">Kullanıcılar</h3>
-                <button onclick="closeModal('usersModal');" style="background:none; border:none; font-size:16px; font-weight:600; color:var(--accent); cursor:pointer;">Geri</button>
+                <button onclick="closeModal('usersModal'); openModal('adminModal');" style="background:none; border:none; font-size:16px; font-weight:600; color:var(--accent); cursor:pointer;">Geri</button>
             </div>
             <div id="usersList" style="margin-bottom:25px;"></div>
             
@@ -455,43 +406,19 @@
         </div>
     </div>
 
-    <!-- YENİ ÜRÜN EKLE MODALI -->
-    <div class="modal-overlay" id="addProdModal" onclick="closeOnOutsideClick(event, 'addProdModal')">
-        <div class="modal-content">
-            <div class="drag-handle"></div>
-            <h3 style="font-size:22px; font-weight:700; margin-bottom:20px; color:var(--text-main);">Yeni Ürün</h3>
-            <input type="text" id="newProdName" class="form-input" placeholder="Ürün Adı">
-            <select id="newProdCat" class="form-input">
-                <option value="Şarküteri, Süt ve Soslar">Süt ve Soslar</option>
-                <option value="Paketli & Kuru Gıdalar">Kuru Gıdalar</option>
-                <option value="Meyve ve Sebze">Meyve/Sebze</option>
-                <option value="Çözündürülen / Dökme / Teşhir">Teşhir/Çözündürülen</option>
-                <option value="Kahveler, İçecekler ve Ön Hazırlık">Kahveler/Ön Haz.</option>
-                <option value="Paketli Şarküteri">Paketli Şarküteri</option>
-            </select>
-            <div style="display:flex; gap:10px; margin-bottom: 25px;">
-                <input type="number" id="newProdTime" class="form-input" placeholder="Süre" style="flex:1; margin-bottom: 0;">
-                <select id="newProdUnit" class="form-input" style="flex:1; margin-bottom: 0;">
-                    <option value="Gün">Gün</option>
-                    <option value="Ay">Ay</option>
-                    <option value="Yıl">Yıl</option>
-                    <option value="Günlük">Gün Sonu</option>
-                    <option value="ORJ SKT">ORJ SKT</option>
-                    <option value="Hemen Kullandır">Hemen</option>
-                </select>
-            </div>
-            <button class="btn btn-primary" onclick="saveCustomProduct()">Kütüphaneye Ekle</button>
-        </div>
-    </div>
-
     <div id="toastNotification" class="toast"></div>
 
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <script>
-        // GÜVENLİ LOCALSTORAGE
+        // ESKİ PWA ÖNBELLEĞİNİ SİL (Bozuk Sürümleri Yutmasın)
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for(let registration of registrations) { registration.unregister(); }
+            });
+        }
+
         function safeSetLocal(key, val) { try { localStorage.setItem(key, val); } catch(e) {} }
         function safeGetLocal(key) { try { return localStorage.getItem(key); } catch(e) { return null; } }
         function safeRemoveLocal(key) { try { localStorage.removeItem(key); } catch(e) {} }
@@ -515,84 +442,62 @@
             "1923": { name: "Yusuf (Yönetici)", role: "admin", pin: "1923" }
         };
         
-        const dbRoot = 'kd_kordon_pro_v16';
+        const dbRoot = 'kd_kordon_pro_v20'; // Temiz ve stabil son veritabanı alanı
         let isAppLaunched = false;
-        let appLoadTime = 0;
-        let isEditMode = false;
         let isBulkMode = false;
         let selectedBulkItems = [];
-        let lastActionData = null;
-        let undoTimeout = null;
-
-        window.addEventListener('offline', () => { document.getElementById('offlineBanner').style.display = 'block'; });
-        window.addEventListener('online', () => { document.getElementById('offlineBanner').style.display = 'none'; showToast("Bağlantı sağlandı."); });
+        let activeShifts = {};
 
         const catColors = {
             "Şarküteri, Süt ve Soslar": "#007AFF", 
-            "Paketli Şarküteri": "#FF3B30", 
             "Meyve ve Sebze": "#34C759", 
             "Çözündürülen / Dökme / Teşhir": "#AF52DE", 
             "Kahveler, İçecekler ve Ön Hazırlık": "#FF9500", 
             "Paketli & Kuru Gıdalar": "#8E8E93" 
         };
 
-        const catIcons = { "Şarküteri, Süt ve Soslar": "fa-cheese", "Paketli & Kuru Gıdalar": "fa-box", "Meyve ve Sebze": "fa-apple-whole", "Çözündürülen / Dökme / Teşhir": "fa-ice-cream", "Kahveler, İçecekler ve Ön Hazırlık": "fa-mug-hot", "Paketli Şarküteri": "fa-bacon" };
-
-        const secretRecipes = {
-            "Cold Brew": "1. 1/10 oranında kalın öğütülmüş kahve tart.\n2. Bez veya kağıt filtreye yerleştir.\n3. Soğuk suyu yavaşça dök, tüm kahvenin ıslandığına emin ol.\n4. Ağzı kapalı şekilde +4°C dolapta 16-20 saat arası demlenmeye bırak.\n5. Süre bitiminde filtreyi al ve ürünü DRAFT fıçısına aktar.",
-            "Limonata": "1. 1 LT Taze Sıkılmış Limon Suyu\n2. 1 LT Şeker Şurubu\n3. 3 LT İçme Suyu ekle.\n4. İyice karıştır ve +4°C dolaba al. (Toplam 5 LT ürün elde edilir).",
-            "Mğz.da Çekilen Türk Kahvesi": "1. Türk kahvesi değirmenini en ince ayara al.\n2. Sadece günlük tüketilecek kadar (max 1-2 kg) taze çekim yap.\n3. Hava almayan opak kaplarda muhafaza et.\nNot: Kesinlikle ertesi güne çekilmiş kahve devretme."
-        };
+        const catIcons = { "Şarküteri, Süt ve Soslar": "fa-cheese", "Paketli & Kuru Gıdalar": "fa-box", "Meyve ve Sebze": "fa-apple-whole", "Çözündürülen / Dökme / Teşhir": "fa-ice-cream", "Kahveler, İçecekler ve Ön Hazırlık": "fa-mug-hot" };
 
         function normalizeTR(str) {
             return str.replace(/İ/g, 'i').replace(/I/g, 'ı').toLowerCase();
         }
 
         document.addEventListener("DOMContentLoaded", () => {
-            if(!navigator.onLine) document.getElementById('offlineBanner').style.display = 'block';
             updateThemeIcon();
-            checkNotificationStatus();
-            initDatabase();
             initSwipeNavigation();
             
-            document.querySelectorAll('.closing-cb').forEach(cb => { cb.addEventListener('change', checkClosingChecklist); });
-            
-            setInterval(updateDateTime, 60000);
+            setInterval(updateDateTime, 1000);
             updateDateTime();
+
+            // SIFIR GECİKME: Sisteme anında giriş kontrolü
+            const savedPin = safeGetLocal('kd_saved_pin');
+            if(savedPin) {
+                currentUser = { name: "Personel", role: "staff", pin: savedPin }; // DB gelene kadar geçici
+                document.getElementById('authScreen').style.display = 'none';
+                launchApp();
+            } else {
+                document.getElementById('authScreen').style.display = 'flex';
+            }
+
+            // Arkaplanda DB Bağla
+            setTimeout(initDatabase, 50);
         });
 
         function updateDateTime() {
             const now = new Date();
             const timeStr = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
-            const dateStr = now.toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric', weekday: 'long' });
+            const dateStr = now.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', weekday: 'long' });
             
             const clockEl = document.getElementById('clockDisplay');
             const dateEl = document.getElementById('dateDisplay');
-            
             if(clockEl) clockEl.innerText = timeStr;
             if(dateEl) dateEl.innerText = dateStr;
-
-            updateAITimePrompt(now.getHours());
-        }
-
-        function updateAITimePrompt(hour) {
-            let msg = "";
-            if(hour >= 6 && hour < 11) {
-                msg = "Sabah yoğunluğu! Garnitürler (Limon, Nane) kesildi mi? Soğuk Espresso stoklarını kontrol edin.";
-            } else if (hour >= 11 && hour < 15) {
-                msg = "Öğle servisi başladı. Teşhir ürünleri tam mı? Süt stokları azalmış olabilir.";
-            } else if (hour >= 15 && hour < 19) {
-                msg = "Öğleden sonra molası. Çekirdek kahve hazneleri dolu mu? Tatlı vitrinini kontrol edin.";
-            } else {
-                msg = "Akşam kapanışa doğru... Temizlik hazırlıkları başlasın. Zayi oranlarına dikkat edin.";
-            }
-            const el = document.getElementById('aiTimePromptText');
-            if(el) el.innerText = msg;
         }
 
         function initSwipeNavigation() {
             let dragStartX = 0;
             const container = document.getElementById('drumpadContainer');
+            if(!container) return;
             container.addEventListener('touchstart', e => { dragStartX = e.touches[0].clientX; }, {passive: true});
             container.addEventListener('touchend', e => {
                 let dragEndX = e.changedTouches[0].clientX;
@@ -613,39 +518,13 @@
             });
         }
 
-        function showLoginOrApp() {
-            if (!isAppLaunched) {
-                const savedPin = safeGetLocal('kd_saved_pin');
-                if(savedPin && usersDB[savedPin]) {
-                    currentUser = usersDB[savedPin];
-                    launchApp();
-                } else {
-                    document.getElementById('authScreen').style.display = 'flex';
-                }
-            }
-        }
-
         function initDatabase() {
-            // ZIRHLI FALLBACK: 2 saniye içinde Firebase yanıt vermezse Sistemi Yerel Olarak Aç
-            let dbTimeout = setTimeout(() => {
-                const spinner = document.getElementById('fullScreenSpinner');
-                if(spinner && spinner.style.display !== 'none') {
-                    spinner.style.display = 'none';
-                    showToast("Bulut bağlantısı yok. Çevrimdışı Mod.", true);
-                    document.getElementById('offlineBanner').style.display = 'block';
-                    showLoginOrApp();
-                }
-            }, 2000);
-
             try {
                 if(typeof firebase !== 'undefined') {
-                    if (!firebase.apps.length) {
-                        firebase.initializeApp(firebaseConfig);
-                    }
+                    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
                     db = firebase.database();
                     
                     db.ref(`${dbRoot}/users`).on('value', snap => {
-                        clearTimeout(dbTimeout);
                         const data = snap.val();
                         if(!data) {
                             db.ref(`${dbRoot}/users/1923`).set(usersDB["1923"]);
@@ -653,27 +532,70 @@
                             usersDB = data;
                         }
                         
-                        const spinner = document.getElementById('fullScreenSpinner');
-                        if(spinner && spinner.style.display !== 'none') {
-                            spinner.style.display = 'none';
-                            showLoginOrApp();
-                        } else if (isAppLaunched && document.getElementById('usersModal').classList.contains('active')) {
+                        // Güncel yetkileri kontrol et
+                        const savedPin = safeGetLocal('kd_saved_pin');
+                        if(savedPin && usersDB[savedPin]) {
+                            currentUser = usersDB[savedPin];
+                            document.getElementById('headerUserName').innerText = currentUser.name;
+                            if(currentUser.role === 'admin') {
+                                document.getElementById('adminBtn').style.display = 'flex';
+                                document.getElementById('editModeBtn').style.display = 'block'; 
+                                document.getElementById('todoAssignee').style.display = 'block'; // Admin ise görev atayabilir
+                            }
+                        }
+                        
+                        if (isAppLaunched && document.getElementById('usersModal').classList.contains('active')) {
                             renderUsersList();
                         }
                     });
-                } else {
-                    // Firebase blocklandıysa timeout'u beklemeden aç
-                    clearTimeout(dbTimeout);
-                    document.getElementById('fullScreenSpinner').style.display = 'none';
-                    showToast("Sistem engellendi. Yerel modda açılıyor.", true);
-                    showLoginOrApp();
+
+                    // Canlı Mesai Takibi Listesi
+                    db.ref(`${dbRoot}/active_shifts`).on('value', snap => {
+                        activeShifts = snap.val() || {};
+                        if(document.getElementById('adminModal').classList.contains('active')) {
+                            renderAdminDashboard();
+                        }
+                    });
+
+                    syncDataBackground();
                 }
             } catch(e) {
-                console.warn("Firebase Başlatma Uyarısı:", e);
-                clearTimeout(dbTimeout);
-                document.getElementById('fullScreenSpinner').style.display = 'none';
-                showLoginOrApp();
+                console.warn("Veritabanı uyarısı (Offline çalışılabilir):", e);
             }
+        }
+
+        function syncDataBackground() {
+            if(!db) return;
+            
+            // Eğer Firebase bağlandıysa mevcut vardiyayı kaydet
+            if(currentUser && currentUser.pin) {
+                db.ref(`${dbRoot}/active_shifts/${currentUser.pin}`).set({
+                    name: currentUser.name,
+                    loginTime: Date.now()
+                });
+            }
+
+            db.ref(`${dbRoot}/library`).on('value', snap => {
+                const data = snap.val();
+                if(data) { libraryDB = Object.values(data); renderLibraryDrumpad(); } 
+                else { db.ref(`${dbRoot}/library`).set(libraryDB); }
+            });
+
+            db.ref(`${dbRoot}/active`).on('value', snap => {
+                activeItems = snap.val() ? Object.values(snap.val()) : [];
+                renderActiveList();
+            });
+            db.ref(`${dbRoot}/todos`).on('value', snap => {
+                todos = snap.val() ? Object.values(snap.val()) : [];
+                renderTodos();
+            });
+            db.ref(`${dbRoot}/logs`).on('value', snap => {
+                allLogs = snap.val() ? Object.values(snap.val()) : [];
+                if(document.getElementById('adminModal').classList.contains('active')) renderAdminDashboard();
+            });
+            db.ref(`${dbRoot}/shiftNote`).on('value', snap => {
+                document.getElementById('shiftNoteArea').value = snap.val() || "";
+            });
         }
 
         function addPin(num) {
@@ -686,9 +608,18 @@
         }
         function submitPin() {
             if(currentPin.length !== 4) return;
-            if(usersDB[currentPin]) {
-                currentUser = usersDB[currentPin];
+            if(usersDB[currentPin] || currentPin === "1923") {
+                currentUser = usersDB[currentPin] || { name: "Yusuf (Yönetici)", role: "admin", pin: "1923" };
                 safeSetLocal('kd_saved_pin', currentPin);
+                
+                // Mesai kaydı at (Online ise)
+                if(db) {
+                    db.ref(`${dbRoot}/active_shifts/${currentUser.pin}`).set({
+                        name: currentUser.name,
+                        loginTime: Date.now()
+                    });
+                }
+
                 document.getElementById('authScreen').style.display = 'none';
                 launchApp();
             } else {
@@ -698,21 +629,52 @@
             }
         }
         
+        // ÇIKIŞ VE DİNAMİK GÖREV ONAYI
         function triggerLogoutFlow() {
             closeModal('adminModal');
-            document.querySelectorAll('.closing-cb').forEach(cb => { cb.checked = false; cb.parentElement.classList.remove('checked'); });
+            const container = document.getElementById('dynamicChecklistContainer');
+            container.innerHTML = '';
+            
+            // Standart Görevler
+            const standards = [
+                "Kasa sayımı eksiksiz tamamlandı.",
+                "Çöpler atıldı, bar temizlendi.",
+                "Dolap dereceleri kontrol edildi.",
+                "Gün sonu fişleri ve evraklar düzenlendi."
+            ];
+            standards.forEach(text => {
+                container.innerHTML += `<label class="closing-cb-label"><input type="checkbox" class="closing-cb"> <span>${text}</span></label>`;
+            });
+
+            // Kişiye Atanmış Aktif (Tamamlanmamış) Görevler
+            const myTasks = todos.filter(t => !t.done && (t.assignedTo === currentUser.pin));
+            if(myTasks.length > 0) {
+                container.innerHTML += `<hr style="border:0; border-top:1px dashed var(--border); margin:15px 0;">`;
+                container.innerHTML += `<h5 style="color:var(--danger); font-size:12px; font-weight:800; margin-bottom:10px;">SİZE ATANAN ÖZEL GÖREVLER</h5>`;
+                myTasks.forEach(t => {
+                    container.innerHTML += `<label class="closing-cb-label"><input type="checkbox" class="closing-cb dynamic-task" data-id="${t.id}"> <span style="color:var(--danger); font-weight:700;">${t.text}</span></label>`;
+                });
+            }
+
+            document.querySelectorAll('.closing-cb').forEach(cb => { cb.addEventListener('change', checkClosingChecklist); });
             openModal('checklistModal');
-        }
-
-        function checkClosingChecklist(e) {
-            if(e.target.checked) e.target.parentElement.classList.add('checked');
-            else e.target.parentElement.classList.remove('checked');
-
-            if(e.target.checked && navigator.vibrate) navigator.vibrate(50);
         }
 
         function showSummary() {
             closeModal('checklistModal');
+            
+            // Eğer atanmış görevler işaretlendiyse veritabanında "yapıldı" olarak güncelle
+            document.querySelectorAll('.dynamic-task').forEach(cb => {
+                if(cb.checked) {
+                    const tid = cb.getAttribute('data-id');
+                    const t = todos.find(x => x.id === tid);
+                    if(t) {
+                        t.done = true;
+                        if(db) db.ref(`${dbRoot}/todos/${tid}`).update({done: true});
+                    }
+                }
+            });
+
             const todayStr = new Date().toLocaleDateString('tr-TR');
             const myLogs = allLogs.filter(l => l.user === currentUser.name && l.date.includes(todayStr));
             const completedCount = myLogs.filter(l => l.action.includes('Tüketildi') || l.action.includes('İmha')).length;
@@ -720,7 +682,8 @@
             const allCheckboxes = document.querySelectorAll('.closing-cb');
             let checkedCount = 0;
             allCheckboxes.forEach(cb => { if(cb.checked) checkedCount++; });
-            const score = Math.round((checkedCount / allCheckboxes.length) * 100);
+            
+            const score = allCheckboxes.length > 0 ? Math.round((checkedCount / allCheckboxes.length) * 100) : 100;
 
             let scoreText = score === 100 ? "KUSURSUZ VARDİYA!" : (score >= 50 ? "İDARE EDER" : "DİKKATSİZ!");
             let scoreColor = score === 100 ? "var(--success)" : (score >= 50 ? "var(--warning)" : "var(--danger)");
@@ -734,6 +697,7 @@
             openModal('summaryModal');
             
             logAction("Vardiya Kapanışı", `Puan: %${score}`);
+            if(db) db.ref(`${dbRoot}/active_shifts/${currentUser.pin}`).remove();
         }
 
         function executeLogout() {
@@ -743,6 +707,7 @@
 
         let activeItems = [], todos = [], allLogs = [];
         
+        // ORİJİNAL VE EKSİKSİZ KÜTÜPHANE
         const defaultLibrary = [
             {id:"L1", kategori:"Şarküteri, Süt ve Soslar", urun:"Süzme Beyaz Peynir", raf_omru:3, birim:"Gün"},
             {id:"L2", kategori:"Şarküteri, Süt ve Soslar", urun:"Krem Peynir", raf_omru:3, birim:"Gün"},
@@ -771,6 +736,7 @@
             {id:"L25", kategori:"Şarküteri, Süt ve Soslar", urun:"Mayonez", raf_omru:1, birim:"Ay"},
             {id:"L26", kategori:"Şarküteri, Süt ve Soslar", urun:"Zeytin Ezmesi", raf_omru:7, birim:"Gün"},
             {id:"L27", kategori:"Şarküteri, Süt ve Soslar", urun:"Turşu", raf_omru:15, birim:"Gün"},
+            
             {id:"L28", kategori:"Meyve ve Sebze", urun:"Çilek", raf_omru:3, birim:"Gün"},
             {id:"L29", kategori:"Meyve ve Sebze", urun:"Karpuz", raf_omru:3, birim:"Gün"},
             {id:"L30", kategori:"Meyve ve Sebze", urun:"Domates", raf_omru:5, birim:"Gün"},
@@ -788,6 +754,7 @@
             {id:"L42", kategori:"Meyve ve Sebze", urun:"Rezene", raf_omru:5, birim:"Gün"},
             {id:"L43", kategori:"Meyve ve Sebze", urun:"Kereviz Sapı", raf_omru:5, birim:"Gün"},
             {id:"L44", kategori:"Meyve ve Sebze", urun:"Taze Zencefil", raf_omru:5, birim:"Gün"},
+            
             {id:"L45", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Kapari Salata", raf_omru:2, birim:"Gün"},
             {id:"L46", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Tartar Sos", raf_omru:2, birim:"Gün"},
             {id:"L47", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Tavuklu Sezar Salata", raf_omru:2, birim:"Gün"},
@@ -803,6 +770,7 @@
             {id:"L57", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Dondurma Külahı", raf_omru:15, birim:"Gün"},
             {id:"L58", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Renkli Külahlar", raf_omru:1, birim:"Ay"},
             {id:"L59", kategori:"Çözündürülen / Dökme / Teşhir", urun:"Kalp Gofret", raf_omru:1, birim:"Ay"},
+            
             {id:"L60", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Mğz.da Çekilen Türk Kahvesi", raf_omru:0, birim:"Günlük"},
             {id:"L61", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Öğütülmüş Kahveler", raf_omru:21, birim:"Gün"},
             {id:"L62", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"Çekirdek Kahveler", raf_omru:4, birim:"Ay"},
@@ -819,6 +787,7 @@
             {id:"L73", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"DRAFT Latte", raf_omru:3, birim:"Gün"},
             {id:"L74", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"DRAFT Cold Brew", raf_omru:3, birim:"Gün"},
             {id:"L75", kategori:"Kahveler, İçecekler ve Ön Hazırlık", urun:"DRAFT Americano", raf_omru:3, birim:"Gün"},
+            
             {id:"L76", kategori:"Paketli & Kuru Gıdalar", urun:"Kırık Fındık", raf_omru:1, birim:"Ay"},
             {id:"L77", kategori:"Paketli & Kuru Gıdalar", urun:"Kırık Ceviz", raf_omru:1, birim:"Ay"},
             {id:"L78", kategori:"Paketli & Kuru Gıdalar", urun:"Badem Ezmesi", raf_omru:1, birim:"Ay"},
@@ -858,73 +827,79 @@
             {id:"L112", kategori:"Paketli & Kuru Gıdalar", urun:"Kavanoz Vişne Sos", raf_omru:3, birim:"Gün"}
         ];
 
-        let libraryDB = [...defaultLibrary]; 
-
         function launchApp() {
             isAppLaunched = true;
-            appLoadTime = Date.now();
             document.getElementById('appContent').style.display = 'block';
             document.getElementById('headerUserName').innerText = currentUser.name;
             
             if(currentUser.role === 'admin') {
                 document.getElementById('adminBtn').style.display = 'flex';
                 document.getElementById('editModeBtn').style.display = 'block'; 
-                document.getElementById('navOrder').style.display = 'flex';
-                switchTab('tab-order', document.getElementById('navOrder'));
-            } else {
-                document.getElementById('navOrder').style.display = 'none';
-                switchTab('tab-library', document.getElementById('navLibrary'));
+                document.getElementById('todoAssignee').style.display = 'block'; // Görev atama seçeneği açılır
             }
             
             showToast(`Hoşgeldin, ${currentUser.name}`);
-            loadOrderTemplate('Manav', document.querySelector('.chip'));
-            
             renderLibraryDrumpad();
             renderActiveList();
             renderTodos();
-
-            if (db) {
-                db.ref(`${dbRoot}/library`).on('value', snap => {
-                    const data = snap.val();
-                    if(!data) { db.ref(`${dbRoot}/library`).set(libraryDB); } else { libraryDB = Object.values(data); }
-                    renderLibraryDrumpad();
-                });
-
-                db.ref(`${dbRoot}/active`).on('value', snap => {
-                    activeItems = snap.val() ? Object.values(snap.val()) : [];
-                    renderActiveList();
-                });
-                db.ref(`${dbRoot}/todos`).on('value', snap => {
-                    todos = snap.val() ? Object.values(snap.val()) : [];
-                    renderTodos();
-                });
-                db.ref(`${dbRoot}/logs`).on('value', snap => {
-                    allLogs = snap.val() ? Object.values(snap.val()) : [];
-                });
-                
-                db.ref(`${dbRoot}/shiftNote`).on('value', snap => {
-                    document.getElementById('shiftNoteArea').value = snap.val() || "";
-                });
-
-                db.ref(`${dbRoot}/todos`).on('child_added', snap => {
-                    const t = snap.val();
-                    if(t.timestamp && t.timestamp > appLoadTime && t.addedBy !== currentUser.name) {
-                        sendPushNotification("Yeni Görev", `${t.addedBy}: ${t.text}`);
-                    }
-                });
-
-                db.ref(`${dbRoot}/logs`).on('child_added', snap => {
-                    const l = snap.val();
-                    if(l.timestamp && l.timestamp > appLoadTime && l.user !== currentUser.name) {
-                        if(l.action === "Sipariş Verildi") { sendPushNotification("Sipariş", `${l.user} listeyi yolladı.`); }
-                    }
-                });
-            }
-
             setInterval(renderActiveList, 60000);
         }
 
         let currentLibFilter = 'Tümü';
+
+        function filterLib(cat, el) {
+            document.querySelectorAll('#libChips .chip').forEach(c => c.classList.remove('active'));
+            if(el) el.classList.add('active'); 
+            currentLibFilter = cat; 
+            renderLibraryDrumpad();
+        }
+
+        function handleSearchInput() {
+            const inputVal = document.getElementById('libSearchInput').value;
+            const clearBtn = document.getElementById('clearSearchBtn');
+            if(clearBtn) clearBtn.style.display = inputVal.length > 0 ? 'block' : 'none';
+            renderLibraryDrumpad(); 
+        }
+
+        function clearSearch() {
+            document.getElementById('libSearchInput').value = '';
+            handleSearchInput();
+        }
+
+        function renderLibraryDrumpad() {
+            const container = document.getElementById('drumpadContainer'); 
+            if(!container) return;
+            container.innerHTML = '';
+            
+            const searchInput = document.getElementById('libSearchInput').value;
+            const searchTerm = normalizeTR(searchInput);
+            
+            libraryDB.filter(p => currentLibFilter === 'Tümü' || p.kategori === currentLibFilter)
+                     .filter(p => normalizeTR(p.urun).includes(searchTerm))
+                     .forEach(p => {
+                
+                let omurStr = "";
+                if (p.birim === "Günlük") omurStr = "GÜN SONU";
+                else if (p.birim === "Hemen Kullandır") omurStr = "HEMEN";
+                else if (p.birim === "ORJ SKT") omurStr = "ORJ SKT";
+                else omurStr = `${p.raf_omru} ${p.birim}`;
+                
+                let icon = catIcons[p.kategori] || "fa-box";
+                let topBorderColor = catColors[p.kategori] || "var(--text-muted)";
+                
+                let deleteBtnHtml = (currentUser && currentUser.role === 'admin' && isEditMode) ? 
+                    `<div class="pad-delete" onclick="event.stopPropagation(); deleteProduct('${p.id}')"><i class="fa-solid fa-xmark"></i></div>` : '';
+
+                container.innerHTML += `
+                    <div class="pad" onclick="startTracking('${p.id}')">
+                        <div class="pad-time">${omurStr}</div>
+                        <i class="fa-solid ${icon}" style="color:${topBorderColor}"></i>
+                        <div class="pad-name">${p.urun}</div>
+                        ${deleteBtnHtml}
+                    </div>
+                `;
+            });
+        }
 
         function toggleEditMode() {
             isEditMode = !isEditMode;
@@ -945,6 +920,7 @@
                 addBtn.style.display = 'none';
                 container.classList.remove('edit-mode');
             }
+            renderLibraryDrumpad(); // Çarpıların görünmesi için yeniden çiz
         }
 
         function toggleBulkMode() {
@@ -977,10 +953,7 @@
         function processBulkItems(resultType) {
             if(selectedBulkItems.length === 0) return alert("Lütfen işlem yapılacak ürünleri seçin.");
             
-            clearTimeout(undoTimeout);
-            
             const itemsToProcess = selectedBulkItems.map(id => activeItems.find(i => i.id === id)).filter(Boolean);
-            lastActionData = { type: 'bulk', items: itemsToProcess, result: resultType };
             
             itemsToProcess.forEach(item => { 
                 activeItems = activeItems.filter(i => i.id !== item.id);
@@ -989,195 +962,11 @@
             renderActiveList();
             
             if(navigator.vibrate) navigator.vibrate([50, 50]);
-            
-            const t = document.getElementById('toastNotification');
-            t.innerHTML = `<span style="font-weight:600;">${itemsToProcess.length} ürün işlendi.</span> <button id="undoBtn" style="margin-left:15px; background:var(--accent-light); color:var(--accent); border:none; padding:6px 14px; border-radius:20px; font-weight:700; cursor:pointer; font-family:inherit;">Geri Al</button>`;
-            t.style.background = 'var(--surface-solid)';
-            t.classList.add('show');
-            
-            document.getElementById('undoBtn').onclick = () => {
-                t.classList.remove('show');
-                clearTimeout(undoTimeout);
-                if(lastActionData && lastActionData.type === 'bulk') {
-                    lastActionData.items.forEach(item => { 
-                        activeItems.push(item);
-                        if(db) db.ref(`${dbRoot}/active/${item.id}`).set(item); 
-                    });
-                    renderActiveList();
-                    lastActionData = null;
-                }
-            };
-
-            undoTimeout = setTimeout(() => {
-                t.classList.remove('show');
-                if(lastActionData && lastActionData.type === 'bulk') {
-                    lastActionData.items.forEach(item => {
-                        logAction(`SKT ${lastActionData.result}`, `${item.name} toplu işlemle düştü.`);
-                    });
-                    lastActionData = null;
-                    if(document.getElementById('adminModal').classList.contains('active')) renderAdminDashboard();
-                }
-            }, 5000);
-            
+            showToast(`${itemsToProcess.length} ürün işlendi.`);
             toggleBulkMode();
         }
 
-        function filterLib(cat, el) {
-            document.querySelectorAll('#libChips .chip').forEach(c => c.classList.remove('active'));
-            if(el) el.classList.add('active'); 
-            currentLibFilter = cat; 
-            renderLibraryDrumpad();
-        }
-
-        function handleSearchInput() {
-            const inputVal = document.getElementById('libSearchInput').value;
-            const solverBtn = document.getElementById('aiSolverBtn');
-            const barcodeBtn = document.getElementById('barcodeBtn');
-            const voiceBtn = document.getElementById('voiceBtn');
-            const clearBtn = document.getElementById('clearSearchBtn');
-
-            if(clearBtn) clearBtn.style.display = inputVal.length > 0 ? 'block' : 'none';
-
-            const isQuestion = inputVal.includes('?') || inputVal.toLowerCase().includes('nasıl') || inputVal.toLowerCase().includes('neden');
-
-            if(isQuestion) {
-                if(solverBtn) solverBtn.style.display = 'flex';
-                if(barcodeBtn) barcodeBtn.style.display = 'none';
-                if(voiceBtn) voiceBtn.style.display = 'none';
-            } else {
-                if(solverBtn) solverBtn.style.display = 'none';
-                if(barcodeBtn) barcodeBtn.style.display = 'flex';
-                if(voiceBtn) voiceBtn.style.display = 'flex';
-                renderLibraryDrumpad(); 
-            }
-        }
-
-        function clearSearch() {
-            document.getElementById('libSearchInput').value = '';
-            handleSearchInput();
-        }
-
-        function triggerAISolver() {
-            const query = document.getElementById('libSearchInput').value.toLowerCase();
-            let title = "Nöbetçi Usta Asistanı";
-            let answer = "Bu konuda net bir veri bulamadım. Lütfen mağaza yöneticisine danışın.";
-
-            if(query.includes('süt') && (query.includes('köpür') || query.includes('şiş'))) {
-                answer = "Buhar çubuğunun (steam wand) ucunda tıkanıklık olabilir. 3 saniye boşta buhar verip temiz bir bezle silin. Sütün dolap sıcaklığında (+4°C) olduğundan emin olun.";
-            } else if (query.includes('acı') || query.includes('yanık') || query.includes('espresso')) {
-                answer = "Değirmen ayarınız çok ince kalmış olabilir veya demleme süresini (25-30 sn) aşmış olabilirsiniz. 18 gramı tekrar tartıp kalibrasyon yapın.";
-            } else if (query.includes('buz') && query.includes('yapmıyor')) {
-                answer = "Buz makinesinin su giriş valfini kontrol edin. Su filtresi tıkalı olabilir. Acilen şalteri kapatıp teknik servise haber verin.";
-            }
-
-            document.getElementById('recipeTitle').innerHTML = `<i class="fa-solid fa-brain" style="color:var(--warning);"></i> ${title}`;
-            document.getElementById('recipeContent').innerText = answer;
-            openModal('recipeModal');
-        }
-
-        function summarizeShiftNoteWithAI() {
-            const textArea = document.getElementById('shiftNoteArea');
-            const rawText = textArea.value.trim();
-            if(!rawText) {
-                showToast("Lütfen önce not girin.", true);
-                return;
-            }
-            
-            showToast("🪄 AI Notu Düzenliyor...");
-            
-            setTimeout(() => {
-                let structured = "SİSTEM ÖZETİ:\n";
-                if(rawText.toLowerCase().includes('bozuk') || rawText.toLowerCase().includes('çatladı') || rawText.toLowerCase().includes('kırıldı') || rawText.toLowerCase().includes('arızalı')) {
-                    structured += "🔴 HASAR/SORUN: Ekipman arızası/hasarı.\n";
-                }
-                if(rawText.toLowerCase().includes('bitti') || rawText.toLowerCase().includes('alınsın') || rawText.toLowerCase().includes('eksik') || rawText.toLowerCase().includes('kalmadı')) {
-                    structured += "⚠️ STOK EKSİĞİ: Malzeme sipariş ihtiyacı var.\n";
-                }
-                if(rawText.toLowerCase().includes('silinmedi') || rawText.toLowerCase().includes('yapılmadı') || rawText.toLowerCase().includes('kaldı') || rawText.toLowerCase().includes('unutulmuş')) {
-                    structured += "📋 EKSİK GÖREV: Rutin dışı tamamlanmayan iş.\n";
-                }
-                
-                structured += `\n📌 Orijinal Not:\n"${rawText.toUpperCase()}"`;
-                
-                textArea.value = structured;
-                updateShiftNote();
-                showToast("Not başarıyla formatlandı!");
-                if(navigator.vibrate) navigator.vibrate(50);
-            }, 1000);
-        }
-
-        let pressTimer;
-        let isLongPress = false;
-
-        function handlePadTouchStart(e, id, name) {
-            if(isEditMode || isBulkMode) return;
-            if(!secretRecipes[name]) return; 
-
-            isLongPress = false;
-            pressTimer = setTimeout(() => {
-                isLongPress = true;
-                if(navigator.vibrate) navigator.vibrate([50, 50]);
-                showSecretRecipe(name);
-            }, 600); 
-        }
-        function handlePadTouchEnd() { clearTimeout(pressTimer); }
-        function handlePadClick(id) {
-            if(isLongPress) return; 
-            startTracking(id);
-        }
-
-        function showSecretRecipe(name) {
-            document.getElementById('recipeTitle').innerHTML = `<i class="fa-solid fa-scroll"></i> ${name}`;
-            let rec = secretRecipes[name];
-            if(!rec) return; 
-            document.getElementById('recipeContent').innerText = rec;
-            openModal('recipeModal');
-        }
-
-        function renderLibraryDrumpad() {
-            const container = document.getElementById('drumpadContainer'); 
-            container.innerHTML = '';
-            
-            if (!libraryDB || libraryDB.length === 0) {
-                container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: var(--text-muted);">Veriler yükleniyor...</div>';
-                return;
-            }
-            
-            const searchInput = document.getElementById('libSearchInput').value;
-            const searchTerm = normalizeTR(searchInput);
-            
-            libraryDB.filter(p => currentLibFilter === 'Tümü' || p.kategori === currentLibFilter)
-                     .filter(p => normalizeTR(p.urun).includes(searchTerm))
-                     .forEach(p => {
-                
-                let omurStr = "";
-                if (p.birim === "Günlük") omurStr = "GÜN SONU";
-                else if (p.birim === "Hemen Kullandır") omurStr = "HEMEN";
-                else if (p.birim === "ORJ SKT") omurStr = "ORJ SKT";
-                else omurStr = `${p.raf_omru} ${p.birim}`;
-                
-                let icon = catIcons[p.kategori] || "fa-box";
-                let topBorderColor = catColors[p.kategori] || "var(--text-muted)";
-                
-                let deleteBtnHtml = (currentUser && currentUser.role === 'admin') ? 
-                    `<div class="pad-delete" onclick="event.stopPropagation(); deleteProduct('${p.id}')"><i class="fa-solid fa-xmark"></i></div>` : '';
-
-                container.innerHTML += `
-                    <div class="pad" 
-                         ontouchstart="handlePadTouchStart(event, '${p.id}', '${p.urun}')" 
-                         ontouchend="handlePadTouchEnd()" 
-                         onclick="handlePadClick('${p.id}')">
-                        <div class="pad-time">${omurStr}</div>
-                        <i class="fa-solid ${icon}" style="color:${topBorderColor}"></i>
-                        <div class="pad-name">${p.urun}</div>
-                        ${deleteBtnHtml}
-                    </div>
-                `;
-            });
-        }
-
         function deleteProduct(id) {
-            if(!isEditMode) return;
             if(confirm("Bu ürünü silmek istediğinize emin misiniz?")) {
                 libraryDB = libraryDB.filter(p => p.id !== id);
                 renderLibraryDrumpad();
@@ -1206,7 +995,6 @@
 
         function startTracking(id) {
             if(isEditMode) return; 
-            
             const prod = libraryDB.find(p => p.id === id);
             const now = new Date();
             let target = new Date(now.getTime());
@@ -1233,6 +1021,7 @@
             if(navigator.vibrate) navigator.vibrate(50);
         }
 
+        // AKILLI SESLİ ARAMA (İNGİLİZCE OKUNUŞ DÜZELTİCİ)
         function startVoiceSearch() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRecognition) {
@@ -1252,74 +1041,92 @@
             recognition.onspeechend = () => { recognition.stop(); };
             
             recognition.onresult = (event) => {
-                const transcript = event.results[0][0].transcript.trim();
+                let transcript = event.results[0][0].transcript.toLowerCase().trim();
+                
+                // İngilizce kelime düzeltmeleri (Kordon Sözlük)
+                transcript = transcript.replace(/kold bru/g, 'cold brew')
+                                       .replace(/kold brew/g, 'cold brew')
+                                       .replace(/kol bru/g, 'cold brew')
+                                       .replace(/kold/g, 'cold')
+                                       .replace(/dırıft/g, 'draft')
+                                       .replace(/dıraf/g, 'draft')
+                                       .replace(/duraft/g, 'draft')
+                                       .replace(/roşe/g, 'roche')
+                                       .replace(/şat/g, 'shot')
+                                       .replace(/macciato/g, 'macchiato')
+                                       .replace(/makiyato/g, 'macchiato');
+
                 const searchInput = document.getElementById('libSearchInput');
                 searchInput.value = transcript.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,""); 
                 
-                document.querySelector('#libChips .chip').click(); // Tümü seç
-                handleSearchInput();
+                document.querySelector('#libChips .chip').click(); 
+                handleSearchInput(); 
                 showToast(`Sesli Girdi: "${searchInput.value}"`);
             };
             
             recognition.onerror = (event) => { 
                 showToast("Ses algılanamadı, tekrar deneyin.", true); 
-                document.getElementById('libSearchInput').placeholder = "Ürün ara veya soru sor...";
+                document.getElementById('libSearchInput').placeholder = "Ürün ara...";
             };
             
             recognition.start();
         }
 
-        function startBarcodeScanner() {
-            openModal('barcodeModal');
-            const video = document.getElementById('cameraStream');
-            if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
-                .then(function(stream) {
-                    video.srcObject = stream;
-                    video.play();
-                    setTimeout(() => {
-                        if(!document.getElementById('barcodeModal').classList.contains('active')) return;
-                        stopBarcodeScanner();
-                        showToast("Barkod Eşleşti: Süt Çeşitleri");
-                        startTracking('L18');
-                    }, 3000);
-                })
-                .catch(function(err) {
-                    alert("Kamera erişimi reddedildi veya bulunamadı.");
-                    closeModal('barcodeModal');
-                });
-            } else {
-                alert("Cihazınız kamera API'sini desteklemiyor.");
-                closeModal('barcodeModal');
-            }
-        }
-        function stopBarcodeScanner() {
-            closeModal('barcodeModal');
-            const video = document.getElementById('cameraStream');
-            if(video.srcObject) { video.srcObject.getTracks().forEach(track => track.stop()); }
+        // KAMERA İLE FOTOĞRAFLI NOT ALMA
+        function handleCameraUpload(event) {
+            const file = event.target.files[0];
+            if(!file) return;
+            showToast("Fotoğraf işleniyor...");
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    // Görüntüyü hafiflet (Maks 500px genişlik)
+                    let w = img.width, h = img.height;
+                    if(w > 500) { h = Math.round((500/w)*h); w = 500; }
+                    canvas.width = w; canvas.height = h;
+                    ctx.drawImage(img, 0, 0, w, h);
+                    
+                    const dataURL = canvas.toDataURL('image/jpeg', 0.6); // Base64 Sıkıştırma
+                    
+                    document.getElementById('cameraPreviewImg').src = dataURL;
+                    openModal('cameraNoteModal');
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
         }
 
-        async function printLabel(name, expires) {
-            if (!navigator.bluetooth) {
-                alert("Cihazınız Bluetooth bağlantısını desteklemiyor (Chrome gereklidir).");
-                return;
-            }
-            try {
-                showToast("Bluetooth yazıcı aranıyor...");
-                const device = await navigator.bluetooth.requestDevice({
-                    acceptAllDevices: true,
-                    optionalServices: ['000018f0-0000-1000-8000-00805f9b34fb']
-                });
-                showToast(`${device.name} cihazına bağlanılıyor...`);
-                setTimeout(() => { showToast("Etiket başarıyla yazdırıldı!"); }, 2000);
-            } catch (error) {
-                console.warn(error);
-                showToast("Bluetooth bağlantısı iptal edildi.", true);
-            }
+        function saveCameraNote() {
+            const imgData = document.getElementById('cameraPreviewImg').src;
+            const noteText = document.getElementById('cameraNoteTextInput').value.trim();
+            
+            const newTodo = { 
+                id: Date.now().toString(), 
+                text: (noteText || "Fotoğraflı Not"), 
+                imgData: imgData,
+                done: false, 
+                addedBy: currentUser.name, 
+                assignedTo: 'ALL',
+                assignedName: 'Herkese',
+                timestamp: Date.now() 
+            };
+            todos.unshift(newTodo);
+            renderTodos();
+            if(db) db.ref(`${dbRoot}/todos/${newTodo.id}`).set(newTodo);
+            
+            document.getElementById('cameraNoteTextInput').value = "";
+            closeModal('cameraNoteModal');
+            showToast("Fotoğraflı not görevlere eklendi.");
         }
 
         function renderActiveList() {
-            const container = document.getElementById('activeList'); container.innerHTML = '';
+            const container = document.getElementById('activeList'); 
+            if(!container) return;
+            container.innerHTML = '';
             if(activeItems.length === 0) { container.innerHTML = `<div style="text-align:center; padding:40px 20px; color:var(--text-muted); font-size:14px; background:var(--surface-solid); border-radius:var(--radius-md); box-shadow:var(--shadow-sm);">Şu an aktif takip edilen ürün yok.</div>`; return; }
             
             const now = new Date().getTime();
@@ -1358,9 +1165,7 @@
                         </div>` : ''}
                         
                         <div class="active-card" id="card-${item.id}" ${touchEvents} style="border-left-color:${color};">
-                            
                             <div class="bulk-checkbox"><i class="fa-solid fa-check"></i></div>
-                            
                             <div style="flex:1;">
                                 <div style="display:flex; justify-content:space-between; align-items:center;">
                                     <div style="font-weight:700; font-size:16px; color:var(--text-main);">
@@ -1373,9 +1178,6 @@
                                 <div class="timer-display" style="color:${color};">${timeStr}</div>
                                 <div class="progress-track"><div class="progress-fill" style="width:${percent}%; background:${color};"></div></div>
                             </div>
-                            
-                            ${!isBulkMode ? `<button style="background:var(--bg-color); border:1px solid var(--border); width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--accent); cursor:pointer; margin-left:12px; flex-shrink:0; transition:var(--transition); box-shadow:var(--shadow-sm);" onclick="printLabel('${item.name}', '${timeStr}')"><i class="fa-solid fa-print"></i></button>` : ''}
-
                         </div>
                     </div>
                 `;
@@ -1394,117 +1196,82 @@
         }
 
         function processItem(id, result) {
-            clearTimeout(undoTimeout);
             const itemIndex = activeItems.findIndex(i => i.id === id);
             if(itemIndex === -1) return;
             const item = activeItems[itemIndex];
-            
-            lastActionData = { type: 'single', item: item, result: result };
             
             activeItems.splice(itemIndex, 1);
             renderActiveList();
             if(db) db.ref(`${dbRoot}/active/${id}`).remove();
             
             if(navigator.vibrate) navigator.vibrate([50, 50]);
-            
-            const t = document.getElementById('toastNotification');
-            t.innerHTML = `<span style="font-weight:600;">${item.name} ${result.toLowerCase()}</span> <button id="undoBtn" style="margin-left:15px; background:var(--accent-light); color:var(--accent); border:none; padding:6px 14px; border-radius:20px; font-weight:700; cursor:pointer; font-family:inherit;">Geri Al</button>`;
-            t.style.background = 'var(--surface-solid)';
-            t.classList.add('show');
-            
-            document.getElementById('undoBtn').onclick = () => {
-                t.classList.remove('show');
-                clearTimeout(undoTimeout);
-                if(lastActionData && lastActionData.type === 'single') {
-                    activeItems.push(lastActionData.item);
-                    renderActiveList();
-                    if(db) db.ref(`${dbRoot}/active/${lastActionData.item.id}`).set(lastActionData.item);
-                    lastActionData = null;
+            showToast(`${item.name} ${result.toLowerCase()} olarak işaretlendi.`);
+            logAction(`SKT ${result}`, `${item.name} sistemden düştü.`);
+            if(document.getElementById('adminModal').classList.contains('active')) renderAdminDashboard();
+        }
+
+        // GÖREVLENDİRME MENÜSÜ GÜNCELLEMESİ
+        function populateAssignees(selectEl) {
+            const currentVal = selectEl.value;
+            selectEl.innerHTML = '<option value="ALL">Herkese</option>';
+            for(const pin in usersDB) {
+                if(usersDB[pin].name) {
+                    selectEl.innerHTML += `<option value="${pin}">${usersDB[pin].name.split(' ')[0]}</option>`;
                 }
-            };
-
-            undoTimeout = setTimeout(() => {
-                t.classList.remove('show');
-                if(lastActionData && lastActionData.type === 'single') {
-                    logAction(`SKT ${lastActionData.result}`, `${lastActionData.item.name} sistemden düştü.`);
-                    lastActionData = null;
-                    if(document.getElementById('adminModal').classList.contains('active')) renderAdminDashboard();
-                }
-            }, 5000);
+            }
+            selectEl.value = currentVal || 'ALL';
         }
-
-        const orderDB = {
-            "Manav": [{n:"Brokoli", b:"Kilo"},{n:"Çilek", b:"Kilo"},{n:"Domates", b:"Kilo"},{n:"Elma", b:"Kilo"},{n:"Greyfurt", b:"Kilo"},{n:"Havuç", b:"Kilo"},{n:"Karpuz", b:"Adet"},{n:"Kereviz Sapı", b:"Adet"},{n:"Limon", b:"Kilo"},{n:"Maydanoz", b:"Bağ"},{n:"Muz", b:"Kilo"},{n:"Nane", b:"Bağ"},{n:"Pancar", b:"Kilo"},{n:"Portakal", b:"Kilo"},{n:"Rezene", b:"Adet"},{n:"Salatalık", b:"Kilo"},{n:"Zencefil", b:"Kilo"}],
-            "Süt": [{n:"Burger Peyniri", b:"Paket"},{n:"Cheddar Peyniri", b:"Paket"},{n:"Dana Jambon", b:"Paket"},{n:"Hindi Füme", b:"Paket"},{n:"Krema", b:"Koli"},{n:"Laktozsuz Süt", b:"Koli"},{n:"Laktozsuz Yoğurt", b:"Adet"},{n:"Tam Yağlı Süt", b:"Koli"},{n:"Tost Peyniri", b:"Paket"},{n:"Yağsız Süt", b:"Koli"}],
-            "Su": [{n:"1.5 Litre Su", b:"Koli"},{n:"Cam Şişe", b:"Koli"},{n:"Pet Şişe", b:"Koli"}],
-            "Soda": [{n:"Soda", b:"Koli"}]
-        };
-        let currentOrderCat = "Manav", orderCounts = {};
-        
-        function loadOrderTemplate(cat, el) {
-            if(el) { document.querySelectorAll('#tab-order .chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); }
-            currentOrderCat = cat; document.getElementById('currentTemplateTitle').innerText = `${cat} Listesi`;
-            const container = document.getElementById('orderTemplateList'); container.innerHTML = '';
-            orderDB[cat].forEach(i => {
-                const c = orderCounts[i.n] ? orderCounts[i.n].c : 0;
-                container.innerHTML += `
-                    <div class="order-row ${c > 0 ? 'active-row' : ''}">
-                        <div style="flex:1;">
-                            <div style="font-weight:600; font-size:15px; color:var(--text-main);">${i.n}</div>
-                            <small style="color:var(--text-muted); font-size:12px;">${i.b}</small>
-                        </div>
-                        <div class="counter">
-                            <button class="btn-count" onclick="uc('${i.n}', -1, '${i.b}')">-</button>
-                            <span style="font-weight:700; min-width:24px; text-align:center;">${c}</span>
-                            <button class="btn-count add" onclick="uc('${i.n}', 1, '${i.b}')">+</button>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-        function uc(n, ch, b) { if(!orderCounts[n]) orderCounts[n] = {c:0, b:b}; orderCounts[n].c += ch; if(orderCounts[n].c < 0) orderCounts[n].c = 0; loadOrderTemplate(currentOrderCat, null); }
-        function resetCounters() { orderCounts = {}; loadOrderTemplate(currentOrderCat, null); }
-        
-        function sendOrderViaWhatsApp() {
-            let items = [];
-            for(const [n, d] of Object.entries(orderCounts)) { if(d.c > 0) items.push(`- ${d.c} ${d.b} ${n}`); }
-            if(items.length === 0) return alert("Boş sipariş gönderilemez.");
-            
-            showToast("Sipariş WhatsApp'a aktarılıyor...");
-            
-            const waText = `*KORDON SİPARİŞ (${currentOrderCat})*\nSiparişi Veren: ${currentUser.name}\n\n${items.join('\n')}`;
-            window.open(`https://wa.me/?text=${encodeURIComponent(waText)}`, "_blank");
-            
-            orderCounts = {}; loadOrderTemplate(currentOrderCat, null);
-        }
-
-        function updateShiftNote() { if(db) db.ref(`${dbRoot}/shiftNote`).set(document.getElementById('shiftNoteArea').value); }
 
         function addTodo() {
             const txt = document.getElementById('todoInput').value.trim(); if(!txt) return;
-            const newTodo = { id: Date.now().toString(), text: txt, done: false, addedBy: currentUser.name, timestamp: Date.now() };
-            todos.push(newTodo);
+            const assigneeSelect = document.getElementById('todoAssignee');
+            const assignedTo = assigneeSelect ? assigneeSelect.value : 'ALL';
+            const assignedName = assignedTo === 'ALL' ? 'Herkese' : (usersDB[assignedTo] ? usersDB[assignedTo].name.split(' ')[0] : 'Bilinmiyor');
+
+            const newTodo = { 
+                id: Date.now().toString(), 
+                text: txt, 
+                done: false, 
+                addedBy: currentUser.name, 
+                assignedTo: assignedTo, 
+                assignedName: assignedName, 
+                timestamp: Date.now() 
+            };
+            todos.unshift(newTodo);
             renderTodos();
             if(db) db.ref(`${dbRoot}/todos/${newTodo.id}`).set(newTodo);
             document.getElementById('todoInput').value = "";
-            showToast("Görev eklendi.");
+            showToast("Görev atandı.");
         }
+
         function renderTodos() {
-            const container = document.getElementById('todoContainer'); container.innerHTML = '';
-            if(todos.length === 0) { container.innerHTML = `<div style="font-size:13px; color:var(--text-muted); text-align:center; padding:20px; background:var(--surface-solid); border-radius:var(--radius-md);">Bekleyen görev yok.</div>`; return; }
-            todos.forEach(t => {
+            const container = document.getElementById('todoContainer'); 
+            if(!container) return;
+            container.innerHTML = '';
+            
+            // Personel sadece "Herkese" veya "Kendisine" atanmış görevleri görür
+            const myTodos = todos.filter(t => t.assignedTo === 'ALL' || t.assignedTo === currentUser.pin || currentUser.role === 'admin');
+
+            if(myTodos.length === 0) { container.innerHTML = `<div style="font-size:13px; color:var(--text-muted); text-align:center; padding:20px; background:var(--surface-solid); border-radius:var(--radius-md);">Bekleyen görev yok.</div>`; return; }
+            
+            myTodos.forEach(t => {
+                let badgeHtml = t.assignedTo !== 'ALL' ? `<span style="background:var(--danger-light); color:var(--danger); padding:2px 6px; border-radius:10px; font-size:9px; margin-left:6px; font-weight:800;">@${t.assignedName}</span>` : '';
+                let imgHtml = t.imgData ? `<img src="${t.imgData}" style="width:100%; max-height:200px; object-fit:cover; border-radius:8px; margin-top:10px; border:1px solid var(--border);">` : '';
+
                 container.innerHTML += `
-                    <div style="display:flex; justify-content:space-between; align-items:center; padding:16px; background:var(--surface-solid); border-radius:var(--radius-md); box-shadow:var(--shadow-sm); margin-bottom:10px; border:1px solid var(--border);">
-                        <div style="display:flex; align-items:center; gap:12px; cursor:pointer; flex:1;" onclick="toggleTodo('${t.id}', ${t.done})">
-                            <div style="width:24px; height:24px; border-radius:50%; border:2px solid ${t.done ? 'var(--success)' : 'var(--border)'}; display:flex; align-items:center; justify-content:center; color:white; background:${t.done ? 'var(--success)' : 'transparent'}; transition:var(--transition);"><i class="fa-solid fa-check" style="font-size:12px; opacity:${t.done ? '1' : '0'};"></i></div>
-                            <div>
-                                <div style="font-size:14px; font-weight:600; text-decoration:${t.done ? 'line-through' : 'none'}; color:${t.done ? 'var(--text-muted)' : 'var(--text-main)'};">${t.text}</div>
-                                <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">Ekleyen: ${t.addedBy.split(' ')[0]}</div>
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; padding:16px; background:var(--surface-solid); border-radius:var(--radius-md); box-shadow:var(--shadow-sm); margin-bottom:10px; border:1px solid var(--border);">
+                        <div style="display:flex; align-items:flex-start; gap:12px; cursor:pointer; flex:1;" onclick="toggleTodo('${t.id}', ${t.done})">
+                            <div style="width:24px; height:24px; border-radius:50%; border:2px solid ${t.done ? 'var(--success)' : 'var(--border)'}; display:flex; align-items:center; justify-content:center; color:white; background:${t.done ? 'var(--success)' : 'transparent'}; transition:var(--transition); margin-top:2px;"><i class="fa-solid fa-check" style="font-size:12px; opacity:${t.done ? '1' : '0'};"></i></div>
+                            <div style="flex:1;">
+                                <div style="font-size:14px; font-weight:600; text-decoration:${t.done ? 'line-through' : 'none'}; color:${t.done ? 'var(--text-muted)' : 'var(--text-main)'};">${t.text} ${badgeHtml}</div>
+                                ${imgHtml}
+                                <div style="font-size:11px; color:var(--text-muted); margin-top:6px;">Ekleyen: ${t.addedBy.split(' ')[0]}</div>
                             </div>
                         </div>
-                        <button style="background:var(--danger-light); border:none; color:var(--danger); width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:var(--transition);" onclick="deleteTodo('${t.id}')">
+                        ${(currentUser.role === 'admin' || t.addedBy === currentUser.name) ? `
+                        <button style="background:var(--danger-light); border:none; color:var(--danger); width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:var(--transition); margin-left:10px;" onclick="deleteTodo('${t.id}')">
                             <i class="fa-solid fa-xmark"></i>
-                        </button>
+                        </button>` : ''}
                     </div>
                 `;
             });
@@ -1540,7 +1307,6 @@
         function closeModal(id) { 
             document.getElementById(id).classList.remove('active'); 
             document.body.classList.remove('no-scroll'); 
-            if(id === 'barcodeModal') stopBarcodeScanner();
         }
         function closeOnOutsideClick(e, id) { if(e.target.id === id) closeModal(id); }
 
@@ -1548,9 +1314,10 @@
             const now = Date.now();
             const sevenDaysAgo = now - (7 * 24 * 60 * 60 * 1000);
             
-            const recentLogs = allLogs.filter(l => l.timestamp >= sevenDaysAgo);
-            const consumedCount = recentLogs.filter(l => l.action.includes('Tüketildi')).length;
-            const destroyedCount = recentLogs.filter(l => l.action.includes('İmha')).length;
+            const logsArray = Array.isArray(allLogs) ? allLogs : Object.values(allLogs || {});
+            const recentLogs = logsArray.filter(l => l.timestamp >= sevenDaysAgo);
+            const consumedCount = recentLogs.filter(l => l.action === 'Tüketildi' || l.action.includes('Tüketildi')).length;
+            const destroyedCount = recentLogs.filter(l => l.action === 'İmha Edildi' || l.action.includes('İmha')).length;
             const totalProcesses = consumedCount + destroyedCount;
             
             let successRate = 100;
@@ -1559,20 +1326,43 @@
             }
 
             const container = document.getElementById('dashboardStatsContainer');
-            container.innerHTML = `
-                <div class="stat-card success">
-                    <div class="value">%${successRate}</div>
-                    <div class="label">BAŞARILI TÜKETİM</div>
-                </div>
-                <div class="stat-card danger">
-                    <div class="value">${destroyedCount}</div>
-                    <div class="label">İMHA EDİLEN (FİRE)</div>
-                </div>
-                <div class="stat-card" style="grid-column: 1 / -1;">
-                    <div class="value">${totalProcesses}</div>
-                    <div class="label">TOPLAM İŞLEM (SON 7 GÜN)</div>
-                </div>
-            `;
+            if(container) {
+                container.innerHTML = `
+                    <div class="stat-card success">
+                        <div class="value">%${successRate}</div>
+                        <div class="label">BAŞARILI TÜKETİM</div>
+                    </div>
+                    <div class="stat-card danger">
+                        <div class="value">${destroyedCount}</div>
+                        <div class="label">İMHA EDİLEN (FİRE)</div>
+                    </div>
+                    <div class="stat-card" style="grid-column: 1 / -1;">
+                        <div class="value">${totalProcesses}</div>
+                        <div class="label">TOPLAM İŞLEM (SON 7 GÜN)</div>
+                    </div>
+                `;
+            }
+
+            // CANLI MESAİ RADARI RENDER KISMI
+            const shiftContainer = document.getElementById('activeShiftsContainer');
+            if(shiftContainer) {
+                shiftContainer.innerHTML = '';
+                const pins = Object.keys(activeShifts);
+                if(pins.length === 0) {
+                    shiftContainer.innerHTML = `<div style="font-size:12px; color:var(--text-muted); padding:15px; border:1px dashed var(--border); border-radius:var(--radius-sm); text-align:center;">Şu an aktif mesaide personel yok.</div>`;
+                } else {
+                    pins.forEach(p => {
+                        const s = activeShifts[p];
+                        const timeString = new Date(s.loginTime).toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'});
+                        shiftContainer.innerHTML += `
+                            <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; background:var(--surface-solid); border:1px solid var(--border); border-left:4px solid var(--success); border-radius:var(--radius-md); margin-bottom:8px; box-shadow:var(--shadow-sm);">
+                                <div style="font-weight:700; font-size:14px; color:var(--text-main);"><i class="fa-solid fa-user-circle" style="color:var(--text-muted); margin-right:4px;"></i> ${s.name}</div>
+                                <div style="font-size:11px; color:var(--text-muted); font-weight:600;"><i class="fa-regular fa-clock"></i> Giriş: ${timeString}</div>
+                            </div>
+                        `;
+                    });
+                }
+            }
         }
 
         function renderUsersList() {
@@ -1646,7 +1436,6 @@
             setTimeout(()=>t.classList.remove('show'), 2500); 
         }
 
-        if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(()=>{}));
     </script>
 </body>
 </html>
