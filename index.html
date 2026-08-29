@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KD Kordon Pro - V29</title>
+    <title>KD Kordon Pro - Ultimate V30</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -67,13 +67,11 @@
         
         #appContent { display: none; padding-bottom: 100px; }
 
-        /* HEADER */
         .app-header { display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; position: sticky; top: 0; z-index: 50; background: var(--bg-color); }
         .brand-text { font-size: 16px; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; }
         .icon-btn { background: var(--surface-solid); border: 1px solid var(--border); box-shadow: var(--shadow-sm); width: 40px; height: 40px; border-radius: 50%; color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: var(--transition); }
         .icon-btn:active { transform: scale(0.9); }
 
-        /* BOTTOM NAV */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--surface-glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); display: flex; justify-content: space-around; padding: 15px 10px 25px 10px; z-index: 100; border-top: 1px solid var(--border); }
         .nav-item { display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--text-muted); font-size: 11px; font-weight: 600; cursor: pointer; flex: 1; transition: var(--transition); }
         .nav-item i { font-size: 20px; padding: 10px 20px; border-radius: 30px; transition: var(--transition); }
@@ -89,7 +87,6 @@
         .btn:active { transform: scale(0.97); opacity: 0.9; }
         .btn-primary { background: var(--accent); color: white; box-shadow: var(--shadow-sm); }
 
-        /* DASHBOARD ANA SAYFA */
         .profile-section { margin-bottom: 25px; }
         .profile-greeting { font-size: 28px; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 5px; }
         .profile-date { font-size: 14px; font-weight: 600; color: var(--accent); display:flex; align-items:center; gap:6px; }
@@ -104,7 +101,6 @@
         .dash-card.logout { color: var(--danger); background: var(--danger-light); border-color: transparent; }
         .dash-card span { font-size: 13px; font-weight: 700; color: var(--text-main); }
 
-        /* CHIPS & INPUTS */
         .chips-container { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; scrollbar-width: none; scroll-behavior: smooth; }
         .chips-container::-webkit-scrollbar { display: none; }
         .chip { background: var(--surface-solid); border: 1px solid var(--border); padding: 12px 20px; border-radius: 30px; font-size: 13px; font-weight: 600; color: var(--text-muted); white-space: nowrap; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-sm); }
@@ -113,14 +109,13 @@
         .form-input { width: 100%; padding: 16px 20px; background: var(--surface-solid); border: 1px solid var(--border); border-radius: var(--radius-md); font-family: inherit; font-size: 15px; font-weight: 500; color: var(--text-main); margin-bottom: 15px; transition: var(--transition); box-shadow: var(--shadow-sm); outline: none;}
         .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-light); }
 
-        /* SİPARİŞ SATIRLARI */
         .order-row { background: var(--surface-solid); border-radius: var(--radius-md); padding: 16px; box-shadow: var(--shadow-sm); display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); margin-bottom:12px; transition: var(--transition);}
         .order-row.active-row { border-color: var(--success); background: var(--success-light); }
         .counter { display: flex; align-items: center; gap: 12px; background: var(--bg-color); padding: 6px; border-radius: 30px; }
         .btn-count { background: var(--surface-solid); border: none; width: 34px; height: 34px; border-radius: 50%; font-size: 18px; font-weight: 500; color: var(--text-main); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); cursor: pointer; transition: var(--transition); }
         .btn-count:active { transform: scale(0.9); }
 
-        /* YENİ ÜRETİM LİSTESİ TASARIMI */
+        /* YENİ ÜRETİM LİSTESİ TASARIMI (Grid'den Liste Tasarımına Geçiş) */
         .library-list { display: flex; flex-direction: column; gap: 10px; min-height: 50vh; padding-bottom: 20px; }
         .lib-item { background: var(--surface-solid); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px 16px; display: flex; align-items: center; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-sm); position: relative; }
         .lib-item:active { transform: scale(0.98); background: var(--bg-color); }
@@ -156,7 +151,6 @@
         .bulk-mode .swipe-container.selected .bulk-checkbox { background:var(--accent); border-color:var(--accent); }
         .bulk-mode .swipe-container.selected .active-card { background: var(--accent-light); }
         
-        /* FLOATING BULK BAR */
         .floating-bulk-bar { position:fixed; bottom:0; left:50%; transform: translateX(-50%) translateY(100%); width:95%; max-width: 500px; background: var(--surface-glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--border); padding:15px; display:flex; gap:12px; z-index:90; border-radius: var(--radius-lg) var(--radius-lg) 0 0; box-shadow: 0 -10px 30px rgba(0,0,0,0.1); transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
         .floating-bulk-bar.show { transform: translateX(-50%) translateY(-90px); }
 
@@ -291,7 +285,7 @@
                 <button class="btn btn-primary" style="margin-top:20px; background: #25D366;" onclick="sendOrderViaWhatsApp()"><i class="fa-brands fa-whatsapp" style="font-size: 18px;"></i> WhatsApp'a Gönder</button>
             </div>
 
-            <!-- 2. ÜRETİM (LİSTE GÖRÜNÜMÜ) -->
+            <!-- 2. ÜRETİM (MODERN LİSTE) -->
             <div id="tab-library" class="tab-pane">
                 <div style="display:flex; gap:10px; margin-bottom: 20px; align-items:center;">
                     <div style="position: relative; flex: 1;">
@@ -305,7 +299,7 @@
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                     <div>
                         <h3 style="font-size: 22px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Üretim Kütüphanesi</h3>
-                        <p style="font-size:12px; color:var(--text-muted);">Takip için ürüne tıklayın.</p>
+                        <p style="font-size:12px; color:var(--text-muted);">Takibe almak için ürünün üstüne dokunun.</p>
                     </div>
                     <div style="display:flex; gap:10px;">
                         <button id="editModeBtn" onclick="toggleEditMode()" style="display:none; background:var(--accent-light); color:var(--accent); border:none; border-radius:20px; padding:8px 16px; font-weight:600; font-size:13px; cursor:pointer; transition:var(--transition);">Düzenle</button>
@@ -746,7 +740,7 @@
 
         function normalizeTR(str) {
             if(!str) return '';
-            return str.replace(/İ/g, 'i').replace(/I/g, 'ı').toLowerCase();
+            return String(str).replace(/İ/g, 'i').replace(/I/g, 'ı').toLowerCase();
         }
 
         document.addEventListener("DOMContentLoaded", () => {
@@ -754,7 +748,6 @@
             if(spinner) spinner.style.display = 'none';
 
             updateThemeIcon();
-            initSwipeNavigation();
             initDragToClose(); 
             
             setInterval(updateDateTime, 1000);
@@ -819,30 +812,6 @@
             
             document.querySelectorAll('.clock-text').forEach(el => el.innerText = timeStr);
             document.querySelectorAll('.date-text').forEach(el => el.innerText = dateStr);
-        }
-
-        function initSwipeNavigation() {
-            let dragStartX = 0;
-            const container = document.getElementById('drumpadContainer');
-            if(!container) return;
-            container.addEventListener('touchstart', e => { dragStartX = e.touches[0].clientX; }, {passive: true});
-            container.addEventListener('touchend', e => {
-                let dragEndX = e.changedTouches[0].clientX;
-                let diff = dragStartX - dragEndX;
-                
-                if (Math.abs(diff) > 70) {
-                    let chips = Array.from(document.querySelectorAll('#libChips .chip'));
-                    let idx = chips.findIndex(c => c.classList.contains('active'));
-                    
-                    if (diff > 0 && idx < chips.length - 1) chips[idx + 1].click();
-                    else if (diff < 0 && idx > 0) chips[idx - 1].click();
-                    
-                    setTimeout(() => {
-                        let activeChip = document.querySelector('#libChips .chip.active');
-                        if(activeChip) activeChip.scrollIntoView({behavior: "smooth", inline: "center", block: "nearest"});
-                    }, 50);
-                }
-            });
         }
 
         function showLoginOrApp() {
@@ -1259,7 +1228,7 @@
             const container = document.getElementById('drumpadContainer'); 
             if(!container) return;
             container.innerHTML = '';
-            container.className = 'library-list'; // LİSTE GÖRÜNÜMÜ AKTİF
+            container.className = 'library-list'; // LİSTE GÖRÜNÜMÜ
             
             if (!libraryDB || libraryDB.length === 0) {
                 libraryDB = [...defaultLibrary];
@@ -1293,14 +1262,15 @@
                     let recipeBtn = secretRecipes[p.urun] ? `<button class="recipe-btn" onclick="event.stopPropagation(); showSecretRecipe('${p.urun}')"><i class="fa-solid fa-book-open"></i></button>` : '';
                     rightActionHtml = `
                         ${recipeBtn}
-                        <button class="lib-add-btn" onclick="event.stopPropagation(); startTracking('${p.id}')"><i class="fa-solid fa-plus"></i></button>
+                        <button class="lib-add-btn" onclick="event.stopPropagation(); startTracking('${p.id}', this)"><i class="fa-solid fa-plus"></i></button>
                     `;
                 }
 
                 let editClass = isEditMode ? 'edit-mode' : '';
 
+                // DOKUNMATİK ÇAKIŞMASI KALDIRILDI: onclick ile doğrudan fonksiyon çağrıldı.
                 container.innerHTML += `
-                    <div class="lib-item ${editClass}" onclick="if(!isEditMode) startTracking('${p.id}')">
+                    <div class="lib-item ${editClass}" onclick="if(!isEditMode) startTracking('${p.id}', this.querySelector('.lib-add-btn'))">
                         <div class="lib-icon" style="background: ${topBorderColor}20; color: ${topBorderColor};">
                             <i class="fa-solid ${icon}"></i>
                         </div>
@@ -1443,33 +1413,60 @@
             document.getElementById('newProdName').value = "";
         }
 
-        function startTracking(id) {
+        function startTracking(id, btnElement) {
             if(isEditMode) return; 
             const prod = libraryDB.find(p => p.id === id);
             if(!prod) return;
+
             const now = new Date();
             let target = new Date(now.getTime());
 
-            if (prod.birim === "Günlük") { target.setHours(23, 59, 59); }
-            else if (prod.birim === "Hemen Kullandır") { target = new Date(now.getTime() + 60000); }
-            else if (prod.birim === "Gün") { target.setDate(now.getDate() + prod.raf_omru); }
-            else if (prod.birim === "Ay") { target.setMonth(now.getMonth() + prod.raf_omru); }
-            else if (prod.birim === "Yıl") { target.setFullYear(now.getFullYear() + prod.raf_omru); }
-            else if (prod.birim === "ORJ SKT") { target.setFullYear(now.getFullYear() + 1); }
+            // TARİH HATASINA KARŞI GÜVENLİK DUVARI: Sayısal (integer) olduğundan %100 emin oluyoruz.
+            const rafOmruNum = parseInt(prod.raf_omru, 10) || 0;
 
-            const newItem = {
-                id: Date.now().toString() + Math.floor(Math.random()*1000),
-                prodId: prod.id, name: prod.urun, icon: catIcons[prod.kategori] || "fa-box",
-                startedAt: now.toISOString(),
-                expiresAt: target.toISOString(),
-                startedBy: currentUser.name
-            };
-            
-            activeItems.push(newItem);
-            renderActiveList();
-            if(db) db.ref(`${dbRoot}/active/${newItem.id}`).set(newItem);
-            showToast(`${prod.urun} takibe alındı.`);
-            if(navigator.vibrate) navigator.vibrate(50);
+            try {
+                if (prod.birim === "Günlük") { target.setHours(23, 59, 59); }
+                else if (prod.birim === "Hemen Kullandır") { target = new Date(now.getTime() + 60000); }
+                else if (prod.birim === "Gün") { target.setDate(now.getDate() + rafOmruNum); }
+                else if (prod.birim === "Ay") { target.setMonth(now.getMonth() + rafOmruNum); }
+                else if (prod.birim === "Yıl") { target.setFullYear(now.getFullYear() + rafOmruNum); }
+                else if (prod.birim === "ORJ SKT") { target.setFullYear(now.getFullYear() + 1); }
+
+                const newItem = {
+                    id: Date.now().toString() + Math.floor(Math.random()*1000),
+                    prodId: prod.id, name: prod.urun, icon: catIcons[prod.kategori] || "fa-box",
+                    startedAt: now.toISOString(),
+                    expiresAt: target.toISOString(),
+                    startedBy: currentUser.name
+                };
+                
+                activeItems.push(newItem);
+                renderActiveList();
+                if(db) db.ref(`${dbRoot}/active/${newItem.id}`).set(newItem);
+                
+                // MÜKEMMEL GÖRSEL GERİ BİLDİRİM (ANIMASYON)
+                showToast(`✅ ${prod.urun} takibe alındı!`);
+                if(navigator.vibrate) navigator.vibrate([50]);
+
+                if(btnElement) {
+                    const originalBg = btnElement.style.background;
+                    const originalColor = btnElement.style.color;
+                    const originalHtml = btnElement.innerHTML;
+
+                    btnElement.style.background = 'var(--success)';
+                    btnElement.style.color = 'white';
+                    btnElement.innerHTML = '<i class="fa-solid fa-check"></i>';
+
+                    setTimeout(() => {
+                        btnElement.style.background = originalBg;
+                        btnElement.style.color = originalColor;
+                        btnElement.innerHTML = originalHtml;
+                    }, 800);
+                }
+            } catch(e) {
+                console.error("Tarih hesaplama hatası:", e);
+                showToast("Ürün eklenirken bir sorun oluştu.", true);
+            }
         }
 
         function startVoiceSearch() {
