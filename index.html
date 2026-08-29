@@ -67,12 +67,12 @@
 
         /* HEADER */
         .app-header { background: var(--surface-glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
-        .datetime-container { display: flex; flex-direction: column; }
+        .datetime-container { display: flex; flex-direction: column; cursor: pointer; }
         .clock-text { font-size: 20px; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; line-height: 1.1; }
         .date-text { font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; }
 
         .header-actions { display: flex; align-items: center; gap: 8px; }
-        .user-badge { display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 13px; color: var(--danger); background: var(--danger-light); padding: 8px 14px; border-radius: 30px; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-sm); border: 1px solid var(--danger); }
+        .user-badge { display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 13px; color: var(--text-main); background: var(--surface-solid); padding: 8px 14px; border-radius: 30px; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-sm); border: 1px solid var(--border); }
         .user-badge:active { transform: scale(0.95); opacity: 0.8; }
         .icon-btn { background: var(--surface-solid); border: 1px solid var(--border); box-shadow: var(--shadow-sm); width: 40px; height: 40px; border-radius: 50%; color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: var(--transition); }
         .icon-btn:active { transform: scale(0.9); }
@@ -101,6 +101,13 @@
         
         .form-input { width: 100%; padding: 16px 20px; background: var(--surface-solid); border: 1px solid var(--border); border-radius: var(--radius-md); font-family: inherit; font-size: 15px; font-weight: 500; color: var(--text-main); margin-bottom: 15px; transition: var(--transition); box-shadow: var(--shadow-sm); outline: none;}
         .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-light); }
+
+        /* Sipariş Satırları */
+        .order-row { background: var(--surface-solid); border-radius: var(--radius-md); padding: 16px; box-shadow: var(--shadow-sm); display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); margin-bottom:12px; transition: var(--transition);}
+        .order-row.active-row { border-color: var(--success); background: var(--success-light); }
+        .counter { display: flex; align-items: center; gap: 12px; background: var(--bg-color); padding: 6px; border-radius: 30px; }
+        .btn-count { background: var(--surface-solid); border: none; width: 34px; height: 34px; border-radius: 50%; font-size: 18px; font-weight: 500; color: var(--text-main); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); cursor: pointer; transition: var(--transition); }
+        .btn-count:active { transform: scale(0.9); }
 
         /* SKT Drumpad */
         .drumpad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; min-height: 50vh; align-content: start; }
@@ -154,7 +161,6 @@
         .toast { position: fixed; top: 30px; left: 50%; transform: translateX(-50%) translateY(-100px); background: var(--surface-solid); color: var(--text-main); box-shadow: var(--shadow-md); padding: 14px 24px; border-radius: 40px; font-size: 14px; font-weight: 600; z-index: 9999; transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); opacity: 0; white-space: nowrap; display:flex; align-items:center; border: 1px solid var(--border);}
         .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
         
-        /* Dashboard Stats */
         .dashboard-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
         .stat-card { background: var(--bg-color); padding: 15px; border-radius: var(--radius-md); text-align: center; border: 1px solid var(--border); }
         .stat-card .value { font-size: 24px; font-weight: 800; color: var(--text-main); margin-bottom: 5px; }
@@ -164,12 +170,17 @@
         .stat-card.success { background: var(--success-light); border-color: var(--success-light); }
         .stat-card.success .value { color: var(--success); }
 
+        /* CAMERA / BARCODE MODAL */
+        #cameraStream { width: 100%; border-radius: var(--radius-md); background: #000; min-height: 250px; object-fit: cover; }
+        .scan-line { position: absolute; width: 100%; height: 2px; background: var(--success); top: 50%; box-shadow: 0 0 10px var(--success); animation: scan 2s infinite linear; }
+        @keyframes scan { 0% { top: 10%; } 50% { top: 90%; } 100% { top: 10%; } }
+
     </style>
 </head>
 <body>
 
     <!-- GİRİŞ EKRANI (PIN) -->
-    <div id="authScreen" style="display:none;">
+    <div id="authScreen" style="display:flex;">
         <div class="auth-card">
             <i class="fa-solid fa-shield-check" style="font-size: 40px; color: var(--accent); margin-bottom:15px;"></i>
             <h2 style="color:var(--text-main); font-weight:700; font-size:22px;">Personel Girişi</h2>
@@ -212,10 +223,26 @@
 
         <div class="app-container">
             
-            <!-- 1. ÜRETİM (DRUMPAD) -->
+            <!-- 1. SİPARİŞ -->
+            <div id="tab-order" class="tab-pane">
+                <div class="chips-container" id="categoryChips">
+                    <div class="chip active" onclick="loadOrderTemplate('Manav', this)">🥦 Manav</div>
+                    <div class="chip" onclick="loadOrderTemplate('Süt', this)">🥛 Süt</div>
+                    <div class="chip" onclick="loadOrderTemplate('Su', this)">💧 Su</div>
+                    <div class="chip" onclick="loadOrderTemplate('Soda', this)">🥤 Soda</div>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <h3 id="currentTemplateTitle" style="font-size: 22px; font-weight: 700; color: var(--text-main);">Manav Listesi</h3>
+                    <button onclick="resetCounters()" style="background:none; border:none; color:var(--accent); font-size:14px; font-weight: 600; cursor:pointer;">Sıfırla</button>
+                </div>
+                <div id="orderTemplateList" class="list-grid mb-4"></div>
+                <button class="btn btn-primary" style="margin-top:20px; background: #25D366;" onclick="sendOrderViaWhatsApp()"><i class="fa-brands fa-whatsapp" style="font-size: 18px;"></i> WhatsApp'a Gönder</button>
+            </div>
+
+            <!-- 2. ÜRETİM (DRUMPAD) -->
             <div id="tab-library" class="tab-pane active">
 
-                <!-- Arama Motoru, Kamera Notu ve Sesli Komut -->
+                <!-- ŞİMŞEK ARAMA, KAMERA VE SESLİ ASİSTAN -->
                 <div style="display:flex; gap:10px; margin-bottom: 20px; align-items:center;">
                     <div style="position: relative; flex: 1;">
                         <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 18px; top: 16px; color: var(--text-muted);"></i>
@@ -253,7 +280,7 @@
                 <div class="drumpad-grid" id="drumpadContainer"></div>
             </div>
 
-            <!-- 2. AKTİF TAKİP -->
+            <!-- 3. AKTİF TAKİP -->
             <div id="tab-active" class="tab-pane">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                     <div>
@@ -271,7 +298,7 @@
                 </div>
             </div>
 
-            <!-- 3. GÖREVLER & DİJİTAL PANO -->
+            <!-- 4. GÖREVLER & DİJİTAL PANO -->
             <div id="tab-todos" class="tab-pane">
                 <h3 style="font-size: 22px; font-weight: 700; color: var(--text-main); margin-bottom: 20px;">Görev Panosu</h3>
 
@@ -312,15 +339,28 @@
     <div class="modal-overlay" id="cameraNoteModal" onclick="closeOnOutsideClick(event, 'cameraNoteModal')">
         <div class="modal-content" style="text-align: center;">
             <div class="drag-handle"></div>
-            <h3 style="font-size:20px; font-weight:700; margin-bottom:15px; color:var(--text-main);">Fotoğraflı Görev Oluştur</h3>
+            <h3 style="font-size:20px; font-weight:700; margin-bottom:15px; color:var(--text-main);">Fotoğraflı Kayıt</h3>
             <img id="cameraPreviewImg" src="" style="width:100%; max-height: 250px; object-fit:cover; border-radius:var(--radius-md); margin-bottom:15px; border:1px solid var(--border); box-shadow:var(--shadow-sm);">
             
-            <input type="text" id="cameraNoteTextInput" class="form-input" placeholder="Fotoğrafla ilgili açıklama yazın..." style="margin-bottom:20px;">
+            <input type="text" id="cameraNoteTextInput" class="form-input" placeholder="Fotoğrafla ilgili açıklama yazın..." style="margin-bottom:10px;">
             
-            <div style="display:flex; gap:10px;">
-                <button class="btn" style="background:var(--bg-color); color:var(--text-main);" onclick="closeModal('cameraNoteModal')">İptal</button>
-                <button class="btn btn-primary" onclick="saveCameraNote()">Görevi Kaydet</button>
+            <div style="display:flex; gap:10px; flex-direction:column; margin-top:10px;">
+                <button class="btn btn-primary" onclick="saveCameraNote()">Görev Panosuna Ekle</button>
+                <button class="btn" style="background:var(--success-light); color:var(--success);" onclick="saveCameraAsLog()">Sadece Log/Not Olarak Kaydet</button>
+                <button class="btn" style="background:transparent; color:var(--text-muted); border:1px solid var(--border);" onclick="closeModal('cameraNoteModal')">İptal</button>
             </div>
+        </div>
+    </div>
+
+    <!-- SİSTEM LOGLARI MODALI (ADMİN) -->
+    <div class="modal-overlay" id="logsModal" onclick="closeOnOutsideClick(event, 'logsModal')">
+        <div class="modal-content">
+            <div class="drag-handle"></div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h3 style="font-size:22px; font-weight:700; color:var(--text-main);">Sistem Logları</h3>
+                <button onclick="closeModal('logsModal'); openModal('adminModal');" style="background:none; border:none; font-size:16px; font-weight:600; color:var(--accent); cursor:pointer;">Geri</button>
+            </div>
+            <div id="logsList" style="max-height: 65vh; overflow-y: auto;"></div>
         </div>
     </div>
 
@@ -371,12 +411,17 @@
                 <div id="activeShiftsContainer"></div>
             </div>
 
-            <div class="admin-grid" style="margin-top:15px;">
+            <div class="admin-grid" style="margin-top:15px; display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
                 <div class="admin-card" onclick="closeModal('adminModal'); openModal('usersModal');" style="background:var(--bg-color); border:none; padding:15px; border-radius:var(--radius-md); text-align:center; cursor:pointer;">
                     <i class="fa-solid fa-users" style="color:var(--accent); font-size:24px; margin-bottom:8px;"></i>
                     <div style="font-weight:600; font-size:13px; color:var(--text-main);">Personel Yönetimi</div>
                 </div>
+                <div class="admin-card" onclick="closeModal('adminModal'); openModal('logsModal'); renderLogsList();" style="background:var(--bg-color); border:none; padding:15px; border-radius:var(--radius-md); text-align:center; cursor:pointer;">
+                    <i class="fa-solid fa-clipboard-list" style="color:var(--warning); font-size:24px; margin-bottom:8px;"></i>
+                    <div style="font-weight:600; font-size:13px; color:var(--text-main);">Sistem Logları</div>
+                </div>
             </div>
+            
             <button class="btn" style="margin-top:25px; background:var(--danger-light); color:var(--danger);" onclick="executeLogout()">Sistemden Komple Çıkış Yap</button>
         </div>
     </div>
@@ -403,6 +448,35 @@
                 </div>
                 <button class="btn btn-primary" onclick="addUser()">Sisteme Kaydet</button>
             </div>
+        </div>
+    </div>
+
+    <!-- YENİ ÜRÜN EKLE MODALI -->
+    <div class="modal-overlay" id="addProdModal" onclick="closeOnOutsideClick(event, 'addProdModal')">
+        <div class="modal-content">
+            <div class="drag-handle"></div>
+            <h3 style="font-size:22px; font-weight:700; margin-bottom:20px; color:var(--text-main);">Yeni Ürün</h3>
+            <input type="text" id="newProdName" class="form-input" placeholder="Ürün Adı">
+            <select id="newProdCat" class="form-input">
+                <option value="Şarküteri, Süt ve Soslar">Süt ve Soslar</option>
+                <option value="Paketli & Kuru Gıdalar">Kuru Gıdalar</option>
+                <option value="Meyve ve Sebze">Meyve/Sebze</option>
+                <option value="Çözündürülen / Dökme / Teşhir">Teşhir/Çözündürülen</option>
+                <option value="Kahveler, İçecekler ve Ön Hazırlık">Kahveler/Ön Haz.</option>
+                <option value="Paketli Şarküteri">Paketli Şarküteri</option>
+            </select>
+            <div style="display:flex; gap:10px; margin-bottom: 25px;">
+                <input type="number" id="newProdTime" class="form-input" placeholder="Süre" style="flex:1; margin-bottom: 0;">
+                <select id="newProdUnit" class="form-input" style="flex:1; margin-bottom: 0;">
+                    <option value="Gün">Gün</option>
+                    <option value="Ay">Ay</option>
+                    <option value="Yıl">Yıl</option>
+                    <option value="Günlük">Gün Sonu</option>
+                    <option value="ORJ SKT">ORJ SKT</option>
+                    <option value="Hemen Kullandır">Hemen</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" onclick="saveCustomProduct()">Kütüphaneye Ekle</button>
         </div>
     </div>
 
@@ -435,6 +509,7 @@
           storageBucket: "raf-omru-takip-uygulamasi.firebasestorage.app"
         };
         
+        // KÜTÜPHANE VE DEĞİŞKENLER GLOBALDE TANIMLANDI (JS ÇÖKMESİNİ ÖNLER)
         let db = null;
         let currentUser = null; 
         let currentPin = "";
@@ -442,272 +517,26 @@
             "1923": { name: "Yusuf (Yönetici)", role: "admin", pin: "1923" }
         };
         
-        const dbRoot = 'kd_kordon_pro_v20'; // Temiz ve stabil son veritabanı alanı
+        const dbRoot = 'kd_kordon_pro_v21'; // Temiz ve stabil son veritabanı alanı
         let isAppLaunched = false;
         let isBulkMode = false;
+        let isEditMode = false;
         let selectedBulkItems = [];
         let activeShifts = {};
+
+        let activeItems = [], todos = [], allLogs = [];
 
         const catColors = {
             "Şarküteri, Süt ve Soslar": "#007AFF", 
             "Meyve ve Sebze": "#34C759", 
             "Çözündürülen / Dökme / Teşhir": "#AF52DE", 
             "Kahveler, İçecekler ve Ön Hazırlık": "#FF9500", 
-            "Paketli & Kuru Gıdalar": "#8E8E93" 
+            "Paketli & Kuru Gıdalar": "#8E8E93",
+            "Paketli Şarküteri": "#FF3B30"
         };
 
-        const catIcons = { "Şarküteri, Süt ve Soslar": "fa-cheese", "Paketli & Kuru Gıdalar": "fa-box", "Meyve ve Sebze": "fa-apple-whole", "Çözündürülen / Dökme / Teşhir": "fa-ice-cream", "Kahveler, İçecekler ve Ön Hazırlık": "fa-mug-hot" };
+        const catIcons = { "Şarküteri, Süt ve Soslar": "fa-cheese", "Paketli & Kuru Gıdalar": "fa-box", "Meyve ve Sebze": "fa-apple-whole", "Çözündürülen / Dökme / Teşhir": "fa-ice-cream", "Kahveler, İçecekler ve Ön Hazırlık": "fa-mug-hot", "Paketli Şarküteri": "fa-bacon" };
 
-        function normalizeTR(str) {
-            return str.replace(/İ/g, 'i').replace(/I/g, 'ı').toLowerCase();
-        }
-
-        document.addEventListener("DOMContentLoaded", () => {
-            updateThemeIcon();
-            initSwipeNavigation();
-            
-            setInterval(updateDateTime, 1000);
-            updateDateTime();
-
-            // SIFIR GECİKME: Sisteme anında giriş kontrolü
-            const savedPin = safeGetLocal('kd_saved_pin');
-            if(savedPin) {
-                currentUser = { name: "Personel", role: "staff", pin: savedPin }; // DB gelene kadar geçici
-                document.getElementById('authScreen').style.display = 'none';
-                launchApp();
-            } else {
-                document.getElementById('authScreen').style.display = 'flex';
-            }
-
-            // Arkaplanda DB Bağla
-            setTimeout(initDatabase, 50);
-        });
-
-        function updateDateTime() {
-            const now = new Date();
-            const timeStr = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
-            const dateStr = now.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', weekday: 'long' });
-            
-            const clockEl = document.getElementById('clockDisplay');
-            const dateEl = document.getElementById('dateDisplay');
-            if(clockEl) clockEl.innerText = timeStr;
-            if(dateEl) dateEl.innerText = dateStr;
-        }
-
-        function initSwipeNavigation() {
-            let dragStartX = 0;
-            const container = document.getElementById('drumpadContainer');
-            if(!container) return;
-            container.addEventListener('touchstart', e => { dragStartX = e.touches[0].clientX; }, {passive: true});
-            container.addEventListener('touchend', e => {
-                let dragEndX = e.changedTouches[0].clientX;
-                let diff = dragStartX - dragEndX;
-                
-                if (Math.abs(diff) > 70) {
-                    let chips = Array.from(document.querySelectorAll('#libChips .chip'));
-                    let idx = chips.findIndex(c => c.classList.contains('active'));
-                    
-                    if (diff > 0 && idx < chips.length - 1) chips[idx + 1].click();
-                    else if (diff < 0 && idx > 0) chips[idx - 1].click();
-                    
-                    setTimeout(() => {
-                        let activeChip = document.querySelector('#libChips .chip.active');
-                        if(activeChip) activeChip.scrollIntoView({behavior: "smooth", inline: "center", block: "nearest"});
-                    }, 50);
-                }
-            });
-        }
-
-        function initDatabase() {
-            try {
-                if(typeof firebase !== 'undefined') {
-                    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-                    db = firebase.database();
-                    
-                    db.ref(`${dbRoot}/users`).on('value', snap => {
-                        const data = snap.val();
-                        if(!data) {
-                            db.ref(`${dbRoot}/users/1923`).set(usersDB["1923"]);
-                        } else {
-                            usersDB = data;
-                        }
-                        
-                        // Güncel yetkileri kontrol et
-                        const savedPin = safeGetLocal('kd_saved_pin');
-                        if(savedPin && usersDB[savedPin]) {
-                            currentUser = usersDB[savedPin];
-                            document.getElementById('headerUserName').innerText = currentUser.name;
-                            if(currentUser.role === 'admin') {
-                                document.getElementById('adminBtn').style.display = 'flex';
-                                document.getElementById('editModeBtn').style.display = 'block'; 
-                                document.getElementById('todoAssignee').style.display = 'block'; // Admin ise görev atayabilir
-                            }
-                        }
-                        
-                        if (isAppLaunched && document.getElementById('usersModal').classList.contains('active')) {
-                            renderUsersList();
-                        }
-                    });
-
-                    // Canlı Mesai Takibi Listesi
-                    db.ref(`${dbRoot}/active_shifts`).on('value', snap => {
-                        activeShifts = snap.val() || {};
-                        if(document.getElementById('adminModal').classList.contains('active')) {
-                            renderAdminDashboard();
-                        }
-                    });
-
-                    syncDataBackground();
-                }
-            } catch(e) {
-                console.warn("Veritabanı uyarısı (Offline çalışılabilir):", e);
-            }
-        }
-
-        function syncDataBackground() {
-            if(!db) return;
-            
-            // Eğer Firebase bağlandıysa mevcut vardiyayı kaydet
-            if(currentUser && currentUser.pin) {
-                db.ref(`${dbRoot}/active_shifts/${currentUser.pin}`).set({
-                    name: currentUser.name,
-                    loginTime: Date.now()
-                });
-            }
-
-            db.ref(`${dbRoot}/library`).on('value', snap => {
-                const data = snap.val();
-                if(data) { libraryDB = Object.values(data); renderLibraryDrumpad(); } 
-                else { db.ref(`${dbRoot}/library`).set(libraryDB); }
-            });
-
-            db.ref(`${dbRoot}/active`).on('value', snap => {
-                activeItems = snap.val() ? Object.values(snap.val()) : [];
-                renderActiveList();
-            });
-            db.ref(`${dbRoot}/todos`).on('value', snap => {
-                todos = snap.val() ? Object.values(snap.val()) : [];
-                renderTodos();
-            });
-            db.ref(`${dbRoot}/logs`).on('value', snap => {
-                allLogs = snap.val() ? Object.values(snap.val()) : [];
-                if(document.getElementById('adminModal').classList.contains('active')) renderAdminDashboard();
-            });
-            db.ref(`${dbRoot}/shiftNote`).on('value', snap => {
-                document.getElementById('shiftNoteArea').value = snap.val() || "";
-            });
-        }
-
-        function addPin(num) {
-            if(currentPin.length < 4) { currentPin += num; updatePinDisplay(); }
-            if(currentPin.length === 4) submitPin();
-        }
-        function clearPin() { currentPin = ""; updatePinDisplay(); }
-        function updatePinDisplay() {
-            for(let i=1; i<=4; i++) { document.getElementById(`dot${i}`).className = `pin-dot ${i <= currentPin.length ? 'filled' : ''}`; }
-        }
-        function submitPin() {
-            if(currentPin.length !== 4) return;
-            if(usersDB[currentPin] || currentPin === "1923") {
-                currentUser = usersDB[currentPin] || { name: "Yusuf (Yönetici)", role: "admin", pin: "1923" };
-                safeSetLocal('kd_saved_pin', currentPin);
-                
-                // Mesai kaydı at (Online ise)
-                if(db) {
-                    db.ref(`${dbRoot}/active_shifts/${currentUser.pin}`).set({
-                        name: currentUser.name,
-                        loginTime: Date.now()
-                    });
-                }
-
-                document.getElementById('authScreen').style.display = 'none';
-                launchApp();
-            } else {
-                showToast("Hatalı PIN kodu.", true);
-                clearPin();
-                if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
-            }
-        }
-        
-        // ÇIKIŞ VE DİNAMİK GÖREV ONAYI
-        function triggerLogoutFlow() {
-            closeModal('adminModal');
-            const container = document.getElementById('dynamicChecklistContainer');
-            container.innerHTML = '';
-            
-            // Standart Görevler
-            const standards = [
-                "Kasa sayımı eksiksiz tamamlandı.",
-                "Çöpler atıldı, bar temizlendi.",
-                "Dolap dereceleri kontrol edildi.",
-                "Gün sonu fişleri ve evraklar düzenlendi."
-            ];
-            standards.forEach(text => {
-                container.innerHTML += `<label class="closing-cb-label"><input type="checkbox" class="closing-cb"> <span>${text}</span></label>`;
-            });
-
-            // Kişiye Atanmış Aktif (Tamamlanmamış) Görevler
-            const myTasks = todos.filter(t => !t.done && (t.assignedTo === currentUser.pin));
-            if(myTasks.length > 0) {
-                container.innerHTML += `<hr style="border:0; border-top:1px dashed var(--border); margin:15px 0;">`;
-                container.innerHTML += `<h5 style="color:var(--danger); font-size:12px; font-weight:800; margin-bottom:10px;">SİZE ATANAN ÖZEL GÖREVLER</h5>`;
-                myTasks.forEach(t => {
-                    container.innerHTML += `<label class="closing-cb-label"><input type="checkbox" class="closing-cb dynamic-task" data-id="${t.id}"> <span style="color:var(--danger); font-weight:700;">${t.text}</span></label>`;
-                });
-            }
-
-            document.querySelectorAll('.closing-cb').forEach(cb => { cb.addEventListener('change', checkClosingChecklist); });
-            openModal('checklistModal');
-        }
-
-        function showSummary() {
-            closeModal('checklistModal');
-            
-            // Eğer atanmış görevler işaretlendiyse veritabanında "yapıldı" olarak güncelle
-            document.querySelectorAll('.dynamic-task').forEach(cb => {
-                if(cb.checked) {
-                    const tid = cb.getAttribute('data-id');
-                    const t = todos.find(x => x.id === tid);
-                    if(t) {
-                        t.done = true;
-                        if(db) db.ref(`${dbRoot}/todos/${tid}`).update({done: true});
-                    }
-                }
-            });
-
-            const todayStr = new Date().toLocaleDateString('tr-TR');
-            const myLogs = allLogs.filter(l => l.user === currentUser.name && l.date.includes(todayStr));
-            const completedCount = myLogs.filter(l => l.action.includes('Tüketildi') || l.action.includes('İmha')).length;
-            
-            const allCheckboxes = document.querySelectorAll('.closing-cb');
-            let checkedCount = 0;
-            allCheckboxes.forEach(cb => { if(cb.checked) checkedCount++; });
-            
-            const score = allCheckboxes.length > 0 ? Math.round((checkedCount / allCheckboxes.length) * 100) : 100;
-
-            let scoreText = score === 100 ? "KUSURSUZ VARDİYA!" : (score >= 50 ? "İDARE EDER" : "DİKKATSİZ!");
-            let scoreColor = score === 100 ? "var(--success)" : (score >= 50 ? "var(--warning)" : "var(--danger)");
-
-            let summaryHtml = `Bugün senin vardiyanda toplam <b>${completedCount}</b> ürün işlemi yapıldı.<br><br>
-            <div style="font-size: 42px; font-weight: 800; color: ${scoreColor}; margin: 10px 0;">%${score}</div>
-            <div style="font-weight:700; color:${scoreColor}; margin-bottom:20px; font-size:14px;">VARDİYA PUANI (${scoreText})</div>
-            Günün yorgunluğunu atma vakti geldi, iyi dinlenmeler!`;
-            
-            document.getElementById('summaryText').innerHTML = summaryHtml;
-            openModal('summaryModal');
-            
-            logAction("Vardiya Kapanışı", `Puan: %${score}`);
-            if(db) db.ref(`${dbRoot}/active_shifts/${currentUser.pin}`).remove();
-        }
-
-        function executeLogout() {
-            safeRemoveLocal('kd_saved_pin');
-            location.reload();
-        }
-
-        let activeItems = [], todos = [], allLogs = [];
-        
-        // ORİJİNAL VE EKSİKSİZ KÜTÜPHANE
         const defaultLibrary = [
             {id:"L1", kategori:"Şarküteri, Süt ve Soslar", urun:"Süzme Beyaz Peynir", raf_omru:3, birim:"Gün"},
             {id:"L2", kategori:"Şarküteri, Süt ve Soslar", urun:"Krem Peynir", raf_omru:3, birim:"Gün"},
@@ -736,7 +565,20 @@
             {id:"L25", kategori:"Şarküteri, Süt ve Soslar", urun:"Mayonez", raf_omru:1, birim:"Ay"},
             {id:"L26", kategori:"Şarküteri, Süt ve Soslar", urun:"Zeytin Ezmesi", raf_omru:7, birim:"Gün"},
             {id:"L27", kategori:"Şarküteri, Süt ve Soslar", urun:"Turşu", raf_omru:15, birim:"Gün"},
+            {id:"L124", kategori:"Şarküteri, Süt ve Soslar", urun:"Süzme Yoğurt", raf_omru:5, birim:"Gün"},
+            {id:"L121", kategori:"Şarküteri, Süt ve Soslar", urun:"Örgü Peyniri", raf_omru:5, birim:"Gün"},
+            {id:"L122", kategori:"Şarküteri, Süt ve Soslar", urun:"Eski Kaşar", raf_omru:10, birim:"Gün"},
+            {id:"L123", kategori:"Şarküteri, Süt ve Soslar", urun:"Tulum Peyniri", raf_omru:10, birim:"Gün"},
             
+            {id:"L113", kategori:"Paketli Şarküteri", urun:"Dana Kavurma", raf_omru:7, birim:"Gün"},
+            {id:"L114", kategori:"Paketli Şarküteri", urun:"Pastırma", raf_omru:10, birim:"Gün"},
+            {id:"L115", kategori:"Paketli Şarküteri", urun:"Kasap Sucuk", raf_omru:10, birim:"Gün"},
+            {id:"L116", kategori:"Paketli Şarküteri", urun:"Sosis", raf_omru:5, birim:"Gün"},
+            {id:"L117", kategori:"Paketli Şarküteri", urun:"Füme Kaburga", raf_omru:5, birim:"Gün"},
+            {id:"L118", kategori:"Paketli Şarküteri", urun:"Macar Salam", raf_omru:5, birim:"Gün"},
+            {id:"L119", kategori:"Paketli Şarküteri", urun:"Fıstıklı Salam", raf_omru:5, birim:"Gün"},
+            {id:"L120", kategori:"Paketli Şarküteri", urun:"Dilimli Zeytin", raf_omru:7, birim:"Gün"},
+
             {id:"L28", kategori:"Meyve ve Sebze", urun:"Çilek", raf_omru:3, birim:"Gün"},
             {id:"L29", kategori:"Meyve ve Sebze", urun:"Karpuz", raf_omru:3, birim:"Gün"},
             {id:"L30", kategori:"Meyve ve Sebze", urun:"Domates", raf_omru:5, birim:"Gün"},
@@ -827,7 +669,258 @@
             {id:"L112", kategori:"Paketli & Kuru Gıdalar", urun:"Kavanoz Vişne Sos", raf_omru:3, birim:"Gün"}
         ];
 
+        let libraryDB = [...defaultLibrary];
+
+        function normalizeTR(str) {
+            return str.replace(/İ/g, 'i').replace(/I/g, 'ı').toLowerCase();
+        }
+
+        // BÜYÜK GÜNCELLEME: SIFIR GECİKME İLE SİSTEMİ AÇMA
+        document.addEventListener("DOMContentLoaded", () => {
+            const spinner = document.getElementById('fullScreenSpinner');
+            if(spinner) spinner.style.display = 'none';
+            
+            updateThemeIcon();
+            checkNotificationStatus();
+            initSwipeNavigation();
+            
+            setInterval(updateDateTime, 1000);
+            updateDateTime();
+
+            showLoginOrApp();
+            setTimeout(initDatabase, 50);
+        });
+
+        function updateDateTime() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+            const dateStr = now.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', weekday: 'long' });
+            
+            const clockEl = document.getElementById('clockDisplay');
+            const dateEl = document.getElementById('dateDisplay');
+            if(clockEl) clockEl.innerText = timeStr;
+            if(dateEl) dateEl.innerText = dateStr;
+        }
+
+        function initSwipeNavigation() {
+            let dragStartX = 0;
+            const container = document.getElementById('drumpadContainer');
+            if(!container) return;
+            container.addEventListener('touchstart', e => { dragStartX = e.touches[0].clientX; }, {passive: true});
+            container.addEventListener('touchend', e => {
+                let dragEndX = e.changedTouches[0].clientX;
+                let diff = dragStartX - dragEndX;
+                
+                if (Math.abs(diff) > 70) {
+                    let chips = Array.from(document.querySelectorAll('#libChips .chip'));
+                    let idx = chips.findIndex(c => c.classList.contains('active'));
+                    
+                    if (diff > 0 && idx < chips.length - 1) chips[idx + 1].click();
+                    else if (diff < 0 && idx > 0) chips[idx - 1].click();
+                    
+                    setTimeout(() => {
+                        let activeChip = document.querySelector('#libChips .chip.active');
+                        if(activeChip) activeChip.scrollIntoView({behavior: "smooth", inline: "center", block: "nearest"});
+                    }, 50);
+                }
+            });
+        }
+
+        function showLoginOrApp() {
+            if (isAppLaunched) return; 
+            const savedPin = safeGetLocal('kd_saved_pin');
+            if(savedPin && (usersDB[savedPin] || savedPin === "1923")) {
+                currentUser = usersDB[savedPin] || { name: "Yusuf (Yönetici)", role: "admin", pin: "1923" };
+                launchApp();
+            } else {
+                document.getElementById('authScreen').style.display = 'flex';
+            }
+        }
+
+        function initDatabase() {
+            try {
+                if(typeof firebase !== 'undefined') {
+                    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+                    db = firebase.database();
+                    
+                    db.ref(`${dbRoot}/users`).on('value', snap => {
+                        const data = snap.val();
+                        if(!data) {
+                            db.ref(`${dbRoot}/users/1923`).set(usersDB["1923"]);
+                        } else {
+                            usersDB = data;
+                        }
+                        
+                        const savedPin = safeGetLocal('kd_saved_pin');
+                        if(savedPin && usersDB[savedPin]) {
+                            currentUser = usersDB[savedPin];
+                            if (isAppLaunched) {
+                                document.getElementById('headerUserName').innerText = currentUser.name;
+                                if(currentUser.role === 'admin') {
+                                    document.getElementById('adminBtn').style.display = 'flex';
+                                    document.getElementById('editModeBtn').style.display = 'block'; 
+                                    document.getElementById('todoAssignee').style.display = 'block';
+                                }
+                            }
+                        }
+                        
+                        if (isAppLaunched && document.getElementById('usersModal').classList.contains('active')) {
+                            renderUsersList();
+                        }
+                    });
+
+                    db.ref(`${dbRoot}/active_shifts`).on('value', snap => {
+                        activeShifts = snap.val() || {};
+                        if(document.getElementById('adminModal').classList.contains('active')) {
+                            renderAdminDashboard();
+                        }
+                    });
+
+                    syncDataBackground();
+                }
+            } catch(e) {
+                console.warn("Veritabanı uyarısı (Offline çalışılabilir):", e);
+            }
+        }
+
+        function syncDataBackground() {
+            if(!db) return;
+            
+            if(currentUser && currentUser.pin) {
+                db.ref(`${dbRoot}/active_shifts/${currentUser.pin}`).set({
+                    name: currentUser.name,
+                    loginTime: Date.now()
+                });
+            }
+
+            db.ref(`${dbRoot}/library`).on('value', snap => {
+                const data = snap.val();
+                if(data) { libraryDB = Object.values(data); renderLibraryDrumpad(); } 
+                else { db.ref(`${dbRoot}/library`).set(libraryDB); }
+            });
+
+            db.ref(`${dbRoot}/active`).on('value', snap => {
+                activeItems = snap.val() ? Object.values(snap.val()) : [];
+                renderActiveList();
+            });
+            db.ref(`${dbRoot}/todos`).on('value', snap => {
+                todos = snap.val() ? Object.values(snap.val()) : [];
+                renderTodos();
+            });
+            db.ref(`${dbRoot}/logs`).on('value', snap => {
+                allLogs = snap.val() ? Object.values(snap.val()) : [];
+                if(document.getElementById('adminModal').classList.contains('active')) renderAdminDashboard();
+                if(document.getElementById('logsModal').classList.contains('active')) renderLogsList();
+            });
+        }
+
+        function addPin(num) {
+            if(currentPin.length < 4) { currentPin += num; updatePinDisplay(); }
+            if(currentPin.length === 4) submitPin();
+        }
+        function clearPin() { currentPin = ""; updatePinDisplay(); }
+        function updatePinDisplay() {
+            for(let i=1; i<=4; i++) { document.getElementById(`dot${i}`).className = `pin-dot ${i <= currentPin.length ? 'filled' : ''}`; }
+        }
+        function submitPin() {
+            if(currentPin.length !== 4) return;
+            if(usersDB[currentPin] || currentPin === "1923") {
+                currentUser = usersDB[currentPin] || { name: "Yusuf (Yönetici)", role: "admin", pin: "1923" };
+                safeSetLocal('kd_saved_pin', currentPin);
+                
+                if(db) {
+                    db.ref(`${dbRoot}/active_shifts/${currentUser.pin}`).set({
+                        name: currentUser.name,
+                        loginTime: Date.now()
+                    });
+                }
+
+                document.getElementById('authScreen').style.display = 'none';
+                launchApp();
+            } else {
+                showToast("Hatalı PIN kodu.", true);
+                clearPin();
+                if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
+            }
+        }
+        
+        // ÇIKIŞ VE DİNAMİK GÖREV ONAYI
+        function triggerLogoutFlow() {
+            closeModal('adminModal');
+            const container = document.getElementById('dynamicChecklistContainer');
+            container.innerHTML = '';
+            
+            // Standart Görevler
+            const standards = [
+                "Kasa sayımı eksiksiz tamamlandı.",
+                "Çöpler atıldı, bar temizlendi.",
+                "Dolap dereceleri kontrol edildi.",
+                "Gün sonu fişleri ve evraklar düzenlendi."
+            ];
+            standards.forEach(text => {
+                container.innerHTML += `<label class="closing-cb-label"><input type="checkbox" class="closing-cb"> <span>${text}</span></label>`;
+            });
+
+            // Kişiye Atanmış Aktif (Tamamlanmamış) Görevler
+            const myTasks = todos.filter(t => !t.done && (t.assignedTo === currentUser.pin));
+            if(myTasks.length > 0) {
+                container.innerHTML += `<hr style="border:0; border-top:1px dashed var(--border); margin:15px 0;">`;
+                container.innerHTML += `<h5 style="color:var(--danger); font-size:12px; font-weight:800; margin-bottom:10px;">SİZE ATANAN ÖZEL GÖREVLER</h5>`;
+                myTasks.forEach(t => {
+                    container.innerHTML += `<label class="closing-cb-label"><input type="checkbox" class="closing-cb dynamic-task" data-id="${t.id}"> <span style="color:var(--danger); font-weight:700;">${t.text}</span></label>`;
+                });
+            }
+
+            document.querySelectorAll('.closing-cb').forEach(cb => { cb.addEventListener('change', checkClosingChecklist); });
+            openModal('checklistModal');
+        }
+
+        function showSummary() {
+            closeModal('checklistModal');
+            
+            document.querySelectorAll('.dynamic-task').forEach(cb => {
+                if(cb.checked) {
+                    const tid = cb.getAttribute('data-id');
+                    const t = todos.find(x => x.id === tid);
+                    if(t) {
+                        t.done = true;
+                        if(db) db.ref(`${dbRoot}/todos/${tid}`).update({done: true});
+                    }
+                }
+            });
+
+            const todayStr = new Date().toLocaleDateString('tr-TR');
+            const myLogs = allLogs.filter(l => l.user === currentUser.name && l.date.includes(todayStr));
+            const completedCount = myLogs.filter(l => l.action.includes('Tüketildi') || l.action.includes('İmha')).length;
+            
+            const allCheckboxes = document.querySelectorAll('.closing-cb');
+            let checkedCount = 0;
+            allCheckboxes.forEach(cb => { if(cb.checked) checkedCount++; });
+            
+            const score = allCheckboxes.length > 0 ? Math.round((checkedCount / allCheckboxes.length) * 100) : 100;
+
+            let scoreText = score === 100 ? "KUSURSUZ VARDİYA!" : (score >= 50 ? "İDARE EDER" : "DİKKATSİZ!");
+            let scoreColor = score === 100 ? "var(--success)" : (score >= 50 ? "var(--warning)" : "var(--danger)");
+
+            let summaryHtml = `Bugün senin vardiyanda toplam <b>${completedCount}</b> ürün işlemi yapıldı.<br><br>
+            <div style="font-size: 42px; font-weight: 800; color: ${scoreColor}; margin: 10px 0;">%${score}</div>
+            <div style="font-weight:700; color:${scoreColor}; margin-bottom:20px; font-size:14px;">VARDİYA PUANI (${scoreText})</div>
+            Günün yorgunluğunu atma vakti geldi, iyi dinlenmeler!`;
+            
+            document.getElementById('summaryText').innerHTML = summaryHtml;
+            openModal('summaryModal');
+            
+            logAction("Vardiya Kapanışı", `Puan: %${score}`);
+            if(db) db.ref(`${dbRoot}/active_shifts/${currentUser.pin}`).remove();
+        }
+
+        function executeLogout() {
+            safeRemoveLocal('kd_saved_pin');
+            location.reload();
+        }
+
         function launchApp() {
+            if(isAppLaunched) return;
             isAppLaunched = true;
             document.getElementById('appContent').style.display = 'block';
             document.getElementById('headerUserName').innerText = currentUser.name;
@@ -835,7 +928,7 @@
             if(currentUser.role === 'admin') {
                 document.getElementById('adminBtn').style.display = 'flex';
                 document.getElementById('editModeBtn').style.display = 'block'; 
-                document.getElementById('todoAssignee').style.display = 'block'; // Görev atama seçeneği açılır
+                document.getElementById('todoAssignee').style.display = 'block'; 
             }
             
             showToast(`Hoşgeldin, ${currentUser.name}`);
@@ -920,7 +1013,7 @@
                 addBtn.style.display = 'none';
                 container.classList.remove('edit-mode');
             }
-            renderLibraryDrumpad(); // Çarpıların görünmesi için yeniden çiz
+            renderLibraryDrumpad();
         }
 
         function toggleBulkMode() {
@@ -967,6 +1060,7 @@
         }
 
         function deleteProduct(id) {
+            if(!isEditMode) return;
             if(confirm("Bu ürünü silmek istediğinize emin misiniz?")) {
                 libraryDB = libraryDB.filter(p => p.id !== id);
                 renderLibraryDrumpad();
@@ -1021,7 +1115,6 @@
             if(navigator.vibrate) navigator.vibrate(50);
         }
 
-        // AKILLI SESLİ ARAMA (İNGİLİZCE OKUNUŞ DÜZELTİCİ)
         function startVoiceSearch() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRecognition) {
@@ -1043,7 +1136,6 @@
             recognition.onresult = (event) => {
                 let transcript = event.results[0][0].transcript.toLowerCase().trim();
                 
-                // İngilizce kelime düzeltmeleri (Kordon Sözlük)
                 transcript = transcript.replace(/kold bru/g, 'cold brew')
                                        .replace(/kold brew/g, 'cold brew')
                                        .replace(/kol bru/g, 'cold brew')
@@ -1072,7 +1164,6 @@
             recognition.start();
         }
 
-        // KAMERA İLE FOTOĞRAFLI NOT ALMA
         function handleCameraUpload(event) {
             const file = event.target.files[0];
             if(!file) return;
@@ -1084,13 +1175,12 @@
                 img.onload = function() {
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
-                    // Görüntüyü hafiflet (Maks 500px genişlik)
                     let w = img.width, h = img.height;
                     if(w > 500) { h = Math.round((500/w)*h); w = 500; }
                     canvas.width = w; canvas.height = h;
                     ctx.drawImage(img, 0, 0, w, h);
                     
-                    const dataURL = canvas.toDataURL('image/jpeg', 0.6); // Base64 Sıkıştırma
+                    const dataURL = canvas.toDataURL('image/jpeg', 0.6); 
                     
                     document.getElementById('cameraPreviewImg').src = dataURL;
                     openModal('cameraNoteModal');
@@ -1106,7 +1196,7 @@
             
             const newTodo = { 
                 id: Date.now().toString(), 
-                text: (noteText || "Fotoğraflı Not"), 
+                text: (noteText || "Fotoğraflı Görev"), 
                 imgData: imgData,
                 done: false, 
                 addedBy: currentUser.name, 
@@ -1120,7 +1210,18 @@
             
             document.getElementById('cameraNoteTextInput').value = "";
             closeModal('cameraNoteModal');
-            showToast("Fotoğraflı not görevlere eklendi.");
+            showToast("Fotoğraflı görev eklendi.");
+        }
+
+        function saveCameraAsLog() {
+            const imgData = document.getElementById('cameraPreviewImg').src;
+            const noteText = document.getElementById('cameraNoteTextInput').value.trim();
+            
+            logAction("Fotoğraflı Not Eklendi", (noteText || "Açıklama girilmedi."), imgData);
+            
+            document.getElementById('cameraNoteTextInput').value = "";
+            closeModal('cameraNoteModal');
+            showToast("Sadece log kayıtlarına eklendi.");
         }
 
         function renderActiveList() {
@@ -1210,7 +1311,6 @@
             if(document.getElementById('adminModal').classList.contains('active')) renderAdminDashboard();
         }
 
-        // GÖREVLENDİRME MENÜSÜ GÜNCELLEMESİ
         function populateAssignees(selectEl) {
             const currentVal = selectEl.value;
             selectEl.innerHTML = '<option value="ALL">Herkese</option>';
@@ -1249,193 +1349,9 @@
             if(!container) return;
             container.innerHTML = '';
             
-            // Personel sadece "Herkese" veya "Kendisine" atanmış görevleri görür
             const myTodos = todos.filter(t => t.assignedTo === 'ALL' || t.assignedTo === currentUser.pin || currentUser.role === 'admin');
 
             if(myTodos.length === 0) { container.innerHTML = `<div style="font-size:13px; color:var(--text-muted); text-align:center; padding:20px; background:var(--surface-solid); border-radius:var(--radius-md);">Bekleyen görev yok.</div>`; return; }
             
             myTodos.forEach(t => {
-                let badgeHtml = t.assignedTo !== 'ALL' ? `<span style="background:var(--danger-light); color:var(--danger); padding:2px 6px; border-radius:10px; font-size:9px; margin-left:6px; font-weight:800;">@${t.assignedName}</span>` : '';
-                let imgHtml = t.imgData ? `<img src="${t.imgData}" style="width:100%; max-height:200px; object-fit:cover; border-radius:8px; margin-top:10px; border:1px solid var(--border);">` : '';
-
-                container.innerHTML += `
-                    <div style="display:flex; justify-content:space-between; align-items:flex-start; padding:16px; background:var(--surface-solid); border-radius:var(--radius-md); box-shadow:var(--shadow-sm); margin-bottom:10px; border:1px solid var(--border);">
-                        <div style="display:flex; align-items:flex-start; gap:12px; cursor:pointer; flex:1;" onclick="toggleTodo('${t.id}', ${t.done})">
-                            <div style="width:24px; height:24px; border-radius:50%; border:2px solid ${t.done ? 'var(--success)' : 'var(--border)'}; display:flex; align-items:center; justify-content:center; color:white; background:${t.done ? 'var(--success)' : 'transparent'}; transition:var(--transition); margin-top:2px;"><i class="fa-solid fa-check" style="font-size:12px; opacity:${t.done ? '1' : '0'};"></i></div>
-                            <div style="flex:1;">
-                                <div style="font-size:14px; font-weight:600; text-decoration:${t.done ? 'line-through' : 'none'}; color:${t.done ? 'var(--text-muted)' : 'var(--text-main)'};">${t.text} ${badgeHtml}</div>
-                                ${imgHtml}
-                                <div style="font-size:11px; color:var(--text-muted); margin-top:6px;">Ekleyen: ${t.addedBy.split(' ')[0]}</div>
-                            </div>
-                        </div>
-                        ${(currentUser.role === 'admin' || t.addedBy === currentUser.name) ? `
-                        <button style="background:var(--danger-light); border:none; color:var(--danger); width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:var(--transition); margin-left:10px;" onclick="deleteTodo('${t.id}')">
-                            <i class="fa-solid fa-xmark"></i>
-                        </button>` : ''}
-                    </div>
-                `;
-            });
-        }
-        function toggleTodo(id, currentStatus) { 
-            const t = todos.find(x=>x.id === id); if(t) t.done = !currentStatus; renderTodos();
-            if(db) db.ref(`${dbRoot}/todos/${id}`).update({ done: !currentStatus }); 
-        }
-        function deleteTodo(id) { 
-            todos = todos.filter(x=>x.id !== id); renderTodos();
-            if(db) db.ref(`${dbRoot}/todos/${id}`).remove(); 
-        }
-
-        function logAction(actionType, detail) {
-            const logItem = { 
-                id: Date.now().toString(), 
-                date: new Date().toLocaleString('tr-TR'), 
-                user: currentUser.name, 
-                action: actionType, 
-                detail: detail,
-                timestamp: Date.now()
-            };
-            allLogs.push(logItem);
-            if(db) db.ref(`${dbRoot}/logs/${logItem.id}`).set(logItem);
-        }
-
-        function openModal(id) { 
-            document.getElementById(id).classList.add('active'); 
-            document.body.classList.add('no-scroll'); 
-            if(id==='usersModal') renderUsersList(); 
-            if(id==='adminModal') renderAdminDashboard();
-        }
-        function closeModal(id) { 
-            document.getElementById(id).classList.remove('active'); 
-            document.body.classList.remove('no-scroll'); 
-        }
-        function closeOnOutsideClick(e, id) { if(e.target.id === id) closeModal(id); }
-
-        function renderAdminDashboard() {
-            const now = Date.now();
-            const sevenDaysAgo = now - (7 * 24 * 60 * 60 * 1000);
-            
-            const logsArray = Array.isArray(allLogs) ? allLogs : Object.values(allLogs || {});
-            const recentLogs = logsArray.filter(l => l.timestamp >= sevenDaysAgo);
-            const consumedCount = recentLogs.filter(l => l.action === 'Tüketildi' || l.action.includes('Tüketildi')).length;
-            const destroyedCount = recentLogs.filter(l => l.action === 'İmha Edildi' || l.action.includes('İmha')).length;
-            const totalProcesses = consumedCount + destroyedCount;
-            
-            let successRate = 100;
-            if (totalProcesses > 0) {
-                successRate = Math.round((consumedCount / totalProcesses) * 100);
-            }
-
-            const container = document.getElementById('dashboardStatsContainer');
-            if(container) {
-                container.innerHTML = `
-                    <div class="stat-card success">
-                        <div class="value">%${successRate}</div>
-                        <div class="label">BAŞARILI TÜKETİM</div>
-                    </div>
-                    <div class="stat-card danger">
-                        <div class="value">${destroyedCount}</div>
-                        <div class="label">İMHA EDİLEN (FİRE)</div>
-                    </div>
-                    <div class="stat-card" style="grid-column: 1 / -1;">
-                        <div class="value">${totalProcesses}</div>
-                        <div class="label">TOPLAM İŞLEM (SON 7 GÜN)</div>
-                    </div>
-                `;
-            }
-
-            // CANLI MESAİ RADARI RENDER KISMI
-            const shiftContainer = document.getElementById('activeShiftsContainer');
-            if(shiftContainer) {
-                shiftContainer.innerHTML = '';
-                const pins = Object.keys(activeShifts);
-                if(pins.length === 0) {
-                    shiftContainer.innerHTML = `<div style="font-size:12px; color:var(--text-muted); padding:15px; border:1px dashed var(--border); border-radius:var(--radius-sm); text-align:center;">Şu an aktif mesaide personel yok.</div>`;
-                } else {
-                    pins.forEach(p => {
-                        const s = activeShifts[p];
-                        const timeString = new Date(s.loginTime).toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'});
-                        shiftContainer.innerHTML += `
-                            <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; background:var(--surface-solid); border:1px solid var(--border); border-left:4px solid var(--success); border-radius:var(--radius-md); margin-bottom:8px; box-shadow:var(--shadow-sm);">
-                                <div style="font-weight:700; font-size:14px; color:var(--text-main);"><i class="fa-solid fa-user-circle" style="color:var(--text-muted); margin-right:4px;"></i> ${s.name}</div>
-                                <div style="font-size:11px; color:var(--text-muted); font-weight:600;"><i class="fa-regular fa-clock"></i> Giriş: ${timeString}</div>
-                            </div>
-                        `;
-                    });
-                }
-            }
-        }
-
-        function renderUsersList() {
-            const container = document.getElementById('usersList'); container.innerHTML = '';
-            for(const [pin, u] of Object.entries(usersDB)) {
-                const roleClass = u.role === 'admin' ? 'role-admin' : 'role-staff';
-                const roleText = u.role === 'admin' ? 'Yönetici' : 'Personel';
-                container.innerHTML += `
-                    <div class="user-row">
-                        <div>
-                            <div style="font-weight:700; font-size:15px; color:var(--text-main);">${u.name}</div>
-                            <div style="font-size:12px; color:var(--text-muted); margin-top:4px; font-family:monospace;">PIN: ${pin}</div>
-                        </div>
-                        <div style="display:flex; align-items:center; gap:12px;">
-                            <span class="role-badge ${roleClass}">${roleText}</span>
-                            ${pin !== '1923' ? `<button onclick="deleteUser('${pin}')" style="background:var(--danger-light); width:32px; height:32px; border-radius:50%; border:none; color:var(--danger); cursor:pointer; transition:var(--transition); display:flex; align-items:center; justify-content:center;"><i class="fa-solid fa-trash"></i></button>` : ''}
-                        </div>
-                    </div>
-                `;
-            }
-        }
-
-        function addUser() {
-            const name = document.getElementById('newUserName').value.trim();
-            const pin = document.getElementById('newUserPin').value.trim();
-            const role = document.getElementById('newUserRole').value;
-            
-            if(!name || pin.length !== 4) return alert("Lütfen eksiksiz ve 4 haneli PIN girin.");
-            if(usersDB[pin]) return alert("Bu PIN kullanımda.");
-
-            usersDB[pin] = { name: name, role: role, pin: pin };
-            if(db) db.ref(`${dbRoot}/users/${pin}`).set({ name: name, role: role, pin: pin });
-            document.getElementById('newUserName').value = ""; document.getElementById('newUserPin').value = "";
-            showToast("Personel başarıyla eklendi.");
-            renderUsersList();
-        }
-
-        function deleteUser(pin) {
-            if(confirm("Personeli silmek istediğinize emin misiniz?")) {
-                delete usersDB[pin];
-                if(db) db.ref(`${dbRoot}/users/${pin}`).remove();
-                renderUsersList();
-            }
-        }
-
-        function checkNotificationStatus() { if("Notification" in window && Notification.permission === "granted") document.getElementById('bellBtn').style.display = 'none'; }
-        function requestNotificationPermission() {
-            if(!("Notification" in window)) return alert("Tarayıcınız bildirimleri desteklemiyor.");
-            Notification.requestPermission().then(p => { if(p === "granted") { document.getElementById('bellBtn').style.display = 'none'; showToast("Bildirimler açıldı."); } });
-        }
-        function sendPushNotification(title, body) {
-            if ("Notification" in window && Notification.permission === "granted") {
-                if(navigator.serviceWorker) { 
-                    navigator.serviceWorker.ready.then(reg => { 
-                        reg.showNotification(title, { body: body, icon: "https://cdn-icons-png.flaticon.com/512/3003/3003984.png", vibrate: [200, 100, 200] }); 
-                    }); 
-                } else { 
-                    new Notification(title, { body: body }); 
-                }
-            }
-        }
-        function toggleTheme() { isDark = !isDark; safeSetLocal('kd_theme', isDark ? 'dark' : 'light'); document.body.classList.toggle('dark-mode', isDark); updateThemeIcon(); renderLibraryDrumpad(); }
-        function updateThemeIcon() { const i = document.getElementById('themeIcon'); if(i) i.className = isDark ? "fa-solid fa-sun" : "fa-solid fa-moon"; }
-        function switchTab(tId, el) { document.querySelectorAll('.tab-pane').forEach(e => e.classList.remove('active')); document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active')); document.getElementById(tId).classList.add('active'); el.classList.add('active'); }
-        function showToast(msg, isErr=false) { 
-            const t = document.getElementById('toastNotification'); 
-            t.innerHTML = `<span style="font-weight:600;">${msg}</span>`; 
-            t.style.background = isErr ? 'var(--danger)' : 'var(--surface-solid)'; 
-            t.style.color = isErr ? '#FFF' : 'var(--text-main)'; 
-            t.classList.add('show'); 
-            setTimeout(()=>t.classList.remove('show'), 2500); 
-        }
-
-    </script>
-</body>
-</html>
+                let badgeHtml = t.assignedTo !== 'ALL' ? `<span style="background:var(--danger-ligh
