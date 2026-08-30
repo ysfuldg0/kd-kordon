@@ -1,45 +1,86 @@
-const CACHE_NAME = 'kordon-pro-cache-v1';
-const urlsToCache = [
+const CACHE_NAME = 'kd-kordon-pro-v31-v1';
+
+const APP_SHELL = [
   './',
   './index.html',
   './manifest.json',
-  'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap',
-  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
-  'https://cdn-icons-png.flaticon.com/512/3003/3003984.png'
+  './icons/icon-192.png',
+  './icons/icon-512.png'
 ];
 
-// Kurulum Aşaması: Belirtilen dosyaları önbelleğe al
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => {
-        console.log('Dosyalar önbelleğe alınıyor');
-        return cache.addAll(urlsToCache);
-      })
+      .then(cache => cache.addAll(APP_SHELL))
+      .then(() => self.skipWaiting())
   );
 });
 
-// Aktivasyon: Eski önbellekleri temizle
 self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheName !== CACHE_NAME) {
-            console.log('Eski önbellek siliniyor:', cacheName);
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
+    caches.keys()
+      .then(keys =>
+        Promise.all(
+          keys
+            .filter(key => key !== CACHE_NAME)
+            .map(key => caches.delete(key))
+        )
+      )
+      .then(() => self.clients.claim())
   );
 });
 
-// İstekleri Yakalama: Önce ağa git, yoksa önbellekten getir (Network-First Fallback)
 self.addEventListener('fetch', event => {
+  const request = event.request;
+
+  // Sadece GET isteklerini ele al.
+  if (request.method !== 'GET') return;
+
+  const url = new URL(request.url);
+
+  // Firebase ve Google servislerini cache'leme.
+  // Veritabanı verileri her zaman canlı Firebase'den alınmalı.
+  if (
+    url.hostname.includes('firebaseio.com') ||
+    url.hostname.includes('googleapis.com') ||
+    url.hostname.includes('firebaseapp.com')
+  ) {
+    return;
+  }
+
+  // Sadece kendi sitemizin dosyalarını cache'le.
+  if (url.origin !== self.location.origin) {
+    return;
+  }
+
   event.respondWith(
-    fetch(event.request).catch(() => {
-      return caches.match(event.request);
-    })
+    caches.match(request)
+      .then(cachedResponse => {
+
+        if (cachedResponse) {
+          return cachedResponse;
+        }
+
+        return fetch(request)
+          .then(networkResponse => {
+
+            if (!networkResponse || !networkResponse.ok) {
+              return networkResponse;
+            }
+
+            const responseClone = networkResponse.clone();
+
+            caches.open(CACHE_NAME)
+              .then(cache => {
+                cache.put(request, responseClone);
+              });
+
+            return networkResponse;
+          })
+          .catch(() => {
+            return caches.match('./index.html');
+          });
+
+      })
   );
 });
