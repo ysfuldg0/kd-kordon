@@ -1,17 +1,74 @@
 {
-  "name": "KD Kordon Pro Dashboard",
-  "short_name": "Kordon Pro",
-  "description": "Kahve Dünyası Vardiya ve Üretim Takip Sistemi",
-  "start_url": "./index.html",
-  "display": "standalone",
-  "background_color": "#F2F4F7",
-  "theme_color": "#0F172A",
-  "icons": [
-    {
-      "src": "https://cdn-icons-png.flaticon.com/512/3003/3003984.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+  "rules": {
+    "kd_kordon_pro_v31": {
+      "publicLoginMap": {
+        "$pin": {
+          ".read": true,
+          ".write": "auth != null && root.child('kd_kordon_pro_v31/userProfiles').child(auth.uid).child('role').val() === 'admin'"
+        }
+      },
+      "userProfiles": {
+        "$uid": {
+          ".read": "auth != null && (auth.uid === $uid || root.child('kd_kordon_pro_v31/userProfiles').child(auth.uid).child('role').val() === 'admin')",
+          ".write": "auth != null && root.child('kd_kordon_pro_v31/userProfiles').child(auth.uid).child('role').val() === 'admin'"
+        }
+      },
+      "users": {
+        "$pin": {
+          ".read": "auth != null",
+          ".write": "auth != null && root.child('kd_kordon_pro_v31/userProfiles').child(auth.uid).child('role').val() === 'admin'"
+        }
+      },
+      "library": {
+        "$id": {
+          ".read": "auth != null",
+          ".write": "auth != null && root.child('kd_kordon_pro_v31/userProfiles').child(auth.uid).child('role').val() === 'admin'"
+        }
+      },
+      "active": {
+        "$id": {
+          ".read": "auth != null",
+          ".write": "auth != null"
+        }
+      },
+      "todos": {
+        "$id": {
+          ".read": "auth != null",
+          ".write": "auth != null"
+        }
+      },
+      "todoArchive": {
+        "$id": {
+          ".read": "auth != null",
+          ".write": "auth != null"
+        }
+      },
+      "orders": {
+        "$id": {
+          ".read": "auth != null",
+          ".write": "auth != null"
+        }
+      },
+      "logs": {
+        "$id": {
+          ".read": "auth != null",
+          ".write": "auth != null"
+        }
+      },
+      "active_shifts": {
+        "$uid": {
+          ".read": "auth != null",
+          ".write": "auth != null && auth.uid === $uid"
+        }
+      },
+      "shiftNotes": {
+        "$date": {
+          "$pin": {
+            ".read": "auth != null",
+            ".write": "auth != null && (root.child('kd_kordon_pro_v31/userProfiles').child(auth.uid).child('pin').val() === $pin || root.child('kd_kordon_pro_v31/userProfiles').child(auth.uid).child('role').val() === 'admin')"
+          }
+        }
+      }
     }
-  ]
+  }
 }
